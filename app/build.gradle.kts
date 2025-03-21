@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -79,6 +79,9 @@ dependencies {
     //coroutine for async
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    //coroutine testing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     //coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
@@ -86,6 +89,24 @@ dependencies {
     //pull to refresh layout
     implementation("com.google.accompanist:accompanist-swiperefresh:0.32.0")
 
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+    //mockwebserver
+    testImplementation ("com.squareup.okhttp3:mockwebserver:4.9.3")
+
+    //serializable
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
+    // Truth
+    testImplementation("com.google.truth:truth:1.4.4")
+    androidTestImplementation("com.google.truth:truth:1.4.4")
+
+    // Mockk
+    testImplementation("io.mockk:mockk:1.13.16")
+    androidTestImplementation("io.mockk:mockk-android:1.13.16")
 }
 
 kapt {
