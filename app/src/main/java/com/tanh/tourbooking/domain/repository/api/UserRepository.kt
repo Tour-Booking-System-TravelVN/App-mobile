@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun getUsers(): Flow<List<Customer>>
+    suspend fun checkBookingIdTour(bookingId: Int): Boolean
 }

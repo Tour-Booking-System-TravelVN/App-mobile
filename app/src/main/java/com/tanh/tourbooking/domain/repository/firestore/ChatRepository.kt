@@ -11,5 +11,5 @@ interface ChatRepository {
     fun observeChatBox(chatId: String): Flow<Resources<ChatBoxDto, Exception>>
     suspend fun deleteChatBox(chatId: String)
     fun observeChatboxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>>
-
+    suspend fun joinChatBox(uniqueBookingId: Int, userId: Int): String?
 }

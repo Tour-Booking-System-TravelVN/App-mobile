@@ -41,6 +41,18 @@ class ChatsViewModel @Inject constructor(
         }
     }
 
+    fun validChatBookingId(chatBookingId: Int) {
+        viewModelScope.launch {
+            chatUseCaseManager.allowUserToChat(chatBookingId, userId).let { chatBoxId ->
+                if(chatBoxId == null) {
+                    sendEvent(OneTimeEvent.ShowSnackbar("Id not found"))
+                } else {
+                    onNavToMessage(chatBoxId)
+                }
+            }
+        }
+    }
+
     private fun sendEvent(event: OneTimeEvent) {
         viewModelScope.launch {
             _channel.send(event)

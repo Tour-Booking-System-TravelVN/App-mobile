@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.data.repository.firestore
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.tanh.tourbooking.data.model.dto.ChatBoxDto
@@ -13,6 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,6 +22,8 @@ class ChatRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     @IODispatcher private val dispatcherIO: CoroutineDispatcher
 ) : ChatRepository {
+
+    private val chatBoxCollection = firestore.collection(Collections.CHATBOX)
 
     override fun observeChatboxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>> {
         return callbackFlow {
@@ -31,7 +35,8 @@ class ChatRepositoryImpl @Inject constructor(
                             trySend(Resources.Error(error))
                         } else {
                             val result = if (snapshot != null) {
-                                Resources.Success(snapshot.toObjects(ChatBoxDto::class.java).mapNotNull { it })
+                                Resources.Success(
+                                    snapshot.toObjects(ChatBoxDto::class.java).mapNotNull { it })
                             } else {
                                 Resources.Error(Exception("Not found documents"))
                             }
@@ -47,11 +52,28 @@ class ChatRepositoryImpl @Inject constructor(
         }.flowOn(dispatcherIO)
     }
 
-    private val chatBoxCollection = firestore.collection(Collections.CHATBOX)
-
     override suspend fun createChatBox(chatBox: ChatBox) {
         withContext(dispatcherIO) {
             chatBoxCollection.add(chatBox)
+        }
+    }
+
+    override suspend fun joinChatBox(uniqueBookingId: Int, userId: Int): String? {
+        return withContext(dispatcherIO) {
+            val snapshot = chatBoxCollection.whereEqualTo("uniqueBookingId", uniqueBookingId)
+                .get().await()
+            if (snapshot.isEmpty) return@withContext null
+
+            val documentId = snapshot.documents[0].id
+
+            return@withContext try {
+                chatBoxCollection.document(documentId)
+                    .update("participants", FieldValue.arrayUnion(userId))
+                    .await()
+                documentId
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 

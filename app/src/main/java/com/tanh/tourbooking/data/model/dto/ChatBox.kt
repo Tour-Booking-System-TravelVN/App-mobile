@@ -8,11 +8,13 @@ data class ChatBoxDto(
     val message: String = "",
     val adminId: Int = 0,
     val chatId: String = "",
-    val name: String = ""
+    val name: String = "",
+    val uniqueBookingId: Int = 0
 )
 
 data class MessageDto(
     val senderId: Int = 0,
     val text: String = "",
-    val timestamp: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now()
+    val timestamp: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now(),
+    val senderName: String = ""
 )

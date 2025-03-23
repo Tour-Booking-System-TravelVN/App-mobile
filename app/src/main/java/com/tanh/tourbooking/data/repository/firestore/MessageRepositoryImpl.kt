@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -22,13 +23,13 @@ class MessageRepositoryImpl @Inject constructor(
 ) : MessageRepository {
 
     private val chatBoxCollection = firestore.collection(Collections.CHATBOX)
-    override suspend fun observeMessages(chatId: String): Flow<Resources<List<MessageDto>, Exception>> {
+    override fun observeMessages(chatId: String): Flow<Resources<List<MessageDto>, Exception>> {
         return callbackFlow {
             var listener: ListenerRegistration? = null
             try {
                 listener = chatBoxCollection.document(chatId)
                     .collection(Collections.MSGLST)
-                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .addSnapshotListener { snapshot, error ->
                         if (error != null) {
                             trySend(Resources.Error(error))
@@ -56,12 +57,24 @@ class MessageRepositoryImpl @Inject constructor(
             val messageMap = hashMapOf(
                 "senderId" to message.senderId,
                 "text" to message.text,
-                "timestamp" to message.timestamp
+                "timestamp" to message.timestamp,
+                "senderName" to message.senderName
             )
 
             chatBoxCollection.document(chatId)
                 .collection(Collections.MSGLST)
                 .add(messageMap)
+                .await()
+
+
+            val updatedLastMessageAndTime = mapOf(
+                "message" to message.text,
+                "lastTimestamp" to message.timestamp
+            )
+            chatBoxCollection.document(chatId)
+                .update(updatedLastMessageAndTime)
+                .await()
+
         }
     }
 

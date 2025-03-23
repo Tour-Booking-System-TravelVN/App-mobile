@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MessageRepository {
 
-    suspend fun observeMessages(chatId: String): Flow<Resources<List<MessageDto>, Exception>>
+    fun observeMessages(chatId: String): Flow<Resources<List<MessageDto>, Exception>>
     suspend fun sendMessage(chatId: String, message: MessageDto)
 
 }

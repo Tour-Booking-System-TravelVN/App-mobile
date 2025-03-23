@@ -5,13 +5,18 @@ import com.tanh.tourbooking.domain.model.TourGuide
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl @Inject constructor() : UserRepository {
 
     override suspend fun getUsers(): Flow<List<Customer>> {
         return flow {
             emit(users)
         }
+    }
+
+    override suspend fun checkBookingIdTour(bookingId: Int): Boolean {
+        return true
     }
 
 }

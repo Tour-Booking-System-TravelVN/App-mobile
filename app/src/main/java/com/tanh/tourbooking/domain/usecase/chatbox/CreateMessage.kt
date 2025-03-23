@@ -11,12 +11,13 @@ class CreateMessage @Inject constructor(
     private val repository: MessageRepository
 ) {
 
-    suspend operator fun invoke(chatId: String, message: Message) {
+    suspend operator fun invoke(chatId: String, message: String, userId: Int, username: String) {
 
         val messageDto = MessageDto(
-            senderId = message.senderId,
-            text = message.text,
-            timestamp = Timestamp.now()
+            senderId = userId,
+            text = message,
+            timestamp = Timestamp.now(),
+            senderName = username
         )
 
         repository.sendMessage(

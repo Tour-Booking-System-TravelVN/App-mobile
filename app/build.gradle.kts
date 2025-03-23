@@ -12,6 +12,15 @@ android {
     namespace = "com.tanh.tourbooking"
     compileSdk = 35
 
+
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.tanh.tourbooking"
         minSdk = 24

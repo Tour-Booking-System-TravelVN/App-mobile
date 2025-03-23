@@ -10,10 +10,12 @@ data class ChatBox(
     val adminId: Int = 0,
     val chatId: String = "",
     val name: String = "",
+    val uniqueBookingId: Int = 0
 )
 
 data class Message(
     val senderId: Int = 0,
     val text: String = "",
-    val time: LocalDateTime
+    val time: LocalDateTime,
+    val senderName: String = ""
 )

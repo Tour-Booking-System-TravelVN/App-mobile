@@ -1,12 +1,16 @@
 package com.tanh.tourbooking.di
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
+import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
+import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.chatbox.CreateMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
+import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,11 +39,28 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideObserveMessage(repository: MessageRepository) = ObserveMessage(repository)
+
+    @Provides
+    @Singleton
+    fun provideAllowUserToChat(repositoryImpl: UserRepository, chatRepository: ChatRepository) =
+        AllowUserToChat(repositoryImpl, chatRepository)
+
+    @Provides
+    @Singleton
     fun provideChatManager(
         observeChat: ObserveChat,
         createMessage: CreateMessage,
-        observeChatlist: ObserveChatlist
+        observeChatlist: ObserveChatlist,
+        observeMessage: ObserveMessage,
+        allowUserToChat: AllowUserToChat
     ) =
-        ChatUseCaseManager(observeChat, createMessage, observeChatlist)
+        ChatUseCaseManager(
+            observeChat,
+            createMessage,
+            observeChatlist,
+            observeMessage,
+            allowUserToChat
+        )
 
 }

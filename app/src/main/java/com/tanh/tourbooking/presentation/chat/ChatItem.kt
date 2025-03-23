@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -43,7 +44,7 @@ fun ChatItem(
     Row(
         modifier = modifier.fillMaxWidth().clickable {
             onClick(chatBox.chatId)
-        },
+        }.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -51,7 +52,7 @@ fun ChatItem(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(70.dp)
+                .size(50.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.onTertiary)
 
@@ -62,8 +63,8 @@ fun ChatItem(
         ) {
             Text(
                 text = chatBox.name,
-                style = MaterialTheme.typography.bodyLarge,
-                fontSize = 20.sp,
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.W600,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -71,14 +72,16 @@ fun ChatItem(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = chatBox.message,
-                style = MaterialTheme.typography.bodySmall,
-                fontSize = 16.sp
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Text(
             text = TimeFormatter.formatDate(chatBox.lastTime),
-            style = MaterialTheme.typography.bodySmall,
-            fontSize = 16.sp
+            style = MaterialTheme.typography.titleSmall,
+            fontSize = 12.sp
         )
     }
 
