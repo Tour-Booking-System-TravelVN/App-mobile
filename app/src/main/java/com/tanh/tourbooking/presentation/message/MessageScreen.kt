@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,6 +60,7 @@ import java.time.ZoneOffset
 @Composable
 fun MessageScreen(
     viewModel: MessageViewModel = hiltViewModel<MessageViewModel>(),
+    paddingValues: PaddingValues,
     modifier: Modifier = Modifier,
     onPopBackStack: () -> Unit = {}
 ) {
@@ -84,7 +86,7 @@ fun MessageScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize().padding(paddingValues)
     ) {
         Row(
             modifier = Modifier
@@ -207,6 +209,6 @@ fun MessageScreen(
 @Composable
 fun PreviewMessageScreen(modifier: Modifier = Modifier) {
     TourBookingTheme {
-        MessageScreen()
+        MessageScreen(paddingValues = PaddingValues(6.dp))
     }
 }

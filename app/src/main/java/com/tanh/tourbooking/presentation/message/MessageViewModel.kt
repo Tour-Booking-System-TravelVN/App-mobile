@@ -102,6 +102,7 @@ class MessageViewModel @Inject constructor(
     fun sendMessage(message: String) {
         viewModelScope.launch {
             chatUseCaseManager.createMessage(chatId, message, userId, username)
+            chatUseCaseManager.notifyMessage(chatId, message, _state.value.chatbox?.name ?:  "No name")
         }
     }
 

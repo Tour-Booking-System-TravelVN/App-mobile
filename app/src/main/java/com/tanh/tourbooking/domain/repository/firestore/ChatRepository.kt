@@ -9,7 +9,7 @@ interface ChatRepository {
 
     suspend fun createChatBox(chatBox: ChatBox)
     fun observeChatBox(chatId: String): Flow<Resources<ChatBoxDto, Exception>>
-    suspend fun deleteChatBox(chatId: String)
+    suspend fun deleteInactiveChatBox(chatId: String)
     fun observeChatboxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>>
     suspend fun joinChatBox(uniqueBookingId: Int, userId: Int): String?
 }

@@ -15,6 +15,10 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
         }
     }
 
+    override fun getUserId(): Int? {
+        return 1;
+    }
+
     override suspend fun checkBookingIdTour(bookingId: Int): Boolean {
         return true
     }

@@ -1,9 +1,14 @@
 package com.tanh.tourbooking.data.repository.firestore
 
+import android.os.Build
+import androidx.compose.animation.core.snap
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.ChatBoxDto
+import com.tanh.tourbooking.data.model.mappers.TimeFormatter
 import com.tanh.tourbooking.data.model.util.exception.Resources
 import com.tanh.tourbooking.di.IODispatcher
 import com.tanh.tourbooking.domain.model.ChatBox
@@ -16,10 +21,12 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.time.ZoneId
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val firebaseMessaging: FirebaseMessaging,
     @IODispatcher private val dispatcherIO: CoroutineDispatcher
 ) : ChatRepository {
 
@@ -103,9 +110,28 @@ class ChatRepositoryImpl @Inject constructor(
         }.flowOn(dispatcherIO)
     }
 
-    override suspend fun deleteChatBox(chatId: String) {
+    //delete chatbox if time gap is more than 7 days
+    override suspend fun deleteInactiveChatBox(chatId: String) {
         withContext(dispatcherIO) {
-            chatBoxCollection.document(chatId).delete()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                chatBoxCollection.document(chatId).get().await()?.let { result ->
+                    result.toObject(ChatBoxDto::class.java)?.also { chatBox ->
+                        val lastTimestamp = chatBox.lastTimestamp.toDate().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        val currentTimeStamp = Timestamp.now().toDate().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        val timeDifference =
+                            currentTimeStamp.toEpochDay() - lastTimestamp.toEpochDay()
+                        if (timeDifference >= 7) {
+                            firebaseMessaging.unsubscribeFromTopic(chatId)
+                            chatBoxCollection.document(chatId).delete()
+                        }
+                    }
+                }
+            }
         }
     }
+
 }

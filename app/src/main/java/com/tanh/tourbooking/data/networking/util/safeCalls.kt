@@ -6,13 +6,13 @@ import kotlinx.serialization.SerializationException
 import retrofit2.Response
 import java.nio.channels.UnresolvedAddressException
 
-suspend fun <T: Any> safeCall(
-    execute: suspend() -> Response<T>
+suspend fun <T : Any> safeCall(
+    execute: suspend () -> Response<T>
 ): Result<T, NetworkError> {
     return try {
         val response = execute()
 
-        if(response.isSuccessful)  {
+        if (response.isSuccessful) {
             response.body()?.let {
                 Result.Success(it)
             } ?: Result.Error(NetworkError.UNKNOWN)

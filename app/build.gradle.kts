@@ -16,8 +16,10 @@ android {
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
             merges += "META-INF/LICENSE.md"
             merges += "META-INF/LICENSE-notice.md"
+
         }
     }
 
@@ -65,6 +67,11 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.firebase.messaging)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,6 +79,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
     //dagger hilt for dependency injection
     implementation("com.google.dagger:hilt-android:2.51.1")
@@ -102,7 +112,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
-
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
     //mockwebserver
     testImplementation ("com.squareup.okhttp3:mockwebserver:4.9.3")
 

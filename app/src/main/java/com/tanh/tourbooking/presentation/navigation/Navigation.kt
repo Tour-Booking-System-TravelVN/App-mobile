@@ -2,6 +2,8 @@ package com.tanh.tourbooking.presentation.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -14,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tanh.tourbooking.presentation.chat.ChatScreen
+import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
 import com.tanh.tourbooking.util.Route
 
@@ -30,12 +33,13 @@ fun Navigation(modifier: Modifier = Modifier) {
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHosState)
-        }
+        },
+        contentWindowInsets = WindowInsets.safeGestures
     ) { vl ->
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.CHATS_SCREEN.toString()
+            startDestination = Route.CHATS_SCREEN.toString()    //Route.CHATS_SCREEN.toString()
         ) {
             composable(route = Route.CHATS_SCREEN.toString()) {
                 ChatScreen(
@@ -52,9 +56,14 @@ fun Navigation(modifier: Modifier = Modifier) {
                 }
             }
             composable(route = Route.MESSAGE_SCREEN.toString() + "/{chatId}") {
-                MessageScreen() {
+                MessageScreen(
+                    paddingValues = paddingValues
+                ) {
                     navController.popBackStack()
                 }
+            }
+            composable(route = "test") {
+                TestScreen()
             }
         }
     }

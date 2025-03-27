@@ -1,13 +1,16 @@
 package com.tanh.tourbooking.di
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
+import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.chatbox.CreateMessage
+import com.tanh.tourbooking.domain.usecase.chatbox.NotifyMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
@@ -27,6 +30,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
+
+    @Provides
+    @Singleton
     fun provideObserveChatUseCase(repository: ChatRepository) = ObserveChat(repository)
 
     @Provides
@@ -43,8 +50,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAllowUserToChat(repositoryImpl: UserRepository, chatRepository: ChatRepository) =
-        AllowUserToChat(repositoryImpl, chatRepository)
+    fun provideAllowUserToChat(
+        repositoryImpl: UserRepository,
+        chatRepository: ChatRepository,
+        handler: NotificationHandler
+    ) =
+        AllowUserToChat(repositoryImpl, chatRepository, handler)
+
+    @Provides
+    @Singleton
+    fun provideNotifyMessage(handler: NotificationHandler) = NotifyMessage(handler)
 
     @Provides
     @Singleton
@@ -53,14 +68,16 @@ object AppModule {
         createMessage: CreateMessage,
         observeChatlist: ObserveChatlist,
         observeMessage: ObserveMessage,
-        allowUserToChat: AllowUserToChat
+        allowUserToChat: AllowUserToChat,
+        notifyMessage: NotifyMessage
     ) =
         ChatUseCaseManager(
             observeChat,
             createMessage,
             observeChatlist,
             observeMessage,
-            allowUserToChat
+            allowUserToChat,
+            notifyMessage
         )
 
 }

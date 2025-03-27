@@ -9,7 +9,8 @@ data class ChatBoxDto(
     val adminId: Int = 0,
     val chatId: String = "",
     val name: String = "",
-    val uniqueBookingId: Int = 0
+    val uniqueBookingId: Int = 0,
+    val participantTokens: List<Map<String, String>> = emptyList()
 )
 
 data class MessageDto(
