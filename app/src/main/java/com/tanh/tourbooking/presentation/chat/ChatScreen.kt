@@ -95,7 +95,8 @@ fun ChatScreen(
                 )
             }
         },
-        contentWindowInsets = WindowInsets.safeGestures
+        contentWindowInsets = WindowInsets.safeGestures,
+        modifier = modifier
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier

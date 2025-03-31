@@ -23,6 +23,9 @@ class MessageRepositoryImpl @Inject constructor(
 ) : MessageRepository {
 
     private val chatBoxCollection = firestore.collection(Collections.CHATBOX)
+
+    //document/collection/documentId/collection/documentId
+
     override fun observeMessages(chatId: String): Flow<Resources<List<MessageDto>, Exception>> {
         return callbackFlow {
             var listener: ListenerRegistration? = null
@@ -66,7 +69,6 @@ class MessageRepositoryImpl @Inject constructor(
                 .add(messageMap)
                 .await()
 
-
             val updatedLastMessageAndTime = mapOf(
                 "message" to message.text,
                 "lastTimestamp" to message.timestamp
@@ -77,6 +79,5 @@ class MessageRepositoryImpl @Inject constructor(
 
         }
     }
-
 
 }

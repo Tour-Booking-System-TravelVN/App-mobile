@@ -1,6 +1,7 @@
 package com.tanh.tourbooking.data.repository.firestore
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.animation.core.snap
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
@@ -116,17 +117,23 @@ class ChatRepositoryImpl @Inject constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 chatBoxCollection.document(chatId).get().await()?.let { result ->
                     result.toObject(ChatBoxDto::class.java)?.also { chatBox ->
-                        val lastTimestamp = chatBox.lastTimestamp.toDate().toInstant()
+                        val lastTimestamp = chatBox.lastTimestamp.toDate().toInstant() //tg cuoi cung
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        val currentTimeStamp = Timestamp.now().toDate().toInstant()
+                        val currentTimeStamp = Timestamp.now().toDate().toInstant()  //tg hien tai
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
                         val timeDifference =
                             currentTimeStamp.toEpochDay() - lastTimestamp.toEpochDay()
                         if (timeDifference >= 7) {
-                            firebaseMessaging.unsubscribeFromTopic(chatId)
-                            chatBoxCollection.document(chatId).delete()
+                            firebaseMessaging.unsubscribeFromTopic(chatId).addOnCompleteListener { task ->
+                                if(task.isSuccessful) {
+                                    Log.d("FCM", "Delete successfully")
+                                } else {
+                                    Log.d("FCM", "Error deleting chatbox")
+                                }
+                            }
+                            chatBoxCollection.document(chatId).delete().await()
                         }
                     }
                 }
