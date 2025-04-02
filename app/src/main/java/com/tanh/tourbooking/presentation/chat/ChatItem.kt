@@ -59,16 +59,26 @@ fun ChatItem(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.align(Alignment.CenterVertically)
         ) {
-            Text(
-                text = chatBox.name,
-                style = MaterialTheme.typography.bodySmall,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W600,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = chatBox.name,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W600,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = TimeFormatter.formatDate(chatBox.lastTime),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontSize = 12.sp
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = chatBox.message,
@@ -78,11 +88,7 @@ fun ChatItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Text(
-            text = TimeFormatter.formatDate(chatBox.lastTime),
-            style = MaterialTheme.typography.titleSmall,
-            fontSize = 12.sp
-        )
+
     }
 
 }

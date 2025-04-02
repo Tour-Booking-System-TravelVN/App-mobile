@@ -8,7 +8,8 @@ enum class Route {
     EXPLORE_SCREEN,
     PROFILE_SCREEN,
     TOURS_SCREEN,
-    DETAIL_SCREEN
+    DETAIL_SCREEN,
+    SPLASH_SCREEN
 }
 
 val navRoutes = listOf(

@@ -3,6 +3,7 @@ package com.tanh.tourbooking.presentation.navigation
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -31,6 +32,7 @@ import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
 import com.tanh.tourbooking.presentation.profile.ProfileScreen
+import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
 
@@ -56,6 +58,8 @@ fun Navigation(modifier: Modifier = Modifier) {
         showBottomBar = currentDestination in navRoutes
     }
 
+  
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHosState)
@@ -70,8 +74,11 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.HOME_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
+            startDestination = Route.SPLASH_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
         ) {
+            composable(route = Route.SPLASH_SCREEN.toString()) {
+                SplashScreen(navController = navController)
+            }
             composable(route = Route.CHATS_SCREEN.toString()) {
                 ChatScreen(
                     modifier = Modifier.padding(paddingValues),
@@ -102,10 +109,14 @@ fun Navigation(modifier: Modifier = Modifier) {
                 )
             }
             composable(route = Route.EXPLORE_SCREEN.toString()) {
-                ExploreScreen()
+                ExploreScreen(
+                    modifier = Modifier.padding(paddingValues)
+                )
             }
             composable(route = Route.PROFILE_SCREEN.toString()) {
-                ProfileScreen()
+                ProfileScreen(
+                    modifier = Modifier.padding(paddingValues)
+                )
             }
 
         }

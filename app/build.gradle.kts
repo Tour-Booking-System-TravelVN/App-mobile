@@ -128,6 +128,13 @@ dependencies {
     // Mockk
     testImplementation("io.mockk:mockk:1.13.16")
     androidTestImplementation("io.mockk:mockk-android:1.13.16")
+
+    //WindowSizedClass
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+
+    //extended icon
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
+
 }
 
 kapt {
