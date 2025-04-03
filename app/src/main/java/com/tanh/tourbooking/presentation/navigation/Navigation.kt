@@ -27,10 +27,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
+import com.tanh.tourbooking.presentation.detail_tour.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
+import com.tanh.tourbooking.presentation.my_tour.MyTourScreen
 import com.tanh.tourbooking.presentation.profile.ProfileScreen
 import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
 import com.tanh.tourbooking.util.Route
@@ -118,7 +120,18 @@ fun Navigation(modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(paddingValues)
                 )
             }
-
+            composable(route = Route.TOURS_SCREEN.toString()) {
+                MyTourScreen(
+                    modifier = Modifier.padding(paddingValues)
+                ) {
+                    navController.navigate(it)
+                }
+            }
+            composable(route = Route.DETAIL_SCREEN.toString()) {
+                DetailScreen(
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
         }
     }
 

@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -57,7 +58,7 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
     }
 
     var isFiltered by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
 
     Column(
@@ -66,10 +67,15 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
     ) {
 
         //image
-        HeaderSection(inputDestination)
+        HeaderSection()
 
         //modifiedSection
-        ModifiedSection(isFiltered = isFiltered)
+        ModifiedSection(
+            isFiltered = isFiltered,
+            inputDestination = inputDestination,
+            onValueChange = {
+
+            })
 
         //tourSection
         RecommendedTourSection()
@@ -109,9 +115,12 @@ fun RecommendedTourSection() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModifiedSection(
     isFiltered: Boolean,
+    inputDestination: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -120,10 +129,38 @@ fun ModifiedSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp)
-                    .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .padding(8.dp)
+                    .padding(top = 8.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                TextField(
+                    value = inputDestination,
+                    onValueChange = {
+                        onValueChange(it)
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Search your destination",
+                            color = Color.Black
+                        )
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        containerColor = Color.White
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    },
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .shadow(elevation = 10.dp, shape = MaterialTheme.shapes.extraLarge)
+                )
             }
         }
     }
@@ -132,12 +169,11 @@ fun ModifiedSection(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun HeaderSection(inputDestination: String) {
-    var inputDestination1 = inputDestination
+private fun HeaderSection() {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(2f)
+            .aspectRatio(2.2f)
     ) {
         val width = maxWidth
         val height = maxHeight
@@ -184,33 +220,7 @@ private fun HeaderSection(inputDestination: String) {
             )
         }
 
-        TextField(
-            value = inputDestination1,
-            onValueChange = {
-                inputDestination1 = it
-            },
-            placeholder = {
-                Text(
-                    text = "Search your destination",
-                    color = Color.LightGray
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                containerColor = Color.White
-            ),
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.FilterList,
-                    contentDescription = null,
-                    tint = Color.LightGray
-                )
-            },
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.extraLarge)
-                .align(Alignment.BottomCenter)
-        )
+
     }
 }
 

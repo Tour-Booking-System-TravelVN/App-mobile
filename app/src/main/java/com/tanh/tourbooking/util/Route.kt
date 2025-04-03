@@ -9,7 +9,7 @@ enum class Route {
     PROFILE_SCREEN,
     TOURS_SCREEN,
     DETAIL_SCREEN,
-    SPLASH_SCREEN
+    SPLASH_SCREEN,
 }
 
 val navRoutes = listOf(
@@ -17,5 +17,5 @@ val navRoutes = listOf(
     Route.CHATS_SCREEN.toString(),
     Route.PROFILE_SCREEN.toString(),
     Route.EXPLORE_SCREEN.toString(),
-    Route.TOURS_SCREEN.toString()
+    Route.TOURS_SCREEN.toString(),
 )

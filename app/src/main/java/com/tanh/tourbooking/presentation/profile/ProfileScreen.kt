@@ -44,7 +44,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
     ) {
         AsyncImage(
             model = "https://i.ibb.co/ch8p9Pd1/image.png",
