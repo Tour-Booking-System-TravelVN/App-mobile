@@ -93,6 +93,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
+
     //nav compose
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.navigation:navigation-compose:2.8.3")
@@ -115,6 +116,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
     //mockwebserver
     testImplementation ("com.squareup.okhttp3:mockwebserver:4.9.3")
 
@@ -135,6 +137,8 @@ dependencies {
     //extended icon
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
 
+    //date picker
+    implementation("androidx.compose.material3:material3:1.4.0-alpha10")
 }
 
 kapt {

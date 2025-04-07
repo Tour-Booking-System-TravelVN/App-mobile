@@ -179,11 +179,9 @@ fun MessageScreen(
                 modifier = Modifier.weight(1f),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(24.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant
                 ), trailingIcon = {
                     IconButton(
                         onClick = {

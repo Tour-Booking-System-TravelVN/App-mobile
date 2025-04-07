@@ -49,7 +49,6 @@ import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreScreen(modifier: Modifier = Modifier) {
 
@@ -145,10 +144,9 @@ fun ModifiedSection(
                             color = Color.Black
                         )
                     },
-                    colors = TextFieldDefaults.textFieldColors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        containerColor = Color.White
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.White,
+                        unfocusedIndicatorColor = Color.White
                     ),
                     trailingIcon = {
                         Icon(

@@ -10,7 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.tanh.tourbooking.domain.repository.firestore.UserTokenRepository
 import com.tanh.tourbooking.presentation.navigation.Navigation
 import com.tanh.tourbooking.ui.theme.TourBookingTheme

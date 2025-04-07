@@ -71,7 +71,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             ) {
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                 Text(
-                    text = "Tuấn Anh",
+                    text = "Thắng Ngọt",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold
                 )

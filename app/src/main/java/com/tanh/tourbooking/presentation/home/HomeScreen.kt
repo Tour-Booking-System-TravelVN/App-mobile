@@ -60,20 +60,32 @@ import com.tanh.tourbooking.ui.theme.ScreenOrientation
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
+import com.tanh.tourbooking.util.Route
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    if(ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-        PortraitHomeScreen(modifier)
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onNav: (String) -> Unit
+) {
+
+    if (ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
+        PortraitHomeScreen(modifier, onNav = {
+            onNav(it)
+        })
     } else {
-        PortraitHomeScreen(modifier = Modifier.verticalScroll(rememberScrollState()))
+        PortraitHomeScreen(modifier = Modifier.verticalScroll(rememberScrollState()), onNav = {
+            onNav(it)
+        })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PortraitHomeScreen(modifier: Modifier = Modifier) {
-    val customerName = "Tuan Anh"
+fun PortraitHomeScreen(
+    modifier: Modifier = Modifier,
+    onNav: (String) -> Unit
+) {
+    val customerName = "Hey guys"
     var inputText by remember { mutableStateOf("") }
     var isSeeAll by remember { mutableStateOf(false) }
 
@@ -134,10 +146,9 @@ fun PortraitHomeScreen(modifier: Modifier = Modifier) {
             placeholder = { Text("Discover a city", color = Color.LightGray) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                unfocusedIndicatorColor = Color.Transparent,
+            colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                containerColor = Color.White
+                unfocusedIndicatorColor = Color.Transparent
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -180,7 +191,10 @@ fun PortraitHomeScreen(modifier: Modifier = Modifier) {
                 items(FakeData.fakePlaces) { place ->
                     PlaceItem(
                         place = place,
-                        modifier = Modifier.width(cardWidth)
+                        modifier = Modifier
+                            .clickable {
+                                onNav(Route.TOUR_LIST_SCREEN.toString())
+                            }
                     )
                 }
             }
@@ -254,6 +268,8 @@ fun PortraitHomeScreen(modifier: Modifier = Modifier) {
 @Composable
 fun PreviewHomeScreen(modifier: Modifier = Modifier) {
     TourBookingTheme {
-        HomeScreen()
+        HomeScreen(
+            onNav = {}
+        )
     }
 }

@@ -30,11 +30,15 @@ import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.detail_tour.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
+import com.tanh.tourbooking.presentation.login.LoginScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
 import com.tanh.tourbooking.presentation.my_tour.MyTourScreen
 import com.tanh.tourbooking.presentation.profile.ProfileScreen
+import com.tanh.tourbooking.presentation.register.RegisterScreen
 import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
+import com.tanh.tourbooking.presentation.start.StartScreen
+import com.tanh.tourbooking.presentation.tour_list.TourListScreen
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
 
@@ -60,8 +64,6 @@ fun Navigation(modifier: Modifier = Modifier) {
         showBottomBar = currentDestination in navRoutes
     }
 
-  
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHosState)
@@ -76,7 +78,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.SPLASH_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
+            startDestination = Route.REGISTER_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
         ) {
             composable(route = Route.SPLASH_SCREEN.toString()) {
                 SplashScreen(navController = navController)
@@ -108,7 +110,9 @@ fun Navigation(modifier: Modifier = Modifier) {
             composable(route = Route.HOME_SCREEN.toString()) {
                 HomeScreen(
                     modifier = Modifier.padding(paddingValues)
-                )
+                ) {
+                    navController.navigate(it)
+                }
             }
             composable(route = Route.EXPLORE_SCREEN.toString()) {
                 ExploreScreen(
@@ -131,6 +135,20 @@ fun Navigation(modifier: Modifier = Modifier) {
                 DetailScreen(
                     modifier = Modifier.padding(paddingValues)
                 )
+            }
+            composable(route = Route.TOUR_LIST_SCREEN.toString()) {
+                TourListScreen() {
+                    navController.navigate(it)
+                }
+            }
+            composable(route = Route.START_SCREEN.toString()) {
+                StartScreen()
+            }
+            composable(route = Route.LOGIN_SCREEN.toString()) {
+                LoginScreen()
+            }
+            composable(route = Route.REGISTER_SCREEN.toString()) {
+                RegisterScreen()
             }
         }
     }

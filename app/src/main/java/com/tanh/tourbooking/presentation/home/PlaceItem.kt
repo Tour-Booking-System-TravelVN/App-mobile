@@ -41,7 +41,8 @@ fun PlaceItem(
 ) {
 
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+        modifier = modifier
     ) {
         Box {
 

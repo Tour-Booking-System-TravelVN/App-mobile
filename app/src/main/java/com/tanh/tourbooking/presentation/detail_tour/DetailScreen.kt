@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.detail_tour
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +33,8 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -39,10 +42,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +67,7 @@ import coil.compose.AsyncImage
 import com.tanh.tourbooking.data.model.dto.tour.TourProgram
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
+import com.tanh.tourbooking.util.Tools
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -299,6 +307,7 @@ fun DetailScreen(
 
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun BottomSheet(
@@ -306,6 +315,14 @@ private fun BottomSheet(
     onSheetStateChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    var openDialog1 by remember {
+        mutableStateOf(false)
+    }
+
+    var openDialog2 by remember {
+        mutableStateOf(false)
+    }
 
     var adultCount by remember {
         mutableStateOf(0)
@@ -315,6 +332,14 @@ private fun BottomSheet(
     }
     var babyCount by remember {
         mutableStateOf(0)
+    }
+
+    var dateResult by remember {
+        mutableStateOf("")
+    }
+
+    var dateResult2 by remember {
+        mutableStateOf("")
     }
 
     ModalBottomSheet(
@@ -328,6 +353,96 @@ private fun BottomSheet(
                 .wrapContentSize()
                 .padding(MaterialTheme.dimens.small2)
         ) {
+            //date picker
+            val datePickerState = rememberDatePickerState()
+            val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
+
+            if(openDialog1) {
+                DatePickerDialog(
+                    onDismissRequest = { openDialog1 = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                openDialog1 = false
+                                var date = "No selection"
+                                if(datePickerState.selectedDateMillis != null) {
+                                    date = Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
+                                }
+                                dateResult = date
+                            },
+                            enabled = confirmEnabled.value
+                        ) {
+                            Text("Okay")
+                        }
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState
+                    )
+                }
+            }
+
+            val datePicker2 = rememberDatePickerState()
+            val confirmedEnabled2 = derivedStateOf { datePicker2.selectedDateMillis != null }
+
+            if(openDialog2) {
+                DatePickerDialog(
+                    onDismissRequest = {
+                        openDialog2 = false
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                openDialog2 = false
+                                var date = "No selection"
+                                if(datePickerState.selectedDateMillis != null) {
+                                    date = Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
+                                }
+                                dateResult2 = date
+                            },
+                            enabled = confirmEnabled.value
+                        ) {
+                            Text("Okay")
+                        }
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Departure date: $dateResult",
+                    modifier = Modifier.clickable {
+                        openDialog1 = true
+                    }
+                )
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = Color.LightGray,
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            Row(
+                modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "End date: $dateResult2",
+                    modifier = Modifier.clickable {
+                        openDialog2 = true
+                    }
+                )
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = Color.LightGray,
+            )
+            //number
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             PeopleSelectorItem(
                 title = "Adult",
                 count = adultCount,
@@ -375,12 +490,15 @@ private fun BottomSheet(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
-                onClick = {},
+            OutlinedButton (
+                onClick = {
+                    dateResult = ""
+                    dateResult2 = ""
+                    adultCount = 0
+                    childCount = 0
+                    babyCount = 0
+                },
                 shape = MaterialTheme.shapes.small,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer
-                ),
                 contentPadding = PaddingValues(MaterialTheme.dimens.small2)
             ) {
                 Text(
