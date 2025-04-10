@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "205232645151",
+    "firebase_url": "https://noteapp-d7b38-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "noteapp-d7b38",
+    "storage_bucket": "noteapp-d7b38.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205232645151:android:50745721f3d4380473e12a",
+        "android_client_info": {
+          "package_name": "com.tanh.baseapp2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKaDjyQUDkDbac5q-Ij7G0FGcYLC8Wh-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205232645151:android:cb37939d449d33b773e12a",
+        "android_client_info": {
+          "package_name": "com.tanh.noteapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKaDjyQUDkDbac5q-Ij7G0FGcYLC8Wh-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205232645151:android:13e806329e36503173e12a",
+        "android_client_info": {
+          "package_name": "com.tanh.tourbooking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKaDjyQUDkDbac5q-Ij7G0FGcYLC8Wh-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
