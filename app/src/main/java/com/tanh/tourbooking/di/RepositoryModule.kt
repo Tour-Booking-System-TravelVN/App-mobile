@@ -1,10 +1,12 @@
 package com.tanh.tourbooking.di
 
+import com.tanh.tourbooking.data.repository.api.AuthRepositoryImpl
 import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
 import com.tanh.tourbooking.data.repository.firestore.ChatRepositoryImpl
 import com.tanh.tourbooking.data.repository.firestore.MessageRepositoryImpl
 import com.tanh.tourbooking.data.repository.firestore.NotificationHandlerImpl
 import com.tanh.tourbooking.data.repository.firestore.UserTokenRepositoryImpl
+import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
@@ -39,5 +41,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun provideNotificationHandler(impl: NotificationHandlerImpl): NotificationHandler
+
+    @Binds
+    @Singleton
+    abstract fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
 }

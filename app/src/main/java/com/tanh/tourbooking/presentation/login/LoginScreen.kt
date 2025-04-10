@@ -27,6 +27,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,14 +44,37 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.R
+import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.util.Route
 
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier
+    viewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
+    modifier: Modifier = Modifier,
+    showSnackBar: (String) -> Unit,
+    onNavigate: (String) -> Unit
 ) {
+
+    val state = viewModel.state.collectAsState(initial = LoginState()).value
+
+    LaunchedEffect(true) {
+        viewModel.channel.collect { event ->
+            when(event) {
+                is OneTimeEvent.Navigate -> {
+                    onNavigate(event.route)
+                }
+                OneTimeEvent.PopBackStack -> {}
+                is OneTimeEvent.ShowSnackbar -> {
+                    showSnackBar(event.message)
+                }
+                is OneTimeEvent.ShowToast -> Unit
+            }
+        }
+    }
 
     var inputName by remember {
         mutableStateOf("")
@@ -173,7 +198,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small3))
         Button(
             onClick = {
-
+                viewModel.onEvent(LoginEvent.Login(inputName, inputPassword))
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -221,7 +246,9 @@ fun LoginScreen(
                 style = MaterialTheme.typography.bodyMedium
             )
             TextButton(
-                onClick = {}
+                onClick = {
+                    viewModel.onEvent(LoginEvent.NavToRegister(Route.REGISTER_SCREEN.toString()))
+                }
             ) {
                 Text(
                     text = "Register now",
@@ -240,6 +267,6 @@ fun PreviewLoginScreen(
     modifier: Modifier = Modifier
 ) {
     TourBookingTheme {
-        LoginScreen()
+//        LoginScreen()
     }
 }

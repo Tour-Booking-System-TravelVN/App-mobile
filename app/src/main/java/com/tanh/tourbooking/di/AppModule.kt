@@ -3,10 +3,13 @@ package com.tanh.tourbooking.di
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
+import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
 import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
+import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
+import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.chatbox.CreateMessage
@@ -23,6 +26,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    //registerusecase
+    @Provides
+    @Singleton
+    fun provideRegisterUseCase(repository: AuthRepository) = RegisterUseCase(repository)
+
+    //loginusecase
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(repository: AuthRepository) = LoginUseCase(repository)
 
     @Provides
     @Singleton

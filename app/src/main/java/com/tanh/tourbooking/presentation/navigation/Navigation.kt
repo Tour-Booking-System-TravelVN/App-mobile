@@ -41,6 +41,7 @@ import com.tanh.tourbooking.presentation.start.StartScreen
 import com.tanh.tourbooking.presentation.tour_list.TourListScreen
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -78,7 +79,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.REGISTER_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
+            startDestination = Route.START_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
         ) {
             composable(route = Route.SPLASH_SCREEN.toString()) {
                 SplashScreen(navController = navController)
@@ -142,13 +143,39 @@ fun Navigation(modifier: Modifier = Modifier) {
                 }
             }
             composable(route = Route.START_SCREEN.toString()) {
-                StartScreen()
+                StartScreen() {
+                    navController.navigate(it)
+                }
             }
             composable(route = Route.LOGIN_SCREEN.toString()) {
-                LoginScreen()
+                LoginScreen(
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                ) {
+                    navController.navigate(it)
+                }
             }
             composable(route = Route.REGISTER_SCREEN.toString()) {
-                RegisterScreen()
+                RegisterScreen(
+                    showSnackbar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                ) {
+                    navController.navigate(it)
+                }
             }
         }
     }

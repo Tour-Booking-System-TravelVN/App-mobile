@@ -22,10 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tanh.tourbooking.R
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.util.Route
 
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit
 ) {
 
     BoxWithConstraints(
@@ -47,7 +49,9 @@ fun StartScreen(
             modifier = Modifier.padding(bottom = 24.dp).align(Alignment.BottomCenter)
         ) {
             Button(
-                onClick = {},
+                onClick = {
+                    onNavigate(Route.LOGIN_SCREEN.toString())
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(60.dp)
