@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -94,9 +93,9 @@ fun MyTourScreen(
 
         val filteredTours = remember(currentStatus) {
             if (currentStatus.isNotBlank()) {
-                FakeData.fakeMyTour.filter { it.status.toString() == currentStatus }
+                FakeData.fakeMyFakeTour.filter { it.status.toString() == currentStatus }
             } else {
-                FakeData.fakeMyTour
+                FakeData.fakeMyFakeTour
             }
         }
 

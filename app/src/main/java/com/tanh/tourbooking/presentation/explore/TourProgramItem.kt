@@ -22,14 +22,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.tour.TourProgram
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
 
 @Composable
 fun TourProgramItem(
-    tourProgram: TourProgram,
+    fakeTourProgram: FakeTourProgram,
     modifier: Modifier = Modifier
 ) {
 
@@ -39,7 +39,7 @@ fun TourProgramItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = tourProgram.image.first(),
+                model = fakeTourProgram.image.first(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -53,7 +53,7 @@ fun TourProgramItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = tourProgram.name,
+                        text = fakeTourProgram.name,
                         maxLines = 2,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
@@ -66,13 +66,13 @@ fun TourProgramItem(
                         tint = Color.Yellow
                     )
                     Text(
-                        text = tourProgram.rated.toString(),
+                        text = fakeTourProgram.rated.toString(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Text(
-                    text = tourProgram.description,
+                    text = fakeTourProgram.description,
                     maxLines = 2,
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis
@@ -88,7 +88,7 @@ fun TourProgramItem(
 fun PreviewTourProgram() {
     TourBookingTheme {
         TourProgramItem(
-            tourProgram = FakeData.fakeTourPrograms[1]
+            fakeTourProgram = FakeData.fakeFakeFakeTourPrograms[1]
         )
     }
 }

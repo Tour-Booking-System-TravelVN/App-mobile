@@ -1,4 +1,4 @@
-package com.tanh.tourbooking.data.model.dto
+package com.tanh.tourbooking.data.model.dto.tour
 
 import com.google.firebase.Timestamp
 

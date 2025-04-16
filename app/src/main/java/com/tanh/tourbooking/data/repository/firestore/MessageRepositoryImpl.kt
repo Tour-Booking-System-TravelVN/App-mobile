@@ -3,7 +3,7 @@ package com.tanh.tourbooking.data.repository.firestore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import com.tanh.tourbooking.data.model.dto.MessageDto
+import com.tanh.tourbooking.data.model.dto.tour.MessageDto
 import com.tanh.tourbooking.data.model.util.exception.Resources
 import com.tanh.tourbooking.di.IODispatcher
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository

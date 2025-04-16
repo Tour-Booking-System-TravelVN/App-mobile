@@ -1,6 +1,6 @@
-package com.tanh.tourbooking.data.model.dto.tour
+package com.tanh.tourbooking.data.model.dto.faketour
 
-data class TourGuide(
+data class FakeTourGuide(
     val name: String,
     val id: Int,
     val email: String,

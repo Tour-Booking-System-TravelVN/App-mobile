@@ -3,8 +3,8 @@ package com.tanh.tourbooking.data.model.mappers
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.firebase.Timestamp
-import com.tanh.tourbooking.data.model.dto.ChatBoxDto
-import com.tanh.tourbooking.data.model.dto.MessageDto
+import com.tanh.tourbooking.data.model.dto.tour.ChatBoxDto
+import com.tanh.tourbooking.data.model.dto.tour.MessageDto
 import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.domain.model.Message
 import java.time.ZoneId
@@ -14,7 +14,7 @@ import java.time.ZoneOffset
 fun ChatBox.toChatBoxDto(): ChatBoxDto =
     ChatBoxDto(
         participants = participants,
-        lastTimestamp = com.google.firebase.Timestamp.now(),
+        lastTimestamp = Timestamp.now(),
         message = message,
         adminId = adminId,
         chatId = chatId,

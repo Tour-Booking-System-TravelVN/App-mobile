@@ -1,18 +1,18 @@
 package com.tanh.tourbooking.util
 
-import com.tanh.tourbooking.data.model.dto.tour.BookedTour
-import com.tanh.tourbooking.data.model.dto.tour.Category
-import com.tanh.tourbooking.data.model.dto.tour.Place
-import com.tanh.tourbooking.data.model.dto.tour.Tour
-import com.tanh.tourbooking.data.model.dto.tour.TourGuide
-import com.tanh.tourbooking.data.model.dto.tour.TourProgram
+import com.tanh.tourbooking.data.model.dto.faketour.FakeBookedTour
+import com.tanh.tourbooking.data.model.dto.faketour.FakeCategory
+import com.tanh.tourbooking.data.model.dto.faketour.FakePlace
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTour
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTourGuide
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
 
 object FakeData {
 
 
-    val fakeMyTour = listOf(
-        BookedTour(
-            name = "Amazing Vietnam Tour",
+    val fakeMyFakeTour = listOf(
+        FakeBookedTour(
+            name = "Amazing Vietnam FakeTour",
             description = "Explore the beauty of Vietnam from North to South.",
             rated = 5,
             totalRate = 120,
@@ -25,14 +25,14 @@ object FakeData {
             duration = "7 days 6 nights",
             startDestination = "Hanoi",
             schedules = listOf(
-                Tour(
-                    name = "Hanoi City Tour",
+                FakeTour(
+                    name = "Hanoi City FakeTour",
                     description = "Visit Hoan Kiem Lake, Old Quarter, and more.",
                     rated = 4,
                     totalRate = 50,
                     price = 49.99
                 ),
-                Tour(
+                FakeTour(
                     name = "Halong Bay Cruise",
                     description = "Enjoy a scenic cruise in one of the world's wonders.",
                     rated = 5,
@@ -41,7 +41,7 @@ object FakeData {
                 )
             ),
             maxParticipant = 25,
-            tourGuide = TourGuide(
+            fakeTourGuide = FakeTourGuide(
                 name = "Nguyen Van A",
                 id = 101,
                 email = "nguyenvana@example.com",
@@ -49,7 +49,7 @@ object FakeData {
             ),
             status = TourStatus.UPCOMING
         ),
-        BookedTour(
+        FakeBookedTour(
             name = "Grand Thailand Adventure",
             description = "Experience the vibrant culture and beautiful beaches of Thailand.",
             rated = 4,
@@ -63,14 +63,14 @@ object FakeData {
             duration = "10 days 9 nights",
             startDestination = "Bangkok",
             schedules = listOf(
-                Tour(
-                    name = "Bangkok Temple Tour",
+                FakeTour(
+                    name = "Bangkok Temple FakeTour",
                     description = "Discover the magnificent temples of Bangkok.",
                     rated = 4,
                     totalRate = 90,
                     price = 59.99
                 ),
-                Tour(
+                FakeTour(
                     name = "Phuket Beach Escape",
                     description = "Relax on the stunning beaches of Phuket.",
                     rated = 5,
@@ -79,7 +79,7 @@ object FakeData {
                 )
             ),
             maxParticipant = 30,
-            tourGuide = TourGuide(
+            fakeTourGuide = FakeTourGuide(
                 name = "Somchai Thanasuk",
                 id = 202,
                 email = "somchai@example.com",
@@ -87,7 +87,7 @@ object FakeData {
             ),
             status = TourStatus.ONGOING
         ),
-        BookedTour(
+        FakeBookedTour(
             name = "Grand Thailand Adventure",
             description = "Experience the vibrant culture and beautiful beaches of Thailand.",
             rated = 4,
@@ -101,14 +101,14 @@ object FakeData {
             duration = "10 days 9 nights",
             startDestination = "Bangkok",
             schedules = listOf(
-                Tour(
-                    name = "Bangkok Temple Tour",
+                FakeTour(
+                    name = "Bangkok Temple FakeTour",
                     description = "Discover the magnificent temples of Bangkok.",
                     rated = 4,
                     totalRate = 90,
                     price = 59.99
                 ),
-                Tour(
+                FakeTour(
                     name = "Phuket Beach Escape",
                     description = "Relax on the stunning beaches of Phuket.",
                     rated = 5,
@@ -117,7 +117,7 @@ object FakeData {
                 )
             ),
             maxParticipant = 30,
-            tourGuide = TourGuide(
+            fakeTourGuide = FakeTourGuide(
                 name = "Somchai Thanasuk",
                 id = 202,
                 email = "somchai@example.com",
@@ -128,61 +128,61 @@ object FakeData {
     )
 
     val fakeCategories = listOf(
-        Category(
+        FakeCategory(
             name = "Adventure",
             image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Historical",
             image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Luxury",
             image = "https://i.ibb.co/HpryKNLf/justin.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Family",
             image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Business",
             image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Relax",
             image = "https://i.ibb.co/ch8p9Pd1/image.png"
         ),
-        Category(
+        FakeCategory(
             name = "Adventure",
             image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
         ),
-        Category(
+        FakeCategory(
             name = "Historical",
             image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
         )
     )
 
-    val fakePlaces = listOf(
-        Place(
+    val fakeFakePlaces = listOf(
+        FakePlace(
             name = "Hanoi",
             country = "Vietnam",
             imageUrl = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
         ),
-        Place(
+        FakePlace(
             name = "Phuket",
             country = "Thailand",
             imageUrl = "https://i.ibb.co/HpryKNLf/justin.jpg"
         ),
-        Place(
+        FakePlace(
             name = "Phuket",
             country = "Thailand",
             imageUrl = "https://i.ibb.co/ch8p9Pd1/image.png"
         )
     )
 
-    val fakeTourPrograms = listOf(
-        TourProgram(
-            name = "Amazing Vietnam Tour",
+    val fakeFakeFakeTourPrograms = listOf(
+        FakeTourProgram(
+            name = "Amazing Vietnam FakeTour",
             description = "Explore the beauty of Vietnam from North to South.",
             rated = 5,
             totalRate = 120,
@@ -195,14 +195,14 @@ object FakeData {
             duration = "7 days 6 nights",
             startDestination = "Hanoi",
             schedules = listOf(
-                Tour(
-                    name = "Hanoi City Tour",
+                FakeTour(
+                    name = "Hanoi City FakeTour",
                     description = "Visit Hoan Kiem Lake, Old Quarter, and more.",
                     rated = 4,
                     totalRate = 50,
                     price = 49.99
                 ),
-                Tour(
+                FakeTour(
                     name = "Halong Bay Cruise",
                     description = "Enjoy a scenic cruise in one of the world's wonders.",
                     rated = 5,
@@ -211,14 +211,14 @@ object FakeData {
                 )
             ),
             maxParticipant = 25,
-            tourGuide = TourGuide(
+            fakeTourGuide = FakeTourGuide(
                 name = "Nguyen Van A",
                 id = 101,
                 email = "nguyenvana@example.com",
                 phone = 84901234567
             )
         ),
-        TourProgram(
+        FakeTourProgram(
             name = "Grand Thailand Adventure",
             description = "Experience the vibrant culture and beautiful beaches of Thailand.",
             rated = 4,
@@ -232,14 +232,14 @@ object FakeData {
             duration = "10 days 9 nights",
             startDestination = "Bangkok",
             schedules = listOf(
-                Tour(
-                    name = "Bangkok Temple Tour",
+                FakeTour(
+                    name = "Bangkok Temple FakeTour",
                     description = "Discover the magnificent temples of Bangkok.",
                     rated = 4,
                     totalRate = 90,
                     price = 59.99
                 ),
-                Tour(
+                FakeTour(
                     name = "Phuket Beach Escape",
                     description = "Relax on the stunning beaches of Phuket.",
                     rated = 5,
@@ -248,7 +248,7 @@ object FakeData {
                 )
             ),
             maxParticipant = 30,
-            tourGuide = TourGuide(
+            fakeTourGuide = FakeTourGuide(
                 name = "Somchai Thanasuk",
                 id = 202,
                 email = "somchai@example.com",

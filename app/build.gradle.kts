@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tanh.tourbooking"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -139,6 +139,12 @@ dependencies {
 
     //date picker
     implementation("androidx.compose.material3:material3:1.4.0-alpha10")
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
+
+    //kotlin serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }
 
 kapt {

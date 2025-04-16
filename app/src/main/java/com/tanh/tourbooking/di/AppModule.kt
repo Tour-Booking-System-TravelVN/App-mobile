@@ -1,14 +1,21 @@
 package com.tanh.tourbooking.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.tanh.tourbooking.data.model.dto.auth.AuthResult
 import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
+import com.tanh.tourbooking.dataStore
+import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
 import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
+import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
+import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
@@ -20,12 +27,28 @@ import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideEncryptAuthResultUseCase(repository: AuthSecurityRepository) = EncryptAuthResultUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideReadAuthResultUseCase(repository: AuthSecurityRepository) = ReadAuthResultUseCase(repository)
+
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<AuthResult> {
+        return context.dataStore
+    }
 
     //registerusecase
     @Provides

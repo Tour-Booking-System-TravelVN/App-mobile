@@ -1,8 +1,8 @@
-package com.tanh.tourbooking.data.model.dto.tour
+package com.tanh.tourbooking.data.model.dto.faketour
 
 import com.tanh.tourbooking.util.TourStatus
 
-data class BookedTour(
+data class FakeBookedTour(
     val name: String,
     val description: String,
     val rated: Int,
@@ -12,8 +12,8 @@ data class BookedTour(
     val vehicle: String,
     val duration: String,
     val startDestination: String,
-    val schedules: List<Tour>,
+    val schedules: List<FakeTour>,
     val maxParticipant: Int,
-    val tourGuide: TourGuide,
+    val fakeTourGuide: FakeTourGuide,
     val status: TourStatus
 )

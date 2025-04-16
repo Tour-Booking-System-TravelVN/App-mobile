@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
+import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
+import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val encryptData: EncryptAuthResultUseCase,
+    private val decryptData: ReadAuthResultUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -47,6 +51,10 @@ class LoginViewModel @Inject constructor(
                             isLoginSuccess = true
                         )
                     }
+                    encryptData(it.result)
+                    Log.d("CRYPTO", "Encrypted successfully")
+                    val data = decryptData()
+                    Log.d("CRYPTO", data.toString())
                 }
                 onError {
                     _state.update {

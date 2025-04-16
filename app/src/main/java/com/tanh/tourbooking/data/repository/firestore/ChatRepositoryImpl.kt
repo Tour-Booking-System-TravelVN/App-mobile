@@ -2,14 +2,12 @@ package com.tanh.tourbooking.data.repository.firestore
 
 import android.os.Build
 import android.util.Log
-import androidx.compose.animation.core.snap
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.messaging.FirebaseMessaging
-import com.tanh.tourbooking.data.model.dto.ChatBoxDto
-import com.tanh.tourbooking.data.model.mappers.TimeFormatter
+import com.tanh.tourbooking.data.model.dto.tour.ChatBoxDto
 import com.tanh.tourbooking.data.model.util.exception.Resources
 import com.tanh.tourbooking.di.IODispatcher
 import com.tanh.tourbooking.domain.model.ChatBox

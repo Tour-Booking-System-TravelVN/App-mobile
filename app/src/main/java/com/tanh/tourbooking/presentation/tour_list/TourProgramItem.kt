@@ -22,15 +22,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.tour.TourProgram
-import com.tanh.tourbooking.presentation.explore.TourProgramItem
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
 
 @Composable
 fun TourProgramItem2(
-    tour: TourProgram,
+    tour: FakeTourProgram,
     modifier: Modifier = Modifier
 ) {
 
@@ -95,7 +94,7 @@ fun TourProgramItem2(
 fun PreviewTourProgramItem2(modifier: Modifier = Modifier) {
     TourBookingTheme {
         TourProgramItem2(
-            tour = FakeData.fakeTourPrograms[0]
+            tour = FakeData.fakeFakeFakeTourPrograms[0]
         )
     }
 }

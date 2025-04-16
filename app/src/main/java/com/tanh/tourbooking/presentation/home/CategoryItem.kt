@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,12 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.tour.Category
+import com.tanh.tourbooking.data.model.dto.faketour.FakeCategory
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 
 @Composable
 fun CategoryItem(
-    category: Category,
+    fakeCategory: FakeCategory,
     modifier: Modifier = Modifier
 ) {
 
@@ -42,7 +41,7 @@ fun CategoryItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = category.image,
+                model = fakeCategory.image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -52,7 +51,7 @@ fun CategoryItem(
             )
 
             Text(
-                text = category.name,
+                text = fakeCategory.name,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
 //            modifier = Modifier.align(Alignment.BottomCenter)
@@ -67,7 +66,7 @@ fun CategoryItem(
 fun PreviewCategoryItem(modifier: Modifier = Modifier) {
     TourBookingTheme {
         CategoryItem(
-            category = Category(
+            fakeCategory = FakeCategory(
                 name = "Adventure",
                 image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
             )

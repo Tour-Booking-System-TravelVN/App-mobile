@@ -31,12 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.tour.Place
+import com.tanh.tourbooking.data.model.dto.faketour.FakePlace
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 
 @Composable
 fun PlaceItem(
-    place: Place,
+    fakePlace: FakePlace,
     modifier: Modifier = Modifier
 ) {
 
@@ -47,7 +47,7 @@ fun PlaceItem(
         Box {
 
             AsyncImage(
-                model = place.imageUrl,
+                model = fakePlace.imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -74,7 +74,7 @@ fun PlaceItem(
                     modifier = Modifier.wrapContentHeight().padding(start = 8.dp)
                 ) {
                     Text(
-                        text = place.name,
+                        text = fakePlace.name,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -85,7 +85,7 @@ fun PlaceItem(
                         modifier = Modifier.padding(0.dp).padding(horizontal = 6.dp)
                     ) {
                         Text(
-                            text = place.country,
+                            text = fakePlace.country,
                             fontSize = 12.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -118,7 +118,7 @@ fun PlaceItem(
 fun PreviewPlaceItem(modifier: Modifier = Modifier) {
     TourBookingTheme {
         PlaceItem(
-            place = Place(
+            fakePlace = FakePlace(
                 name = "Hanoi",
                 country = "Vietnam",
                 imageUrl = ""

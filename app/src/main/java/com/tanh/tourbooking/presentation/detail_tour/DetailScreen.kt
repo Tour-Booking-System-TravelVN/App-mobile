@@ -59,12 +59,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.tour.TourProgram
+import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.FakeData
 import com.tanh.tourbooking.util.Tools
@@ -75,7 +74,7 @@ fun DetailScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val tourProgram = FakeData.fakeTourPrograms[0]
+    val tourProgram = FakeData.fakeFakeFakeTourPrograms[0]
 
     val bottomSheetState = rememberModalBottomSheetState()
     var isSheetOpen by remember {
@@ -256,7 +255,7 @@ fun DetailScreen(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             Text(
-                text = "Tour guide",
+                text = "FakeTour guide",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.Black
             )
@@ -265,13 +264,13 @@ fun DetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = tourProgram.tourGuide.name,
+                    text = tourProgram.fakeTourGuide.name,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = tourProgram.tourGuide.phone.toString(),
+                    text = tourProgram.fakeTourGuide.phone.toString(),
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black
                 )
@@ -590,7 +589,7 @@ fun PeopleSelectorItem(
 }
 
 @Composable
-private fun IndicatorSection(tourProgram: TourProgram) {
+private fun IndicatorSection(fakeTourProgram: FakeTourProgram) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -601,12 +600,12 @@ private fun IndicatorSection(tourProgram: TourProgram) {
         ) {
             IndicatorItem(
                 icon = Icons.Default.AirplanemodeActive,
-                title = tourProgram.vehicle
+                title = fakeTourProgram.vehicle
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             IndicatorItem(
                 icon = Icons.Default.Place,
-                title = tourProgram.startDestination
+                title = fakeTourProgram.startDestination
             )
         }
 
@@ -616,12 +615,12 @@ private fun IndicatorSection(tourProgram: TourProgram) {
         ) {
             IndicatorItem(
                 icon = Icons.Default.AccessTime,
-                title = tourProgram.duration
+                title = fakeTourProgram.duration
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             IndicatorItem(
                 icon = Icons.Default.People,
-                title = tourProgram.maxParticipant.toString()
+                title = fakeTourProgram.maxParticipant.toString()
             )
         }
     }

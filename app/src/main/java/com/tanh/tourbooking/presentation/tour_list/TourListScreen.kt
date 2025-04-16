@@ -46,7 +46,7 @@ fun TourListScreen(
             contentPadding = PaddingValues(MaterialTheme.dimens.small2),
             modifier = Modifier.weight(1f)
         ) {
-            items(FakeData.fakeTourPrograms) { tour ->
+            items(FakeData.fakeFakeFakeTourPrograms) { tour ->
                 TourProgramItem2(
                     tour = tour,
                     modifier = Modifier.padding(bottom = MaterialTheme.dimens.small1).clickable {
