@@ -3,7 +3,6 @@ package com.tanh.tourbooking.presentation.navigation
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -13,18 +12,18 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.detail_tour.DetailScreen
@@ -43,7 +42,6 @@ import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -79,7 +77,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.START_SCREEN.toString()   //Route.CHATS_SCREEN.toString()
+            startDestination = Route.HOME_SCREEN.toString()
         ) {
             composable(route = Route.SPLASH_SCREEN.toString()) {
                 SplashScreen(navController = navController)
@@ -122,10 +120,21 @@ fun Navigation(modifier: Modifier = Modifier) {
             }
             composable(route = Route.PROFILE_SCREEN.toString()) {
                 ProfileScreen(
-                    modifier = Modifier.padding(paddingValues)
-                )
+                    modifier = Modifier.padding(paddingValues),
+                    onNavigate = {
+                        navController.navigate(it)
+                    }
+                ) {
+                    coroutineScope.launch {
+                        snackBarHosState.showSnackbar(
+                            message = it,
+                            withDismissAction = true,
+                            duration = SnackbarDuration.Long
+                        )
+                    }
+                }
             }
-            composable(route = Route.TOURS_SCREEN.toString()) {
+            composable(route = Route.MY_TOURS_SCREEN.toString()) {
                 MyTourScreen(
                     modifier = Modifier.padding(paddingValues)
                 ) {
@@ -137,8 +146,25 @@ fun Navigation(modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(paddingValues)
                 )
             }
-            composable(route = Route.TOUR_LIST_SCREEN.toString()) {
-                TourListScreen() {
+            composable(
+                route = Route.TOUR_LIST_SCREEN.toString() + "/{place}",
+                arguments = listOf(
+                    navArgument(name = "place") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                TourListScreen(
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                ) {
                     navController.navigate(it)
                 }
             }

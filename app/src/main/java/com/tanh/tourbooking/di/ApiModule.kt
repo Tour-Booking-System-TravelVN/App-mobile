@@ -1,6 +1,6 @@
 package com.tanh.tourbooking.di
 
-import com.tanh.tourbooking.data.networking.api.AuthApi
+import com.tanh.tourbooking.data.networking.api.TourBookingApi
 import com.tanh.tourbooking.data.networking.api.FCMApi
 import dagger.Module
 import dagger.Provides
@@ -53,8 +53,8 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideAuthApi(@Named("Auth") retrofit: Retrofit): AuthApi =
-        retrofit.create(AuthApi::class.java)
+    fun provideAuthApi(@Named("Auth") retrofit: Retrofit): TourBookingApi =
+        retrofit.create(TourBookingApi::class.java)
 
     @Singleton
     @Provides

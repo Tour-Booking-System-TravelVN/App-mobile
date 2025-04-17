@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,11 +40,37 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.util.Role
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>(),
+    onNavigate: (String) -> Unit,
+    showSnackBar: (String) -> Unit
+) {
+
+    val state = viewModel.state.collectAsState(initial = ProfileUiState()).value
+
+    val isCustomer by derivedStateOf {
+        state.role == Role.CUSTOMER
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.channel.collect { event ->
+            when (event) {
+                is OneTimeEvent.Navigate -> onNavigate(event.route)
+                OneTimeEvent.PopBackStack -> Unit
+                is OneTimeEvent.ShowSnackbar -> showSnackBar(event.message)
+                is OneTimeEvent.ShowToast -> Unit
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -71,7 +102,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             ) {
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                 Text(
-                    text = "Thắng Ngọt",
+                    text = if (isCustomer) state.customer?.firstname + " " + state.customer?.lastname else
+                        state.tourGuide?.firstname + " " + state.tourGuide?.lastname,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold
                 )

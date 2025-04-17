@@ -48,7 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tanh.tourbooking.data.model.mappers.TimeFormatter
+import com.tanh.tourbooking.data.mappers.TimeFormatter
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import java.time.ZoneId

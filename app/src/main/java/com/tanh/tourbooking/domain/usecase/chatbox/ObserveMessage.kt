@@ -2,7 +2,7 @@ package com.tanh.tourbooking.domain.usecase.chatbox
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.tanh.tourbooking.data.model.mappers.toMessage
+import com.tanh.tourbooking.data.mappers.toMessage
 import com.tanh.tourbooking.data.model.util.exception.Resources
 import com.tanh.tourbooking.domain.model.Message
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository

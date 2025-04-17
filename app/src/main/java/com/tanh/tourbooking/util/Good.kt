@@ -31,7 +31,7 @@ object Good {
         ),
         NavigationBarItemData(
             title = "Tours",
-            route = Route.TOURS_SCREEN.toString(),
+            route = Route.MY_TOURS_SCREEN.toString(),
             selectedIcon = Icons.Filled.Place,
             unselectedIcon = Icons.Outlined.Place,
         ),

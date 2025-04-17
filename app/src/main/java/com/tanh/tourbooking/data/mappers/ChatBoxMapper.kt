@@ -1,4 +1,4 @@
-package com.tanh.tourbooking.data.model.mappers
+package com.tanh.tourbooking.data.mappers
 
 import android.os.Build
 import androidx.annotation.RequiresApi

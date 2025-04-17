@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tanh.tourbooking.R
-import com.tanh.tourbooking.data.model.mappers.TimeFormatter
+import com.tanh.tourbooking.data.mappers.TimeFormatter
 import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import java.time.LocalDateTime

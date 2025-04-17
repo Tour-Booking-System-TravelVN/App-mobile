@@ -5,15 +5,18 @@ import androidx.datastore.core.DataStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
-import com.tanh.tourbooking.data.repository.api.UserRepositoryImpl
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
+import com.tanh.tourbooking.domain.repository.api.TourUnitRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
 import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
+import com.tanh.tourbooking.domain.usecase.auth.CheckRoleUseCase
 import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
+import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
+import com.tanh.tourbooking.domain.usecase.auth.GetToursByPlaceUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
@@ -37,11 +40,29 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideEncryptAuthResultUseCase(repository: AuthSecurityRepository) = EncryptAuthResultUseCase(repository)
+    fun provideGetToursByPlaceUseCase(repository: TourUnitRepository) = GetToursByPlaceUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideReadAuthResultUseCase(repository: AuthSecurityRepository) = ReadAuthResultUseCase(repository)
+    fun provideGetInformationUseCase(
+        repository: UserRepository,
+        authSecurityRepository: AuthSecurityRepository
+    ) =
+        GetInformationUseCase(repository, authSecurityRepository)
+
+    @Provides
+    @Singleton
+    fun provideCheckRoleUseCase(repository: AuthSecurityRepository) = CheckRoleUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideEncryptAuthResultUseCase(repository: AuthSecurityRepository) =
+        EncryptAuthResultUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideReadAuthResultUseCase(repository: AuthSecurityRepository) =
+        ReadAuthResultUseCase(repository)
 
 
     @Provides

@@ -92,18 +92,18 @@ fun PlaceItem(
                             color = Color.Black
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.alpha(0.5f)
-                        )
-                        Text(
-                            text = "4.5",
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+//                        Icon(
+//                            imageVector = Icons.Default.Star,
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.secondary,
+//                            modifier = Modifier.alpha(0.5f)
+//                        )
+//                        Text(
+//                            text = "4.5",
+//                            fontSize = 12.sp,
+//                            maxLines = 1,
+//                            overflow = TextOverflow.Ellipsis
+//                        )
                     }
                 }
             }

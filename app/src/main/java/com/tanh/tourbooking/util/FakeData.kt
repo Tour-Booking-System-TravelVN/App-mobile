@@ -162,23 +162,30 @@ object FakeData {
         )
     )
 
-    val fakeFakePlaces = listOf(
-        FakePlace(
-            name = "Hanoi",
-            country = "Vietnam",
-            imageUrl = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
-        ),
-        FakePlace(
-            name = "Phuket",
-            country = "Thailand",
-            imageUrl = "https://i.ibb.co/HpryKNLf/justin.jpg"
-        ),
-        FakePlace(
-            name = "Phuket",
-            country = "Thailand",
-            imageUrl = "https://i.ibb.co/ch8p9Pd1/image.png"
-        )
+    val fakePlacesVietNam = listOf(
+        FakePlace("Hà Nội", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Hồ Chí Minh", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Đà Nẵng", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Huế", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Hội An", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Lâm Đồng", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Đà Lạt
+        FakePlace("Khánh Hòa", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Nha Trang
+        FakePlace("Quảng Ninh", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Hạ Long
+        FakePlace("Kiên Giang", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Phú Quốc
+        FakePlace("Ninh Bình", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Quảng Bình", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Phong Nha
+        FakePlace("Lào Cai", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Sapa
+        FakePlace("Thừa Thiên Huế", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Bà Rịa - Vũng Tàu", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Phú Yên", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Bình Thuận", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg") // Mũi Né
     )
+
+
+
+
+
+
 
     val fakeFakeFakeTourPrograms = listOf(
         FakeTourProgram(

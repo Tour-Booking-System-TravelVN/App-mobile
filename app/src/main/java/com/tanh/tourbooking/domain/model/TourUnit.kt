@@ -1,6 +1,9 @@
-package com.tanh.tourbooking.data.model.dto.tour
+package com.tanh.tourbooking.domain.model
 
-data class TourUnitDto(
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+data class TourUnit(
     val adultTourCost: Double,
     val adultTourPrice: Double,
     val availableCapacity: Int,
@@ -8,19 +11,19 @@ data class TourUnitDto(
     val babyTourPrice: Double,
     val childTourCost: Double,
     val childTourPrice: Double,
-    val createdTime: String?,
-    val departureDate: String?,
-    val discount: DiscountDto?,
-    val festival: FestivalDto?,
+    val createdTime: LocalDateTime?,
+    val departureDate: LocalDate?,
+    val discount: Discount?,
+    val festival: Festival?,
     val lastUpdatedOperator: Int?,
-    val lastUpdatedTime: String?,
+    val lastUpdatedTime: LocalDateTime?,
     val maximumCapacity: Int,
     val privateRoomPrice: Double,
-    val returnDate: String?,
+    val returnDate: LocalDate?,
     val toddlerTourCost: Double,
     val toddlerTourPrice: Double,
     val totalAdditionalCost: Double,
-    val tour: TourDto,
+    val tour: Tour,
     val tourOperator: Int?,
     val tourUnitId: String
 )

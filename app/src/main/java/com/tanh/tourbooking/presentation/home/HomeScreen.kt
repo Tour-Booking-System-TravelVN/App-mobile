@@ -1,6 +1,7 @@
 package com.tanh.tourbooking.presentation.home
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -33,6 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +52,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.ScreenOrientation
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
@@ -59,25 +64,40 @@ import com.tanh.tourbooking.util.Route
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNav: (String) -> Unit
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
+    onNavigate: (String) -> Unit
 ) {
 
+    val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.channel.collect { event ->
+            when (event) {
+                is OneTimeEvent.Navigate -> onNavigate(event.route)
+                OneTimeEvent.PopBackStack -> Unit
+                is OneTimeEvent.ShowSnackbar -> Unit
+                is OneTimeEvent.ShowToast -> Unit
+            }
+        }
+    }
+
+
     if (ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-        PortraitHomeScreen(modifier, onNav = {
-            onNav(it)
-        })
+        PortraitHomeScreen(modifier, state, viewModel)
     } else {
-        PortraitHomeScreen(modifier = Modifier.verticalScroll(rememberScrollState()), onNav = {
-            onNav(it)
-        })
+        PortraitHomeScreen(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            state,
+            viewModel
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PortraitHomeScreen(
     modifier: Modifier = Modifier,
-    onNav: (String) -> Unit
+    state: HomeUiState,
+    viewModel: HomeViewModel
 ) {
     val customerName = "Hey guys"
     var inputText by remember { mutableStateOf("") }
@@ -142,7 +162,9 @@ fun PortraitHomeScreen(
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -182,12 +204,15 @@ fun PortraitHomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
             ) {
-                items(FakeData.fakeFakePlaces) { place ->
+                items(FakeData.fakePlacesVietNam) { place ->
                     PlaceItem(
                         fakePlace = place,
                         modifier = Modifier
                             .clickable {
-                                onNav(Route.TOUR_LIST_SCREEN.toString())
+                                Log.d("TL", place.name)
+                                viewModel.onEvent(
+                                    HomeEvent.OnNavToTours(Route.TOUR_LIST_SCREEN.toString() + "/${place.name}")
+                                )
                             }
                     )
                 }
@@ -257,13 +282,3 @@ fun PortraitHomeScreen(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHomeScreen(modifier: Modifier = Modifier) {
-    TourBookingTheme {
-        HomeScreen(
-            onNav = {}
-        )
-    }
-}
