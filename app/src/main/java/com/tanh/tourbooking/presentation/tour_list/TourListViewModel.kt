@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
-import com.tanh.tourbooking.domain.usecase.auth.GetToursByPlaceUseCase
-import com.tanh.tourbooking.presentation.home.HomeUiState
+import com.tanh.tourbooking.domain.usecase.tour.GetToursByPlaceUseCase
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
+import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +44,21 @@ class TourListViewModel @Inject constructor(
                 getToursInit()
             }
         }
+    }
+
+    fun onEvent(event: TourListEvent) {
+        when(event) {
+            is TourListEvent.OnClickTour -> onNavToDetailTour(event.id)
+        }
+    }
+
+    private fun onNavToDetailTour(id: String) {
+        val foundTour = _state.value.list.first { it.tourUnitId == id }
+        val jsonTour = Json.encodeToString(foundTour)
+        val encodedJson = URLEncoder.encode(jsonTour, StandardCharsets.UTF_8.toString())
+        val route = Route.DETAIL_SCREEN.toString() + "/${encodedJson}"
+        Log.d("JSON1", "encode: $encodedJson")
+        sendEvent(OneTimeEvent.Navigate(route))
     }
 
     private suspend fun getToursInit() {

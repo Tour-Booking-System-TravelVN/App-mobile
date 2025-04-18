@@ -1,4 +1,4 @@
-package com.tanh.tourbooking.presentation.detail_tour
+package com.tanh.tourbooking.presentation.detail_tour.item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -44,14 +44,14 @@ fun IndicatorItem(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                modifier = Modifier.size(MaterialTheme.dimens.medium2)
             )
         }
         Spacer(modifier = Modifier.width(MaterialTheme.dimens.small1))
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
             color = Color.Black,
             modifier = Modifier.weight(1f)
         )

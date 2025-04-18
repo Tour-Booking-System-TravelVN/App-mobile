@@ -1,6 +1,9 @@
 package com.tanh.tourbooking.presentation.detail_tour
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,6 +52,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -57,32 +62,77 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
+import com.tanh.tourbooking.domain.model.Discount
+import com.tanh.tourbooking.domain.model.TourUnit
+import com.tanh.tourbooking.presentation.detail_tour.item.CheckSection
+import com.tanh.tourbooking.presentation.detail_tour.item.DiscountItem
+import com.tanh.tourbooking.presentation.detail_tour.item.IndicatorItem
+import com.tanh.tourbooking.presentation.detail_tour.item.RatingBarDisplay
+import com.tanh.tourbooking.presentation.detail_tour.item.RatingItem
+import com.tanh.tourbooking.presentation.detail_tour.item.TourProgramItem
+import com.tanh.tourbooking.presentation.detail_tour.item.UnCheckSection
+import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.ui.theme.lightGray
+import com.tanh.tourbooking.ui.theme.lighterGray
+import com.tanh.tourbooking.ui.theme.starColor
+import com.tanh.tourbooking.util.Calculation
 import com.tanh.tourbooking.util.FakeData
 import com.tanh.tourbooking.util.Tools
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: DetailViewModel = hiltViewModel<DetailViewModel>(),
+    showSnackBar: (String) -> Unit,
+    popBackStack: () -> Unit,
+    onNavigate: (String) -> Unit
 ) {
 
-    val tourProgram = FakeData.fakeFakeFakeTourPrograms[0]
+    val state = viewModel.state.collectAsState(initial = DetailUiState()).value
+    val tourUnit = state.tourUnit
+
+    LaunchedEffect(Unit) {
+        viewModel.channel.collect { event ->
+            when (event) {
+                is OneTimeEvent.Navigate -> onNavigate(event.route)
+                OneTimeEvent.PopBackStack -> popBackStack()
+                is OneTimeEvent.ShowSnackbar -> showSnackBar(event.message)
+                is OneTimeEvent.ShowToast -> Unit
+            }
+        }
+    }
+
+    var isExpandedSchedule by remember {
+        mutableStateOf(false)
+    }
+
+    val direction by animateFloatAsState(
+        targetValue = if (isExpandedSchedule) 90f else 0f,
+        animationSpec = tween(300)
+    )
+
 
     val bottomSheetState = rememberModalBottomSheetState()
     var isSheetOpen by remember {
         mutableStateOf(false)
     }
 
+    val imageSet = tourUnit?.tour?.imageSet ?: emptyList()
+
     val pagerState = rememberPagerState(pageCount = {
-        listImages.size
+        imageSet.size
     })
 
     Column(
@@ -97,7 +147,7 @@ fun DetailScreen(
                     .align(Alignment.Center)
             ) { page ->
                 AsyncImage(
-                    model = listImages[page],
+                    model = imageSet[page].url,
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                     modifier = Modifier
@@ -106,7 +156,9 @@ fun DetailScreen(
                 )
             }
             IconButton(
-                onClick = { },
+                onClick = {
+                    viewModel.popBackStack()
+                },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = Color.White
                 ),
@@ -114,6 +166,7 @@ fun DetailScreen(
 //                    .border(1.dp, Color(0xFFefecf0), CircleShape)
                     .clip(CircleShape)
                     .padding(8.dp)
+                    .alpha(0.5f)
                     .align(Alignment.TopStart)
             ) {
                 Icon(
@@ -131,13 +184,20 @@ fun DetailScreen(
             ) {
                 repeat(pagerState.pageCount) { iteration ->
                     val color =
-                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                        if (pagerState.currentPage == iteration) lighterGray else Color.DarkGray
+                    val isSwap by derivedStateOf {
+                        pagerState.currentPage == iteration
+                    }
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
                             .clip(CircleShape)
+                            .animateContentSize()
                             .background(color)
-                            .size(MaterialTheme.dimens.small1)
+                            .size(
+                                height = MaterialTheme.dimens.small1,
+                                width = if (isSwap) MaterialTheme.dimens.small3 else MaterialTheme.dimens.small1
+                            )
                     )
                 }
             }
@@ -149,35 +209,41 @@ fun DetailScreen(
                 .padding(0.dp)
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(MaterialTheme.dimens.small2)
+//                .padding(MaterialTheme.dimens.small2)
                 .verticalScroll(rememberScrollState())
         ) {
             //rate + price
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.dimens.small2,
+                        top = MaterialTheme.dimens.small2,
+                        end = MaterialTheme.dimens.small2
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "★",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.secondaryContainer
+                    fontSize = 18.sp,
+                    color = starColor
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "4.5/5.0",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = Calculation.averageRatings(state.ratings).toString(),
+                    fontSize = 18.sp,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "(${tourProgram.totalRate})",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.LightGray
+                    text = "(${state.ratings.size})",
+                    fontSize = 18.sp,
+                    color = lightGray
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Price: $${tourProgram.price} VNĐ",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "Giá vé: đ ${state.tourUnit?.adultTourPrice ?: "0.0"}",
+                    fontSize = 18.sp,
                     color = Color.Black
                 )
             }
@@ -185,96 +251,225 @@ fun DetailScreen(
 
             //name
             Text(
-                text = tourProgram.name,
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.Black
+                text = tourUnit?.tour?.tourName ?: "No name",
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             HorizontalDivider(
                 thickness = 0.5.dp,
                 color = Color.LightGray,
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
             //detail
-            IndicatorSection(tourProgram)
-
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small1)
+            ) {
+                IndicatorSection(state.tourUnit)
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            //Discount
+            DiscountSection(state.tourUnit?.discount)
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             //Description
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            Text(
-                text = "Description",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            Text(
-                text = tourProgram.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.LightGray
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small1)
             ) {
                 Text(
-                    text = "Schedule",
+                    text = "Mô tả",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {}
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                Text(
+                    text = tourUnit?.tour?.description ?: "This tour is amazing",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.LightGray
+                )
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+            //schedule
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small1)
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = Color.Black
+                    Text(
+                        text = "Lịch trình",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = {
+                            isExpandedSchedule = !isExpandedSchedule
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.Black,
+                            modifier = Modifier.rotate(direction)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                if (isExpandedSchedule) {
+                    Column(
+                        Modifier
+                            .animateContentSize()
+                            .background(Color(0xFFfff6f7))
+                    ) {
+                        state.tourProgram.forEach { tourProgram ->
+                            TourProgramItem(tourProgram = tourProgram)
+                            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                            HorizontalDivider(
+                                Modifier.fillMaxWidth(),
+                                0.5.dp,
+                                Color.LightGray
+                            )
+                            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                        }
+                    }
+                }
+            }
+//            HorizontalDivider(
+//                thickness = 0.5.dp,
+//                color = Color.LightGray,
+//                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
+//            )
+            //tourguide
+//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+//            Text(
+//                text = "FakeTour guide",
+//                style = MaterialTheme.typography.headlineMedium,
+//                color = Color.Black
+//            )
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Text(
+//                    text = tourProgram.fakeTourGuide.name,
+//                    style = MaterialTheme.typography.bodyLarge,
+//                    color = Color.Black
+//                )
+//                Spacer(modifier = Modifier.weight(1f))
+//                Text(
+//                    text = tourProgram.fakeTourGuide.phone.toString(),
+//                    style = MaterialTheme.typography.bodyLarge,
+//                    color = Color.Black
+//                )
+//            }
+
+            //inclusive
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small1)
+            ) {
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                Text(
+                    text = "Tour này bao gồm",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                CheckSection(check = state.tourUnit?.tour?.inclusions ?: "")
+                //exclusive
+                UnCheckSection(uncheck = state.tourUnit?.tour?.exclusions ?: "")
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            }
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = lightGray,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            //rating
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small1)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        Modifier
+                            .width(6.dp)
+                            .height(25.dp)
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.secondary)
+                    )
+                    Spacer(Modifier.width(MaterialTheme.dimens.small2))
+                    Text(
+                        text = "Đánh giá",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Spacer(Modifier.width(MaterialTheme.dimens.small3))
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val averageRating = Calculation.averageRatings(state.ratings)
+                        Row(
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(
+                                text = averageRating.toString(),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                text = "/5",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = Color(0xFFa7a6a7)
+                            )
+                        }
+                        Spacer(Modifier.width(MaterialTheme.dimens.small3))
+                        RatingBarDisplay(
+                            size = 25.dp,
+                            averageRating = averageRating
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                    Text(
+                        text = "Dựa trên ${state.ratings.size} lượt đánh giá",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = lightGray
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            Text(
-                text = "ngày 1: 10h sáng đi hội an",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "ngày 2: 10h sáng đi hội an",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "ngày 3: 10h sáng đi hội an",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            HorizontalDivider(
-                thickness = 0.5.dp,
-                color = Color.LightGray,
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            Text(
-                text = "FakeTour guide",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Black
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.medium1)
             ) {
-                Text(
-                    text = tourProgram.fakeTourGuide.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = tourProgram.fakeTourGuide.phone.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black
-                )
+                state.ratings.forEach { rating ->
+                    RatingItem(rating = rating)
+                    Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                }
             }
+
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+            //button book
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -286,7 +481,7 @@ fun DetailScreen(
                     }
                 ) {
                     Text(
-                        text = "Book now",
+                        text = "Đặt phòng ngay",
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -304,6 +499,39 @@ fun DetailScreen(
         }
     }
 
+}
+
+@Composable
+fun DiscountSection(discount: Discount?) {
+    if (discount != null) {
+        Column {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .background(lightGray)
+            ) { }
+            Row(
+                Modifier
+                    .padding(vertical = 4.dp, horizontal = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Ưu đãi cho bạn",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.width(8.dp))
+                DiscountItem(discountName = discount.discountName)
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .background(lightGray)
+            ) { }
+        }
+    }
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -356,7 +584,7 @@ private fun BottomSheet(
             val datePickerState = rememberDatePickerState()
             val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
 
-            if(openDialog1) {
+            if (openDialog1) {
                 DatePickerDialog(
                     onDismissRequest = { openDialog1 = false },
                     confirmButton = {
@@ -364,8 +592,9 @@ private fun BottomSheet(
                             onClick = {
                                 openDialog1 = false
                                 var date = "No selection"
-                                if(datePickerState.selectedDateMillis != null) {
-                                    date = Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
+                                if (datePickerState.selectedDateMillis != null) {
+                                    date =
+                                        Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
                                 }
                                 dateResult = date
                             },
@@ -384,7 +613,7 @@ private fun BottomSheet(
             val datePicker2 = rememberDatePickerState()
             val confirmedEnabled2 = derivedStateOf { datePicker2.selectedDateMillis != null }
 
-            if(openDialog2) {
+            if (openDialog2) {
                 DatePickerDialog(
                     onDismissRequest = {
                         openDialog2 = false
@@ -394,8 +623,9 @@ private fun BottomSheet(
                             onClick = {
                                 openDialog2 = false
                                 var date = "No selection"
-                                if(datePickerState.selectedDateMillis != null) {
-                                    date = Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
+                                if (datePickerState.selectedDateMillis != null) {
+                                    date =
+                                        Tools.convertLongToTime(datePickerState.selectedDateMillis!!)
                                 }
                                 dateResult2 = date
                             },
@@ -412,7 +642,8 @@ private fun BottomSheet(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "Departure date: $dateResult",
                     modifier = Modifier.clickable {
@@ -427,7 +658,8 @@ private fun BottomSheet(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Row(
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "End date: $dateResult2",
                     modifier = Modifier.clickable {
@@ -489,7 +721,7 @@ private fun BottomSheet(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OutlinedButton (
+            OutlinedButton(
                 onClick = {
                     dateResult = ""
                     dateResult2 = ""
@@ -504,7 +736,7 @@ private fun BottomSheet(
                     text = "Reset"
                 )
             }
-            Spacer(modifier = Modifier.width(MaterialTheme.dimens.small3))
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
             Button(
                 onClick = {},
                 shape = MaterialTheme.shapes.small,
@@ -589,7 +821,9 @@ fun PeopleSelectorItem(
 }
 
 @Composable
-private fun IndicatorSection(fakeTourProgram: FakeTourProgram) {
+private fun IndicatorSection(
+    tour: TourUnit?
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -600,12 +834,12 @@ private fun IndicatorSection(fakeTourProgram: FakeTourProgram) {
         ) {
             IndicatorItem(
                 icon = Icons.Default.AirplanemodeActive,
-                title = fakeTourProgram.vehicle
+                title = tour?.tour?.vehicle ?: "Xe khách"
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             IndicatorItem(
                 icon = Icons.Default.Place,
-                title = fakeTourProgram.startDestination
+                title = tour?.tour?.departurePlace ?: "Việt Nam"
             )
         }
 
@@ -615,12 +849,12 @@ private fun IndicatorSection(fakeTourProgram: FakeTourProgram) {
         ) {
             IndicatorItem(
                 icon = Icons.Default.AccessTime,
-                title = fakeTourProgram.duration
+                title = Calculation.formatDuration(tour?.tour?.duration ?: "")
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             IndicatorItem(
                 icon = Icons.Default.People,
-                title = fakeTourProgram.maxParticipant.toString()
+                title = tour?.availableCapacity.toString()
             )
         }
     }

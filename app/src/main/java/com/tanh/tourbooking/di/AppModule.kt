@@ -8,6 +8,8 @@ import com.tanh.tourbooking.data.model.dto.auth.AuthResult
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
+import com.tanh.tourbooking.domain.repository.api.RatingRepository
+import com.tanh.tourbooking.domain.repository.api.TourProgramRepository
 import com.tanh.tourbooking.domain.repository.api.TourUnitRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
@@ -16,7 +18,7 @@ import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
 import com.tanh.tourbooking.domain.usecase.auth.CheckRoleUseCase
 import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
-import com.tanh.tourbooking.domain.usecase.auth.GetToursByPlaceUseCase
+import com.tanh.tourbooking.domain.usecase.tour.GetToursByPlaceUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
@@ -27,6 +29,8 @@ import com.tanh.tourbooking.domain.usecase.chatbox.NotifyMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
+import com.tanh.tourbooking.domain.usecase.tour.GetRatingByTourUnitIdUseCase
+import com.tanh.tourbooking.domain.usecase.tour.GetTourProgramByTourIdUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,7 +44,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetToursByPlaceUseCase(repository: TourUnitRepository) = GetToursByPlaceUseCase(repository)
+    fun provideGetRatingByTourIdUseCase(repository: RatingRepository) =
+        GetRatingByTourUnitIdUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetTourProgramByTourIdUseCase(repository: TourProgramRepository) =
+        GetTourProgramByTourIdUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetToursByPlaceUseCase(repository: TourUnitRepository) =
+        GetToursByPlaceUseCase(repository)
 
     @Provides
     @Singleton

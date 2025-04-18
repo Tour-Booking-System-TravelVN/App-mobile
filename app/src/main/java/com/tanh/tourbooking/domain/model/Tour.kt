@@ -1,9 +1,14 @@
 package com.tanh.tourbooking.domain.model
 
+import com.tanh.tourbooking.data.serializer.LocalDateSerializer
+import com.tanh.tourbooking.data.serializer.LocalDateTimeSerializer
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
+@Serializable
 data class Tour(
     val category: Category,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdTime: LocalDateTime?,
     val cuisine: String,
     val departurePlace: String,
@@ -15,6 +20,7 @@ data class Tour(
     val imageSet: List<ImageSet>,
     val inclusions: String,
     val lastUpdatedOperator: String?,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val lastUpdatedTime: LocalDateTime?,
     val placesToVisit: String,
     val targetAudience: String,

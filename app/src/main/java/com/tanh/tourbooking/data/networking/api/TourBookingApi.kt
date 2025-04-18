@@ -3,6 +3,8 @@ package com.tanh.tourbooking.data.networking.api
 import com.tanh.tourbooking.data.model.dto.auth.AuthResponse
 import com.tanh.tourbooking.data.model.dto.auth.LoginRequest
 import com.tanh.tourbooking.data.model.dto.auth.RegisterRequest
+import com.tanh.tourbooking.data.model.response.RatingResponse
+import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
 import com.tanh.tourbooking.data.model.response.UserInformationResponse
 import retrofit2.Response
@@ -10,6 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TourBookingApi {
@@ -29,6 +32,12 @@ interface TourBookingApi {
         @Query("price") price: String,
         @Query("departure_date") departureDate: String? = null,
         @Query("page") page: Int? = null
-        ): Response<TourUnitByPlaceResponse>
+    ): Response<TourUnitByPlaceResponse>
+
+    @GET("/rating/tour-detail/{tourUnitId}")
+    suspend fun getRatingByTourUnitId(@Path("tourUnitId") tourUnitId: String): Response<RatingResponse>
+
+    @GET("/program/tour-detail/{tourUnitId}")
+    suspend fun getTourProgramByTourUnitId(@Path("tourUnitId") tourUnitId: String): Response<TourProgramResponse>
 
 }

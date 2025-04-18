@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.tour_list
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
+import com.tanh.tourbooking.presentation.util.multipleEventsCutter
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.Route
 
@@ -80,12 +82,17 @@ fun TourListScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 items(state.list) { tour ->
-                    TourUnitItem(
-                        tour = tour,
-                        modifier = Modifier.padding(bottom = MaterialTheme.dimens.small2).clickable {
-                            onNavigate(Route.DETAIL_SCREEN.toString())
-                        }
-                    )
+                    multipleEventsCutter { eventManager ->
+                        TourUnitItem(
+                            tour = tour,
+                            modifier = Modifier.padding(bottom = MaterialTheme.dimens.small2).clickable {
+                                eventManager.processEvent {
+                                    Log.d("CLICK", "Click1")
+                                    viewModel.onEvent(TourListEvent.OnClickTour(tour.tourUnitId))
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.tanh.tourbooking.domain.usecase.auth
+package com.tanh.tourbooking.domain.usecase.tour
 
 import com.tanh.tourbooking.data.mappers.toTourUnit
 import com.tanh.tourbooking.data.model.util.exception.Resources

@@ -141,10 +141,31 @@ fun Navigation(modifier: Modifier = Modifier) {
                     navController.navigate(it)
                 }
             }
-            composable(route = Route.DETAIL_SCREEN.toString()) {
-                DetailScreen(
-                    modifier = Modifier.padding(paddingValues)
+            composable(
+                route = Route.DETAIL_SCREEN.toString() + "/{jsonTour}",
+                arguments = listOf(
+                    navArgument(name = "jsonTour") {
+                        type = NavType.StringType
+                    }
                 )
+            ) {
+                DetailScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    },
+                    popBackStack = {
+                        navController.popBackStack()
+                    }
+                ) {
+                    navController.navigate(it)
+                }
             }
             composable(
                 route = Route.TOUR_LIST_SCREEN.toString() + "/{place}",
