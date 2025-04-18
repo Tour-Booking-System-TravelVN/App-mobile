@@ -2,11 +2,13 @@ package com.tanh.tourbooking.presentation.detail_tour
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,8 +68,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -135,10 +140,44 @@ fun DetailScreen(
         imageSet.size
     })
 
-    Column(
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val visibleTopPadding = 48.dp
+    val minHeight = screenHeight * 0.6f
+    val maxHeight = screenHeight - visibleTopPadding
+
+    var currentHeight by remember { mutableStateOf(minHeight) }
+    val animatedHeight by animateDpAsState(
+        targetValue = currentHeight
+    )
+
+    val scrollState = rememberScrollState()
+
+    //image
+    Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Box(modifier = Modifier.wrapContentSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(screenHeight - animatedHeight)
+                .then(
+                    if(currentHeight == maxHeight) Modifier.pointerInput(Unit) {
+                        detectVerticalDragGestures(
+                            onDragEnd = {
+                                currentHeight = if(currentHeight < (minHeight + maxHeight) / 2) {
+                                    minHeight
+                                } else {
+                                    maxHeight
+                                }
+                            },
+                            onVerticalDrag = { _, dragAmount ->
+                                currentHeight = (currentHeight - dragAmount.dp)
+                                    .coerceIn(minHeight, maxHeight)
+                            }
+                        )
+                    } else Modifier
+                )
+        ) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
@@ -204,153 +243,177 @@ fun DetailScreen(
         }
 
         //detail tour section
-        Column(
+        Box(
             modifier = Modifier
-                .padding(0.dp)
                 .fillMaxWidth()
-                .wrapContentHeight()
-//                .padding(MaterialTheme.dimens.small2)
-                .verticalScroll(rememberScrollState())
+                .height(animatedHeight)
+                .align(Alignment.BottomCenter)
+                .background(Color.White)
+                .pointerInput(Unit) {
+                    detectVerticalDragGestures(
+                        onDragEnd ={
+                            currentHeight = if(currentHeight < (minHeight + maxHeight) / 2) {
+                                minHeight
+                            } else {
+                                maxHeight
+                            }
+                        },
+                        onVerticalDrag = { _, dragAmount ->
+                            currentHeight = (currentHeight - dragAmount.dp)
+                                .coerceIn(minHeight, maxHeight)
+                        }
+                    )
+                }
         ) {
-            //rate + price
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = MaterialTheme.dimens.small2,
-                        top = MaterialTheme.dimens.small2,
-                        end = MaterialTheme.dimens.small2
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "★",
-                    fontSize = 18.sp,
-                    color = starColor
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = Calculation.averageRatings(state.ratings).toString(),
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "(${state.ratings.size})",
-                    fontSize = 18.sp,
-                    color = lightGray
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "Giá vé: đ ${state.tourUnit?.adultTourPrice ?: "0.0"}",
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-
-            //name
-            Text(
-                text = tourUnit?.tour?.tourName ?: "No name",
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            HorizontalDivider(
-                thickness = 0.5.dp,
-                color = Color.LightGray,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-
-            //detail
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small1)
+                    .padding(0.dp)
+                    .wrapContentHeight()
+                    .let {
+                        if(currentHeight == maxHeight) {
+                            it.verticalScroll(scrollState)
+                        } else it
+                    }
             ) {
-                IndicatorSection(state.tourUnit)
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            //Discount
-            DiscountSection(state.tourUnit?.discount)
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            //Description
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small1)
-            ) {
-                Text(
-                    text = "Mô tả",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                Text(
-                    text = tourUnit?.tour?.description ?: "This tour is amazing",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.LightGray
-                )
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            //schedule
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small1)
-            ) {
+                //rate + price
                 Row(
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = MaterialTheme.dimens.small2,
+                            top = MaterialTheme.dimens.small2,
+                            end = MaterialTheme.dimens.small2
+                        ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Lịch trình",
+                        text = "★",
+                        fontSize = 18.sp,
+                        color = starColor
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = Calculation.averageRatings(state.ratings).toString(),
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "(${state.ratings.size})",
+                        fontSize = 18.sp,
+                        color = lightGray
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Giá vé: đ ${state.tourUnit?.adultTourPrice ?: "0.0"}",
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+
+                //name
+                Text(
+                    text = tourUnit?.tour?.tourName ?: "No name",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = Color.LightGray,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+
+                //detail
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small1)
+                ) {
+                    IndicatorSection(state.tourUnit)
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                //Discount
+                DiscountSection(state.tourUnit?.discount)
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                //Description
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small1)
+                ) {
+                    Text(
+                        text = "Mô tả",
                         style = MaterialTheme.typography.headlineMedium,
                         color = Color.Black
                     )
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(
-                        onClick = {
-                            isExpandedSchedule = !isExpandedSchedule
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowRight,
-                            contentDescription = null,
-                            tint = Color.Black,
-                            modifier = Modifier.rotate(direction)
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                    Text(
+                        text = tourUnit?.tour?.description ?: "This tour is amazing",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.LightGray
+                    )
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                if (isExpandedSchedule) {
-                    Column(
-                        Modifier
-                            .animateContentSize()
-                            .background(Color(0xFFfff6f7))
+                //schedule
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small1)
+                ) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        state.tourProgram.forEach { tourProgram ->
-                            TourProgramItem(tourProgram = tourProgram)
-                            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                            HorizontalDivider(
-                                Modifier.fillMaxWidth(),
-                                0.5.dp,
-                                Color.LightGray
+                        Text(
+                            text = "Lịch trình",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        IconButton(
+                            onClick = {
+                                isExpandedSchedule = !isExpandedSchedule
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowRight,
+                                contentDescription = null,
+                                tint = Color.Black,
+                                modifier = Modifier.rotate(direction)
                             )
-                            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                    if (isExpandedSchedule) {
+                        Column(
+                            Modifier
+                                .animateContentSize()
+                                .background(MaterialTheme.colorScheme.surface)
+                        ) {
+                            state.tourProgram.forEach { tourProgram ->
+                                TourProgramItem(tourProgram = tourProgram)
+                                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                                HorizontalDivider(
+                                    Modifier.fillMaxWidth(),
+                                    0.5.dp,
+                                    Color.LightGray
+                                )
+                                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                            }
                         }
                     }
                 }
-            }
 //            HorizontalDivider(
 //                thickness = 0.5.dp,
 //                color = Color.LightGray,
 //                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
 //            )
-            //tourguide
+                //tourguide
 //            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
 //            Text(
 //                text = "FakeTour guide",
@@ -374,127 +437,128 @@ fun DetailScreen(
 //                )
 //            }
 
-            //inclusive
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small1)
-            ) {
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-                Text(
-                    text = "Tour này bao gồm",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                CheckSection(check = state.tourUnit?.tour?.inclusions ?: "")
-                //exclusive
-                UnCheckSection(uncheck = state.tourUnit?.tour?.exclusions ?: "")
-
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            }
-            HorizontalDivider(
-                thickness = 0.5.dp,
-                color = lightGray,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            //rating
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small1)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                //inclusive
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small1)
                 ) {
-                    Box(
-                        Modifier
-                            .width(6.dp)
-                            .height(25.dp)
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(MaterialTheme.colorScheme.secondary)
-                    )
-                    Spacer(Modifier.width(MaterialTheme.dimens.small2))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                     Text(
-                        text = "Đánh giá",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.SemiBold
+                        text = "Tour này bao gồm",
+                        style = MaterialTheme.typography.titleLarge
                     )
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                    CheckSection(check = state.tourUnit?.tour?.inclusions ?: "")
+                    //exclusive
+                    UnCheckSection(uncheck = state.tourUnit?.tour?.exclusions ?: "")
+
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                 }
-                Spacer(Modifier.width(MaterialTheme.dimens.small3))
-                Column {
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = lightGray,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                //rating
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small1)
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val averageRating = Calculation.averageRatings(state.ratings)
-                        Row(
-                            verticalAlignment = Alignment.Bottom
-                        ) {
-                            Text(
-                                text = averageRating.toString(),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            Text(
-                                text = "/5",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color(0xFFa7a6a7)
-                            )
-                        }
-                        Spacer(Modifier.width(MaterialTheme.dimens.small3))
-                        RatingBarDisplay(
-                            size = 25.dp,
-                            averageRating = averageRating
+                        Box(
+                            Modifier
+                                .width(6.dp)
+                                .height(25.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.secondary)
+                        )
+                        Spacer(Modifier.width(MaterialTheme.dimens.small2))
+                        Text(
+                            text = "Đánh giá",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                    Text(
-                        text = "Dựa trên ${state.ratings.size} lượt đánh giá",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = lightGray
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.medium1)
-            ) {
-                state.ratings.forEach { rating ->
-                    RatingItem(rating = rating)
-                    Spacer(Modifier.height(MaterialTheme.dimens.small2))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-            //button book
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        isSheetOpen = true
+                    Spacer(Modifier.width(MaterialTheme.dimens.small3))
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val averageRating = Calculation.averageRatings(state.ratings)
+                            Row(
+                                verticalAlignment = Alignment.Bottom
+                            ) {
+                                Text(
+                                    text = averageRating.toString(),
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                                Text(
+                                    text = "/5",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = Color(0xFFa7a6a7)
+                                )
+                            }
+                            Spacer(Modifier.width(MaterialTheme.dimens.small3))
+                            RatingBarDisplay(
+                                size = 25.dp,
+                                averageRating = averageRating
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+                        Text(
+                            text = "Dựa trên ${state.ratings.size} lượt đánh giá",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = lightGray
+                        )
                     }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.medium1)
                 ) {
-                    Text(
-                        text = "Đặt phòng ngay",
-                        fontWeight = FontWeight.Bold
+                    state.ratings.forEach { rating ->
+                        RatingItem(rating = rating)
+                        Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+                //button book
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = {
+                            isSheetOpen = true
+                        }
+                    ) {
+                        Text(
+                            text = "Đặt phòng ngay",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                //bottom sheet
+                if (isSheetOpen) {
+                    BottomSheet(
+                        bottomSheetState = bottomSheetState,
+                        onSheetStateChange = {
+                            isSheetOpen = it
+                        }
                     )
                 }
-            }
-
-            //bottom sheet
-            if (isSheetOpen) {
-                BottomSheet(
-                    bottomSheetState = bottomSheetState,
-                    onSheetStateChange = {
-                        isSheetOpen = it
-                    }
-                )
             }
         }
     }
@@ -509,7 +573,7 @@ fun DiscountSection(discount: Discount?) {
                 Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(lightGray)
+                    .background(lighterGray)
             ) { }
             Row(
                 Modifier
@@ -528,7 +592,7 @@ fun DiscountSection(discount: Discount?) {
                 Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(lightGray)
+                    .background(lighterGray)
             ) { }
         }
     }
@@ -860,11 +924,3 @@ private fun IndicatorSection(
     }
 }
 
-
-val listImages = listOf(
-    "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg",
-    "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg",
-    "https://i.ibb.co/dwqzBVZL/jonnn.jpg",
-    "https://i.ibb.co/ch8p9Pd1/image.png",
-    "https://i.ibb.co/HpryKNLf/justin.jpg"
-)
