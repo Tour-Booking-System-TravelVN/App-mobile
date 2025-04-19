@@ -10,6 +10,7 @@ import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.RatingRepository
 import com.tanh.tourbooking.domain.repository.api.TourProgramRepository
+import com.tanh.tourbooking.domain.repository.api.TourUnitCalendarRepository
 import com.tanh.tourbooking.domain.repository.api.TourUnitRepository
 import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
@@ -31,6 +32,7 @@ import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
 import com.tanh.tourbooking.domain.usecase.tour.GetRatingByTourUnitIdUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetTourProgramByTourIdUseCase
+import com.tanh.tourbooking.domain.usecase.tour.GetTourUnitCalendarUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,6 +43,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideGetTourUnitCalendar(repository: TourUnitCalendarRepository) =
+        GetTourUnitCalendarUseCase(repository)
 
     @Provides
     @Singleton

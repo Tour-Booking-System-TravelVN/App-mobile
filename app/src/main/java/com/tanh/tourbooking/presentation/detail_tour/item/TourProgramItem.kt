@@ -24,12 +24,14 @@ import com.tanh.tourbooking.R
 import com.tanh.tourbooking.domain.model.TourProgram
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.ui.theme.greenItem
+import com.tanh.tourbooking.util.toStringList
 
 @Composable
 fun TourProgramItem(
     modifier: Modifier = Modifier,
     tourProgram: TourProgram
 ) {
+    val list = tourProgram.description.toStringList()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,10 +46,23 @@ fun TourProgramItem(
             title = tourProgram.mealDescription
         )
         Spacer(Modifier.height(MaterialTheme.dimens.small2))
-        TourProgramItemItem(
-            icon = painterResource(R.drawable.information),
-            title = tourProgram.description
-        )
+        Row {
+            Icon(
+                painter = painterResource(R.drawable.information),
+                contentDescription = null,
+                tint = greenItem,
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(Modifier.width(10.dp))
+            Column {
+                list.forEach { content ->
+                    Text(
+                        text = "• $content",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+        }
     }
 
 }

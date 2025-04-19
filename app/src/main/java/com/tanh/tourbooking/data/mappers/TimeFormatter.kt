@@ -38,9 +38,8 @@ object TimeFormatter {
 private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-fun String.toLocalDateTime(): LocalDateTime = LocalDateTime.parse(this, formatter)
-
 fun LocalDateTime.toFormattedString(): String = this.format(formatter)
+fun String.toLocalDateTime(): LocalDateTime = LocalDateTime.parse(this, formatter)
 
 fun String.toLocalDate(): LocalDate = LocalDate.parse(this, dateFormatter)
 fun LocalDate.toFormattedString(): String = this.format(dateFormatter)

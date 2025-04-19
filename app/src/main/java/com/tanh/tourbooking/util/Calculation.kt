@@ -2,6 +2,7 @@ package com.tanh.tourbooking.util
 
 import android.annotation.SuppressLint
 import com.tanh.tourbooking.domain.model.Rating
+import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -19,6 +20,11 @@ object Calculation {
         if(duration.length != 4) return ""
         val formattedDuration = "${duration[0]} ngày, ${duration[2]} đêm"
         return formattedDuration
+    }
+
+    fun formatDouble(amount: Double): String {
+        val formatter = NumberFormat.getNumberInstance(Locale.US)
+        return formatter.format(amount)
     }
 
 }

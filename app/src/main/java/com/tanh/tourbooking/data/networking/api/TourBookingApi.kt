@@ -3,9 +3,11 @@ package com.tanh.tourbooking.data.networking.api
 import com.tanh.tourbooking.data.model.dto.auth.AuthResponse
 import com.tanh.tourbooking.data.model.dto.auth.LoginRequest
 import com.tanh.tourbooking.data.model.dto.auth.RegisterRequest
+import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
 import com.tanh.tourbooking.data.model.response.RatingResponse
 import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
+import com.tanh.tourbooking.data.model.response.TourUnitCalendarResponse
 import com.tanh.tourbooking.data.model.response.UserInformationResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -39,5 +41,15 @@ interface TourBookingApi {
 
     @GET("/program/tour-detail/{tourUnitId}")
     suspend fun getTourProgramByTourUnitId(@Path("tourUnitId") tourUnitId: String): Response<TourProgramResponse>
+
+    @GET("/tour/calendar/{tourId}")
+    suspend fun getAvailableMonthByTourId(@Path("tourId") tourId: String): Response<AvailableMonthResponse>
+
+    @GET("/tourunit/calendar")
+    suspend fun getTourUnitCalendar(
+        @Query("month") month: Int,
+        @Query("year") year: Int,
+        @Query("tourid") tourId: String
+    ): Response<TourUnitCalendarResponse>
 
 }
