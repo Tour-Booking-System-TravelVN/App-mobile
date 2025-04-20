@@ -1,8 +1,5 @@
 package com.tanh.tourbooking.presentation.navigation
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -26,7 +23,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
-import com.tanh.tourbooking.presentation.detail_tour.DetailScreen
+import com.tanh.tourbooking.presentation.detail_tour.screen.BookingScreen
+import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.login.LoginScreen
@@ -77,7 +75,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.HOME_SCREEN.toString()
+            startDestination = Route.START_SCREEN.toString()
         ) {
             composable(route = Route.SPLASH_SCREEN.toString()) {
                 SplashScreen(navController = navController)
@@ -223,6 +221,9 @@ fun Navigation(modifier: Modifier = Modifier) {
                 ) {
                     navController.navigate(it)
                 }
+            }
+            composable(route = Route.BOOKING_SCREEN.toString()) {
+                BookingScreen()
             }
         }
     }

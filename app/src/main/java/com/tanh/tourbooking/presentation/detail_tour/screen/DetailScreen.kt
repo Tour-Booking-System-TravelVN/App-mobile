@@ -1,6 +1,5 @@
-package com.tanh.tourbooking.presentation.detail_tour
+package com.tanh.tourbooking.presentation.detail_tour.screen
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -12,7 +11,6 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -23,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -37,30 +34,20 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -82,6 +69,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.tanh.tourbooking.domain.model.Discount
 import com.tanh.tourbooking.domain.model.TourUnit
+import com.tanh.tourbooking.presentation.detail_tour.DetailEvent
+import com.tanh.tourbooking.presentation.detail_tour.DetailUiState
+import com.tanh.tourbooking.presentation.detail_tour.DetailViewModel
 import com.tanh.tourbooking.presentation.detail_tour.item.BookingBarSection
 import com.tanh.tourbooking.presentation.detail_tour.item.BottomSheet
 import com.tanh.tourbooking.presentation.detail_tour.item.CheckSection
@@ -97,8 +87,7 @@ import com.tanh.tourbooking.ui.theme.lightGray
 import com.tanh.tourbooking.ui.theme.lighterGray
 import com.tanh.tourbooking.ui.theme.starColor
 import com.tanh.tourbooking.util.Calculation
-import com.tanh.tourbooking.util.FakeData
-import com.tanh.tourbooking.util.Tools
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -146,6 +135,14 @@ fun DetailScreen(
     val pagerState = rememberPagerState(pageCount = {
         imageSet.size
     })
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(2000)
+            val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+            pagerState.scrollToPage(nextPage)
+        }
+    }
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp - 60.dp
     val visibleTopPadding = 48.dp
@@ -577,6 +574,9 @@ fun DetailScreen(
                             },
                             onCalendar = {
                                 viewModel.onEvent(DetailEvent.OnLoadCalendar)
+                            },
+                            bookTour = {
+                                viewModel.onEvent(DetailEvent.BookTour(it))
                             }
                         )
                     }

@@ -2,11 +2,20 @@ package com.tanh.tourbooking.util
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.google.type.PostalAddress
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
+
+//procedure
+//Declare parameters
+//declare cipher
+//declare keyStore
+//fun getKey -> SecretKey
+//fun createKey
+//fun encrypt + decrypt
 
 object Crypto {
     private const val KEY_ALIAS = "secret"

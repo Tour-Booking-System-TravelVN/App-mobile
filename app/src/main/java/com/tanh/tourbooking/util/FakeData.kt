@@ -1,11 +1,16 @@
 package com.tanh.tourbooking.util
 
+import androidx.datastore.core.Serializer
 import com.tanh.tourbooking.data.model.dto.faketour.FakeBookedTour
 import com.tanh.tourbooking.data.model.dto.faketour.FakeCategory
 import com.tanh.tourbooking.data.model.dto.faketour.FakePlace
 import com.tanh.tourbooking.data.model.dto.faketour.FakeTour
 import com.tanh.tourbooking.data.model.dto.faketour.FakeTourGuide
 import com.tanh.tourbooking.data.model.dto.faketour.FakeTourProgram
+import com.tanh.tourbooking.domain.model.Discount
+import com.tanh.tourbooking.presentation.detail_tour.screen.DiscountSection
+import java.io.InputStream
+import java.io.OutputStream
 
 object FakeData {
 

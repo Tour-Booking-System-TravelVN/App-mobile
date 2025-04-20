@@ -12,7 +12,8 @@ enum class Route {
     SPLASH_SCREEN,
     TOUR_LIST_SCREEN,
     START_SCREEN,
-    REGISTER_SCREEN
+    REGISTER_SCREEN,
+    BOOKING_SCREEN
 }
 
 val navRoutes = listOf(

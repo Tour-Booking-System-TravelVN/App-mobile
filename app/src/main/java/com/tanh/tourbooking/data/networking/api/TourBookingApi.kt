@@ -3,7 +3,10 @@ package com.tanh.tourbooking.data.networking.api
 import com.tanh.tourbooking.data.model.dto.auth.AuthResponse
 import com.tanh.tourbooking.data.model.dto.auth.LoginRequest
 import com.tanh.tourbooking.data.model.dto.auth.RegisterRequest
+import com.tanh.tourbooking.data.model.request.PaymentRequest
 import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
+import com.tanh.tourbooking.data.model.response.BookingResponse
+import com.tanh.tourbooking.data.model.response.CheckTourUnitResponse
 import com.tanh.tourbooking.data.model.response.RatingResponse
 import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
@@ -51,5 +54,17 @@ interface TourBookingApi {
         @Query("year") year: Int,
         @Query("tourid") tourId: String
     ): Response<TourUnitCalendarResponse>
+
+    @POST("/order/create")
+    suspend fun createBooking(
+        @Header("Authorization") token: String,
+        @Body request: PaymentRequest
+    ): Response<BookingResponse>
+
+    @GET("booking/checkbeforebooking")
+    suspend fun checkBeforeBooking(
+        @Header("Authorization") token: String,
+        @Query("tourUnitId") tourUnitId: String
+    ): Response<CheckTourUnitResponse>
 
 }

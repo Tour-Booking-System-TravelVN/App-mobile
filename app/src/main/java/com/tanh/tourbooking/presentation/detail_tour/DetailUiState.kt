@@ -13,4 +13,5 @@ data class DetailUiState(
     val tourUnit: TourUnit? = null,
     val ratings: List<Rating> = emptyList(),
     val tourProgram: List<TourProgram> = emptyList()
+
 )

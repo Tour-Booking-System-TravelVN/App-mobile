@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
 import com.tanh.tourbooking.domain.model.TourUnit
+import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetRatingByTourUnitIdUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetTourProgramByTourIdUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetTourUnitCalendarUseCase
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.util.Calendar
 import com.tanh.tourbooking.util.Month
+import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +33,7 @@ class DetailViewModel @Inject constructor(
     private val tourRating: GetRatingByTourUnitIdUseCase,
     private val tourProgram: GetTourProgramByTourIdUseCase,
     private val tourCalendar: GetTourUnitCalendarUseCase,
+    private val checkTourUnit: CheckTourUnitUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -39,6 +42,9 @@ class DetailViewModel @Inject constructor(
 
     private val _calendar = MutableStateFlow(CalendarUiState())
     val calendar = _calendar.asStateFlow()
+
+    private val _booking = MutableStateFlow(BookingTourState())
+    val booking = _booking.asStateFlow()
 
     private val _channel = Channel<OneTimeEvent>()
     val channel = _channel.receiveAsFlow()
@@ -59,8 +65,45 @@ class DetailViewModel @Inject constructor(
 
     fun onEvent(event: DetailEvent) {
         when (event) {
-            DetailEvent.BookTour -> Unit
-            DetailEvent.OnLoadCalendar -> onLoadCalendar()
+            is DetailEvent.OnLoadCalendar -> onLoadCalendar()
+            is DetailEvent.BookTour -> {
+                viewModelScope.launch {
+                    bookTour(event.state)
+                }
+            }
+        }
+    }
+
+    private suspend fun bookTour(state: BookingTourState) {
+        checkTourUnit(state.tourUnitId).apply {
+            onSuccess { check ->
+                if(check) {
+                    Log.d("BOOK1", state.toString())
+                    _booking.update {
+                        it.copy(
+                            tourUnitId = state.tourUnitId,
+                            tourName = state.tourName,
+                            adultNumber = state.adultNumber,
+                            childNumber = state.childNumber,
+                            toddleNumber = state.toddleNumber,
+                            babyNumber = state.babyNumber,
+                            adultPrice = state.adultPrice,
+                            childPrice = state.childPrice,
+                            toddlePrice = state.toddlePrice,
+                            babyPrice = state.babyPrice,
+                            discount = state.discount,
+                            departureDate = state.departureDate,
+                            totalPrice = state.totalPrice
+                        )
+                    }
+                    sendEvent(OneTimeEvent.Navigate(Route.BOOKING_SCREEN.toString()))
+                } else {
+                    sendEvent(OneTimeEvent.ShowSnackbar("Không thể đặt tour, vui lòng thử lại."))
+                }
+            }
+            onError {
+                sendEvent(OneTimeEvent.ShowSnackbar("Không thể đặt tour, vui lòng thử lại."))
+            }
         }
     }
 
@@ -125,27 +168,6 @@ class DetailViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    private fun updateCalendarWithTourData() {
-        val months = _calendar.value.months
-        val calendar = _calendar.value.calendar
-
-        val updatedMonths = months.map { (firstDayOfWeek, month) ->
-            val updatedDays = month.days.map { day ->
-                val matched = calendar.any { (_, tourUnit) ->
-                    val departureDate = tourUnit.departureDate
-                    departureDate.year == month.year &&
-                            departureDate.monthValue == month.month &&
-                            departureDate.dayOfMonth == day.date
-                }
-                day.copy(data = matched)
-            }
-            firstDayOfWeek to month.copy(days = updatedDays)
-        }
-        _calendar.update {
-            it.copy(months = updatedMonths)
         }
     }
 

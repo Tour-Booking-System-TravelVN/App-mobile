@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -53,12 +52,12 @@ import com.tanh.tourbooking.R
 import com.tanh.tourbooking.data.mappers.toLocalDate
 import com.tanh.tourbooking.domain.model.Discount
 import com.tanh.tourbooking.domain.model.TourUnit
+import com.tanh.tourbooking.presentation.detail_tour.BookingTourState
 import com.tanh.tourbooking.presentation.detail_tour.CalendarUiState
-import com.tanh.tourbooking.presentation.detail_tour.PeopleSelectorItem
+import com.tanh.tourbooking.presentation.detail_tour.screen.PeopleSelectorItem
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.Calculation
 import com.tanh.tourbooking.util.toFormattedDate
-import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -73,7 +72,8 @@ fun BottomSheet(
     bottomSheetState: SheetState,
     onSheetStateChange: (Boolean) -> Unit,
     dismissSheet: () -> Unit,
-    onCalendar: () -> Unit
+    onCalendar: () -> Unit,
+    bookTour: (BookingTourState) -> Unit
 ) {
 
     var adultPrice by remember {
@@ -121,6 +121,8 @@ fun BottomSheet(
         mutableStateOf(discount?.discountName ?: "")
     }
 
+    var bookingTourState = BookingTourState()
+
     LaunchedEffect(isDateChosen) {
         if(chosenMonth != 0 && chosenDate != 0) {
             val currentYear = LocalDate.now().year
@@ -139,6 +141,17 @@ fun BottomSheet(
                 babyPrice = tourUnitCalendar.babyTourPrice
                 childPrice = tourUnitCalendar.childTourPrice
                 discountValue = tourUnitCalendar.discount.discountName
+
+                bookingTourState = bookingTourState.copy(
+                    departureDate = chosenLocalDate,
+                    adultPrice = tourUnitCalendar.adultTourPrice,
+                    toddlePrice = tourUnitCalendar.toddlerTourPrice,
+                    babyPrice = tourUnitCalendar.babyTourPrice,
+                    childPrice = tourUnitCalendar.childTourPrice,
+                    tourUnitId = tourUnitCalendar.tourUnitId,
+                    discount = tourUnitCalendar.discount,
+                    tourName = tourUnit?.tour?.tourName ?: ""
+                )
             }
         }
     }
@@ -360,7 +373,19 @@ fun BottomSheet(
             }
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
             Button(
-                onClick = {},
+                onClick = {
+                    if(isDateChosen) {
+                        bookingTourState = bookingTourState.copy(
+                            totalPrice = totalAmount,
+                            adultNumber = adultCount,
+                            toddleNumber = toddleCount,
+                            childNumber = childCount,
+                            babyNumber = babyCount
+                        )
+                        dismissSheet()
+                        bookTour(bookingTourState)
+                    }
+                },
                 shape = MaterialTheme.shapes.small,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.onPrimaryContainer

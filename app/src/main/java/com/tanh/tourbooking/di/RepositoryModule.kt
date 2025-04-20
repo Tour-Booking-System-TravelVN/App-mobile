@@ -2,6 +2,7 @@ package com.tanh.tourbooking.di
 
 import com.tanh.tourbooking.data.repository.AuthSecurityRepositoryImpl
 import com.tanh.tourbooking.data.repository.api.AuthRepositoryImpl
+import com.tanh.tourbooking.data.repository.api.BookingRepositoryImpl
 import com.tanh.tourbooking.data.repository.api.RatingRepositoryImpl
 import com.tanh.tourbooking.data.repository.api.TourProgramRepositoryImpl
 import com.tanh.tourbooking.data.repository.api.TourUnitCalendarRepositoryImpl
@@ -13,6 +14,7 @@ import com.tanh.tourbooking.data.repository.firestore.NotificationHandlerImpl
 import com.tanh.tourbooking.data.repository.firestore.UserTokenRepositoryImpl
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
+import com.tanh.tourbooking.domain.repository.api.BookingRepository
 import com.tanh.tourbooking.domain.repository.api.RatingRepository
 import com.tanh.tourbooking.domain.repository.api.TourProgramRepository
 import com.tanh.tourbooking.domain.repository.api.TourUnitCalendarRepository
@@ -31,6 +33,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun provideBookingRepository(impl: BookingRepositoryImpl): BookingRepository
 
     @Binds
     @Singleton
