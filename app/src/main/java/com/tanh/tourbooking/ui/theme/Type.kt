@@ -10,6 +10,19 @@ import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.unit.sp
 import com.tanh.tourbooking.R
 
+val TextStyle18 = TextStyle(
+    fontSize = 18.sp,
+    fontWeight = FontWeight.Medium
+)
+val TextStyle17 = TextStyle(
+    fontSize = 17.sp,
+    fontWeight = FontWeight.Medium
+)
+val TextStyle20 = TextStyle(
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Medium
+)
+
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",

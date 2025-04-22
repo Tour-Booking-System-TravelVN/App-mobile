@@ -16,7 +16,7 @@ class GetInformationUseCase @Inject constructor(
     private val authSecurity: AuthSecurityRepository
 ) {
 
-    suspend operator fun invoke(): Resources<Information, Exception> {
+    suspend operator fun invoke(): Resources<Pair<String, Information>, Exception> {
         val data = authSecurity.readData()
         if (data.token == null) {
             return Resources.Error(Exception("Login again"))
@@ -29,13 +29,13 @@ class GetInformationUseCase @Inject constructor(
                     Role.CUSTOMER.toString() -> {
                         val customerDto = response.data.result.c
                         val customer = customerDto?.toCustomer()
-                        Resources.Success(customer!!)
+                        Resources.Success(response.data.result.email to customer!!)
                     }
 
                     Role.TOURGUIDE.toString() -> {
                         val tourGuideDto = response.data.result.tourGuide
                         val tourGuide = tourGuideDto?.toTourGuide()
-                        Resources.Success(tourGuide!!)
+                        Resources.Success(response.data.result.email to tourGuide!!)
                     }
 
                     else -> {

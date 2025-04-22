@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.detail_tour.screen
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -103,6 +104,12 @@ fun DetailScreen(
     val calendarState = viewModel.calendar.collectAsState().value
 
     val tourUnit = state.tourUnit
+
+    LaunchedEffect(Unit) {
+        viewModel.booking.collect { state ->
+            Log.d("BO4", "abc: $state")
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->

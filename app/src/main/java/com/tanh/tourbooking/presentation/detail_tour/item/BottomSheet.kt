@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -121,7 +122,9 @@ fun BottomSheet(
         mutableStateOf(discount?.discountName ?: "")
     }
 
-    var bookingTourState = BookingTourState()
+    var bookingTourState by remember {
+        mutableStateOf(BookingTourState())
+    }
 
     LaunchedEffect(isDateChosen) {
         if(chosenMonth != 0 && chosenDate != 0) {
@@ -134,6 +137,7 @@ fun BottomSheet(
             val tourUnitCalendar = calendarState.calendar
                 .map { it.second }
                 .find { it.departureDate == chosenLocalDate }
+            Log.d("BO3", tourUnitCalendar.toString())
 
             if (tourUnitCalendar != null) {
                 adultPrice = tourUnitCalendar.adultTourPrice
@@ -383,6 +387,7 @@ fun BottomSheet(
                             babyNumber = babyCount
                         )
                         dismissSheet()
+                        Log.d("BO3", "bookState: ${bookingTourState.toString()}")
                         bookTour(bookingTourState)
                     }
                 },

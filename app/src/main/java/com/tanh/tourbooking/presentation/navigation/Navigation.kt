@@ -21,9 +21,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
-import com.tanh.tourbooking.presentation.detail_tour.screen.BookingScreen
+import com.tanh.tourbooking.presentation.booking.BookingScreen
 import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
@@ -140,32 +141,6 @@ fun Navigation(modifier: Modifier = Modifier) {
                 }
             }
             composable(
-                route = Route.DETAIL_SCREEN.toString() + "/{jsonTour}",
-                arguments = listOf(
-                    navArgument(name = "jsonTour") {
-                        type = NavType.StringType
-                    }
-                )
-            ) {
-                DetailScreen(
-                    modifier = Modifier.padding(paddingValues),
-                    showSnackBar = {
-                        coroutineScope.launch {
-                            snackBarHosState.showSnackbar(
-                                message = it,
-                                withDismissAction = true,
-                                duration = SnackbarDuration.Long
-                            )
-                        }
-                    },
-                    popBackStack = {
-                        navController.popBackStack()
-                    }
-                ) {
-                    navController.navigate(it)
-                }
-            }
-            composable(
                 route = Route.TOUR_LIST_SCREEN.toString() + "/{place}",
                 arguments = listOf(
                     navArgument(name = "place") {
@@ -222,8 +197,55 @@ fun Navigation(modifier: Modifier = Modifier) {
                     navController.navigate(it)
                 }
             }
-            composable(route = Route.BOOKING_SCREEN.toString()) {
-                BookingScreen()
+            composable(
+                route = Route.BOOKING_SCREEN.toString() + "/{state}",
+                arguments = listOf(navArgument("state") {
+                    type = NavType.StringType
+                })
+            ) {
+                BookingScreen(
+                    onNavigate = {
+                        navController.navigate(it)
+                    },
+                    popBackStack = {
+                        navController.popBackStack()
+                    },
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                )
+            }
+            composable(
+                route = Route.DETAIL_SCREEN.toString() + "/{jsonTour}",
+                arguments = listOf(
+                    navArgument(name = "jsonTour") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                DetailScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    },
+                    popBackStack = {
+                        navController.popBackStack()
+                    }
+                ) {
+                    navController.navigate(it)
+                }
             }
         }
     }

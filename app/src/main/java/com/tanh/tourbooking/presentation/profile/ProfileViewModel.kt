@@ -50,8 +50,8 @@ class ProfileViewModel @Inject constructor(
     private suspend fun getInformation() {
         _state.value = _state.value.copy(isLoading = true)
         getInformationUseCase().apply {
-            onSuccess { infor ->
-                when (infor) {
+            onSuccess { information ->
+                when (val infor = information.second) {
                     is Information.Customer -> {
                         _state.update {
                             it.copy(

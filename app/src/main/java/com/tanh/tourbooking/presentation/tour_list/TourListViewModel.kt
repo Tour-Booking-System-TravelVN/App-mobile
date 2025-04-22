@@ -57,7 +57,6 @@ class TourListViewModel @Inject constructor(
         val jsonTour = Json.encodeToString(foundTour)
         val encodedJson = URLEncoder.encode(jsonTour, StandardCharsets.UTF_8.toString())
         val route = Route.DETAIL_SCREEN.toString() + "/${encodedJson}"
-        Log.d("JSON1", "encode: $encodedJson")
         sendEvent(OneTimeEvent.Navigate(route))
     }
 

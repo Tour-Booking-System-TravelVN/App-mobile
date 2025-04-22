@@ -265,39 +265,41 @@ val unspecified_scheme = ColorFamily(
 @Composable
 fun TourBookingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
-    activity: Activity =  LocalActivity.current as MainActivity,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> darkScheme
         else -> lightScheme
     }
 
-    val window = calculateWindowSizeClass(activity)
+    val window = activity?.let { calculateWindowSizeClass(it) }
     val config = LocalConfiguration.current
 
     var typography = CompactTypography
     var appDimens = CompactDimens
 
-    when(window.widthSizeClass) {
+    when (window?.widthSizeClass ?: WindowWidthSizeClass.Compact) {
         WindowWidthSizeClass.Compact -> {
-            if(config.screenWidthDp <= 360) {
-                appDimens = CompactSmallDimens
-                typography = CompactSmallTypography
-            }
-            else if(config.screenWidthDp <= 599) {
-                appDimens = CompactMediumDimens
-                typography = CompactMediumTypography
-            } else {
-                appDimens = CompactDimens
-                typography = CompactTypography
+            when {
+                config.screenWidthDp <= 360 -> {
+                    appDimens = CompactSmallDimens
+                    typography = CompactSmallTypography
+                }
+                config.screenWidthDp <= 599 -> {
+                    appDimens = CompactMediumDimens
+                    typography = CompactMediumTypography
+                }
+                else -> {
+                    appDimens = CompactDimens
+                    typography = CompactTypography
+                }
             }
         }
         WindowWidthSizeClass.Medium -> {
@@ -317,10 +319,7 @@ fun TourBookingTheme(
             content = content
         )
     }
-
-
 }
-
 val MaterialTheme.dimens
     @Composable
     get() = LocalAppDimens.current

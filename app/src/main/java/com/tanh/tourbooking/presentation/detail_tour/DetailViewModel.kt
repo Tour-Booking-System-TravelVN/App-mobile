@@ -1,6 +1,8 @@
 package com.tanh.tourbooking.presentation.detail_tour
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +24,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
+import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import javax.inject.Inject
@@ -74,29 +78,33 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private suspend fun bookTour(state: BookingTourState) {
+        Log.d("BO3", state.toString())
         checkTourUnit(state.tourUnitId).apply {
             onSuccess { check ->
                 if(check) {
-                    Log.d("BOOK1", state.toString())
-                    _booking.update {
-                        it.copy(
-                            tourUnitId = state.tourUnitId,
-                            tourName = state.tourName,
-                            adultNumber = state.adultNumber,
-                            childNumber = state.childNumber,
-                            toddleNumber = state.toddleNumber,
-                            babyNumber = state.babyNumber,
-                            adultPrice = state.adultPrice,
-                            childPrice = state.childPrice,
-                            toddlePrice = state.toddlePrice,
-                            babyPrice = state.babyPrice,
-                            discount = state.discount,
-                            departureDate = state.departureDate,
-                            totalPrice = state.totalPrice
-                        )
-                    }
-                    sendEvent(OneTimeEvent.Navigate(Route.BOOKING_SCREEN.toString()))
+//                    _booking.update {
+//                        it.copy(
+//                            tourUnitId = state.tourUnitId,
+//                            tourName = state.tourName,
+//                            adultNumber = state.adultNumber,
+//                            childNumber = state.childNumber,
+//                            toddleNumber = state.toddleNumber,
+//                            babyNumber = state.babyNumber,
+//                            adultPrice = state.adultPrice,
+//                            childPrice = state.childPrice,
+//                            toddlePrice = state.toddlePrice,
+//                            babyPrice = state.babyPrice,
+//                            discount = state.discount,
+//                            departureDate = state.departureDate,
+//                            totalPrice = state.totalPrice
+//                        )
+//                    }
+                    val json = Json.encodeToString(state)
+                    val encodedJson = URLEncoder.encode(json, StandardCharsets.UTF_8)
+                    val route = Route.BOOKING_SCREEN.toString() + "/${encodedJson}"
+                    sendEvent(OneTimeEvent.Navigate(route))
                 } else {
                     sendEvent(OneTimeEvent.ShowSnackbar("Không thể đặt tour, vui lòng thử lại."))
                 }
