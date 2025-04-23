@@ -81,7 +81,7 @@ fun ChatScreen(
                 is OneTimeEvent.ShowSnackbar -> {
                     onShowSnackBar(event.message)
                 }
-
+                is OneTimeEvent.OpenLink -> Unit
                 is OneTimeEvent.ShowToast -> Unit
             }
         }

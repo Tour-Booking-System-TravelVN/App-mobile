@@ -77,6 +77,7 @@ fun HomeScreen(
                 OneTimeEvent.PopBackStack -> Unit
                 is OneTimeEvent.ShowSnackbar -> Unit
                 is OneTimeEvent.ShowToast -> Unit
+                is OneTimeEvent.OpenLink -> Unit
             }
         }
     }

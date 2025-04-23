@@ -1,6 +1,7 @@
 package com.tanh.tourbooking.util
 
 import android.annotation.SuppressLint
+import com.tanh.tourbooking.domain.model.Discount
 import com.tanh.tourbooking.domain.model.Rating
 import java.text.NumberFormat
 import java.util.Locale
@@ -25,6 +26,21 @@ object Calculation {
     fun formatDouble(amount: Double): String {
         val formatter = NumberFormat.getNumberInstance(Locale.US)
         return formatter.format(amount)
+    }
+
+    fun discountedPrice(amount: Double, discount: Discount): Double {
+        return when (discount.discountUnit) {
+            "%" -> {
+                amount * ((100 - discount.discountValue) / 100)
+            }
+            "VND" -> {
+                val value = discount.discountValue
+                amount - value
+            }
+            else -> {
+                0.0
+            }
+        }
     }
 
 }

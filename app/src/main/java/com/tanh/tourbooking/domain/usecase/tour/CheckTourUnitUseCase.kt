@@ -19,7 +19,11 @@ class CheckTourUnitUseCase @Inject constructor(
         return repository.checkBeforeBooking(tourUnitId, token).let {
             when(it) {
                 is Result.Success -> {
-                    Resources.Success(true)
+                    if(it.data.code == 0) {
+                        Resources.Success(true)
+                    } else {
+                        Resources.Error(Exception(it.data.message))
+                    }
                 }
                 is Result.Error -> {
                     Resources.Success(false)

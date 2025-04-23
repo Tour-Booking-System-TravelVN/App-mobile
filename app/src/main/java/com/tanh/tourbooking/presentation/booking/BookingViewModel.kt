@@ -9,10 +9,13 @@ import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
 import com.tanh.tourbooking.domain.model.Information
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
+import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
+import com.tanh.tourbooking.presentation.booking.item.InforCustomer
 import com.tanh.tourbooking.presentation.detail_tour.BookingTourState
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val getInformationUseCase: GetInformationUseCase,
+    private val createPaymentUseCase: CreatePaymentUseCase,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _state = MutableStateFlow(BookingUiState())
@@ -74,7 +78,6 @@ class BookingViewModel @Inject constructor(
                         }
 
                         is Information.TourGuide -> Unit
-
                     }
                 }
             }
@@ -109,7 +112,54 @@ class BookingViewModel @Inject constructor(
     }
 
     private fun makeAPayment() {
-
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+            delay(2000)
+            createPaymentUseCase(
+                tourState = _state.value.state,
+                companions = _state.value.companions,
+                customerInfo = InforCustomer(
+                    firstname = _state.value.editedFirstName,
+                    lastname = _state.value.editedLastName,
+                    dob = _state.value.editedDob,
+                    email = _state.value.editedEmail,
+                    phoneNumber = _state.value.editedPhoneNumber,
+                    gender = _state.value.editedGender,
+                    address = _state.value.editedAddress
+                )
+            ).apply {
+                onSuccess { transaction ->
+                    Log.d("PAY1", transaction.toString())
+                    _state.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            transactionDetail = transaction
+                        )
+                    }
+                }
+                onError { exception ->
+                    _state.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            error = exception.message
+                        )
+                    }
+                    sendEvent(OneTimeEvent.ShowSnackbar(message = exception.message ?: "Unknown error"))
+                }
+            }
+            if(_state.value.transactionDetail != null) {
+                val url = _state.value.transactionDetail?.checkoutUrl
+                if(url.isNullOrBlank()) {
+                    sendEvent(OneTimeEvent.ShowSnackbar("Không thể tạo thanh toán"))
+                } else {
+                    sendEvent(OneTimeEvent.OpenLink(url))
+                }
+            }
+        }
     }
 
     private fun addCompanion(companion: Companion) {

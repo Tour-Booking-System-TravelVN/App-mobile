@@ -81,6 +81,7 @@ fun MessageScreen(
                 OneTimeEvent.PopBackStack -> onPopBackStack()
                 is OneTimeEvent.ShowSnackbar -> Unit
                 is OneTimeEvent.ShowToast -> Unit
+                is OneTimeEvent.OpenLink -> Unit
             }
         }
     }

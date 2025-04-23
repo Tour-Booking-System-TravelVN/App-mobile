@@ -21,12 +21,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.booking.BookingScreen
 import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
+import com.tanh.tourbooking.presentation.failure.FailureScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.login.LoginScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
@@ -36,6 +36,7 @@ import com.tanh.tourbooking.presentation.profile.ProfileScreen
 import com.tanh.tourbooking.presentation.register.RegisterScreen
 import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
 import com.tanh.tourbooking.presentation.start.StartScreen
+import com.tanh.tourbooking.presentation.success.SuccessScreen
 import com.tanh.tourbooking.presentation.tour_list.TourListScreen
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
@@ -80,6 +81,12 @@ fun Navigation(modifier: Modifier = Modifier) {
         ) {
             composable(route = Route.SPLASH_SCREEN.toString()) {
                 SplashScreen(navController = navController)
+            }
+            composable(route = Route.SUCCESS_SCREEN.toString()) {
+                SuccessScreen()
+            }
+            composable(route = Route.FAILURE_SCREEN.toString()) {
+                FailureScreen()
             }
             composable(route = Route.CHATS_SCREEN.toString()) {
                 ChatScreen(

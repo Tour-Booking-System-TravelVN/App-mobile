@@ -1,5 +1,7 @@
 package com.tanh.tourbooking.data.model.request
 
+import com.tanh.tourbooking.data.model.dto.tour.UserAccount
+
 data class CustomerRequest(
     val firstname: String,
     val lastname: String,

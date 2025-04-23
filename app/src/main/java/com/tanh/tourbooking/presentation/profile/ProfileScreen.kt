@@ -68,6 +68,7 @@ fun ProfileScreen(
                 OneTimeEvent.PopBackStack -> Unit
                 is OneTimeEvent.ShowSnackbar -> showSnackBar(event.message)
                 is OneTimeEvent.ShowToast -> Unit
+                is OneTimeEvent.OpenLink -> Unit
             }
         }
     }

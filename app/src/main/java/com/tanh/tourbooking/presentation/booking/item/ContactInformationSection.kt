@@ -440,7 +440,7 @@ fun ContactInformationSection(
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        val formatter = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+                        val formatter = SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
                         dob = formatter.format(Date(millis))
                     }
                     showDatePicker = false

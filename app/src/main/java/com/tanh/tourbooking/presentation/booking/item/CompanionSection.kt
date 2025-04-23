@@ -275,7 +275,7 @@ fun CompanionSection(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                             dob = formatter.format(Date(millis))
                         }
                         showDatePicker = false

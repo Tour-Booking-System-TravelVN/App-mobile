@@ -5,10 +5,12 @@ import androidx.datastore.core.DataStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
+import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.BookingRepository
+import com.tanh.tourbooking.domain.repository.api.PaymentRepository
 import com.tanh.tourbooking.domain.repository.api.RatingRepository
 import com.tanh.tourbooking.domain.repository.api.TourProgramRepository
 import com.tanh.tourbooking.domain.repository.api.TourUnitCalendarRepository
@@ -31,6 +33,7 @@ import com.tanh.tourbooking.domain.usecase.chatbox.NotifyMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
+import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CreateBookingOrderUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetRatingByTourUnitIdUseCase
@@ -46,6 +49,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideCreatePaymentUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        paymentRepository: PaymentRepository
+    ) = CreatePaymentUseCase(authSecurityRepository, paymentRepository)
 
     @Provides
     @Singleton
