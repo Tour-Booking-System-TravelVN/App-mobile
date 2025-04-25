@@ -90,6 +90,7 @@ fun BookingScreen(
                 is OneTimeEvent.ShowToast -> Unit
                 is OneTimeEvent.OpenLink -> {
                     val intent = Intent(ACTION_VIEW, event.url.toUri())
+                    intent.setPackage("com.android.chrome")
                     context.startActivity(intent)
                 }
             }

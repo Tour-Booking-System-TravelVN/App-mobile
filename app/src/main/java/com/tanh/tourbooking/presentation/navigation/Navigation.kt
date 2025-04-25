@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -21,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.booking.BookingScreen
@@ -79,13 +81,33 @@ fun Navigation(modifier: Modifier = Modifier) {
             navController = navController,
             startDestination = Route.START_SCREEN.toString()
         ) {
-            composable(route = Route.SPLASH_SCREEN.toString()) {
+            composable(
+                route = Route.SPLASH_SCREEN.toString()
+            ) {
                 SplashScreen(navController = navController)
             }
-            composable(route = Route.SUCCESS_SCREEN.toString()) {
+            composable(
+                route = Route.SUCCESS_SCREEN.toString(),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern =
+                            "https://makeitsoapp-44995.web.app/success"
+                        action = Intent.ACTION_VIEW
+                    }
+                )
+            ) {
                 SuccessScreen()
             }
-            composable(route = Route.FAILURE_SCREEN.toString()) {
+            composable(
+                route = Route.FAILURE_SCREEN.toString(),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern =
+                            "https://makeitsoapp-44995.web.app/failure"
+                        action = Intent.ACTION_VIEW
+                    }
+                )
+            ) {
                 FailureScreen()
             }
             composable(route = Route.CHATS_SCREEN.toString()) {

@@ -31,8 +31,8 @@ class CreatePaymentUseCase @Inject constructor(
             return Resources.Error(Exception("Vui lòng đăng nhập/ đăng ký"))
         }
         val request = CreatePaymentRequest(
-            cancelUrl = "https://youtube.com",
-            returnUrl = "https://chat.com",
+            cancelUrl = "https://makeitsoapp-44995.web.app/failure",
+            returnUrl = "https://makeitsoapp-44995.web.app/status.html",
             description = tourState.tourUnitId,
             price = tourState.totalPrice.toInt(),
             productName = tourState.tourName,
