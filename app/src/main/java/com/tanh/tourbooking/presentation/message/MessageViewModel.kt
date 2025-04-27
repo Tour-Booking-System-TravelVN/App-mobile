@@ -13,8 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
+import com.tanh.tourbooking.domain.model.Information
+import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
+import com.tanh.tourbooking.util.Role
+import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,15 +28,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class MessageViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val chatUseCaseManager: ChatUseCaseManager
+    private val chatUseCaseManager: ChatUseCaseManager,
+    private val getInformationUseCase: GetInformationUseCase
 ): ViewModel() {
-
-    val userId by mutableIntStateOf(1)
-    var username by mutableStateOf("Tuấn Anh")
 
     private val _state = MutableStateFlow(MessageUiState())
     val state = _state.asStateFlow()
@@ -44,11 +45,40 @@ class MessageViewModel @Inject constructor(
 
     init {
         chatId = savedStateHandle.get<String>("chatId") ?: ""
-        if(chatId.isNotBlank()) {
+        if (chatId.isNotBlank()) {
             viewModelScope.launch {
                 launch {
+                    getInformationUseCase().onSuccess {
+                        when (val role = it.second) {
+                            is Information.Customer -> {
+                                Log.d("CAT1", role.toString())
+                                _state.update { state ->
+                                    state.copy(
+                                        customer = role,
+                                        role = Role.CUSTOMER
+                                    )
+                                }
+                            }
+
+                            is Information.TourGuide -> {
+                                Log.d("CAT1", role.toString())
+                                _state.update { state ->
+                                    state.copy(
+                                        tourguide = role,
+                                        role = Role.TOURGUIDE
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    _state.update {
+                        it.copy(isLoading = true)
+                    }
                     chatUseCaseManager.observeMessage(chatId).collect { res ->
                         res.onSuccess { list ->
+                            Log.d("MSG1", list.toString())
                             _state.update {
                                 it.copy(
                                     messages = list,
@@ -57,6 +87,7 @@ class MessageViewModel @Inject constructor(
                             }
                         }
                         res.onError {
+                            Log.d("MSG1", it.message.toString())
                             _state.update {
                                 it.copy(
                                     error = it.error,
@@ -97,10 +128,14 @@ class MessageViewModel @Inject constructor(
         }
     }
 
-
+    fun onNavToWaitingId() {
+        sendEvent(OneTimeEvent.Navigate(Route.WAITING_SCREEN.toString() + "/${chatId}"))
+    }
 
     fun sendMessage(message: String) {
         viewModelScope.launch {
+            val userId = _state.value.customer?.id ?: _state.value.tourguide?.id ?: 0
+            val username = _state.value.customer?.lastname ?: _state.value.tourguide?.lastname ?: "Anonymous"
             chatUseCaseManager.createMessage(chatId, message, userId, username)
             chatUseCaseManager.notifyMessage(chatId, message, _state.value.chatbox?.name ?:  "No name")
         }
@@ -121,3 +156,10 @@ class MessageViewModel @Inject constructor(
     }
 
 }
+
+val MessageUiState.userId: Int?
+    get() = when(role) {
+        Role.CUSTOMER -> customer?.id
+        Role.TOURGUIDE -> tourguide?.id
+        Role.NULL -> null
+    }

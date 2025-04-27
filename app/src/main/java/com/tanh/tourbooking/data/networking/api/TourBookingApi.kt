@@ -9,11 +9,13 @@ import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
 import com.tanh.tourbooking.data.model.response.BookingResponse
 import com.tanh.tourbooking.data.model.response.CheckTourUnitResponse
 import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
+import com.tanh.tourbooking.data.model.response.LogoutResponse
 import com.tanh.tourbooking.data.model.response.RatingResponse
 import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
 import com.tanh.tourbooking.data.model.response.TourUnitCalendarResponse
 import com.tanh.tourbooking.data.model.response.UserInformationResponse
+import com.tanh.tourbooking.data.model.response.ValidTokenResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -74,5 +76,15 @@ interface TourBookingApi {
         @Header("Authorization") token: String,
         @Body request: CreatePaymentRequest
     ): Response<CreatePaymentResponse>
+
+    @POST("/auth/introspect")
+    suspend fun validToken(
+        @Header("Authorization") token: String
+    ): Response<ValidTokenResponse>
+
+    @POST("/auth/logoutapp")
+    suspend fun logout(
+        @Header("Authorization") token: String
+    ): Response<LogoutResponse>
 
 }

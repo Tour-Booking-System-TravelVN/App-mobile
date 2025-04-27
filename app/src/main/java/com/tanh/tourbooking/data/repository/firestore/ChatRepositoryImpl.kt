@@ -2,10 +2,12 @@ package com.tanh.tourbooking.data.repository.firestore
 
 import android.os.Build
 import android.util.Log
+import androidx.compose.ui.text.rememberTextMeasurer
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.toObject
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.tour.ChatBoxDto
 import com.tanh.tourbooking.data.model.util.exception.Resources
@@ -13,6 +15,7 @@ import com.tanh.tourbooking.di.IODispatcher
 import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.util.Collections
+import io.opencensus.resource.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -64,7 +67,7 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun joinChatBox(uniqueBookingId: Int, userId: Int): String? {
+    override suspend fun joinChatBox(uniqueBookingId: String, userId: Int): String? {
         return withContext(dispatcherIO) {
             val snapshot = chatBoxCollection.whereEqualTo("uniqueBookingId", uniqueBookingId)
                 .get().await()
@@ -74,11 +77,67 @@ class ChatRepositoryImpl @Inject constructor(
 
             return@withContext try {
                 chatBoxCollection.document(documentId)
-                    .update("participants", FieldValue.arrayUnion(userId))
+                    .update("waitingId", FieldValue.arrayUnion(userId))
                     .await()
                 documentId
             } catch (e: Exception) {
                 null
+            }
+        }
+    }
+
+    override fun observeWaitingChatBoxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>> {
+        return callbackFlow<Resources<List<ChatBoxDto>, Exception>> {
+            var listenerRegistration: ListenerRegistration? = null
+            try {
+                listenerRegistration = chatBoxCollection.whereArrayContains("waitingId", userId)
+                    .addSnapshotListener { snapshot, error ->
+                        if(error != null) {
+                            trySend(Resources.Error(error))
+                        } else {
+                            val result = if (snapshot != null) {
+                                Resources.Success(
+                                    snapshot.toObjects(ChatBoxDto::class.java).mapNotNull { it })
+                            } else {
+                                Resources.Error(Exception("Not found documents"))
+                            }
+                            trySend(result).isSuccess
+                        }
+                    }
+            } catch (e: Exception) {
+                Resources.Error(e)
+            }
+
+            awaitClose {
+                listenerRegistration?.remove()
+            }
+        }.flowOn(dispatcherIO)
+    }
+
+    override suspend fun observeWaitingId(chatId: String): Resources<List<Int>, Exception> {
+        return withContext(dispatcherIO) {
+            val snapshot = chatBoxCollection.whereEqualTo("chatId", chatId).get().await()
+            if(snapshot.isEmpty) return@withContext Resources.Error(Exception("Error"))
+            val chatBoxDto = snapshot.first().toObject(ChatBoxDto::class.java)
+            val waitingIds = chatBoxDto.waitingId
+            return@withContext Resources.Success(waitingIds)
+        }
+    }
+
+    override suspend fun acceptUserIdToChat(userId: Int, chatId: String) {
+        return withContext(dispatcherIO) {
+            val snapshot = chatBoxCollection.whereEqualTo("chatId", chatId).get().await()
+            if(snapshot.isEmpty) return@withContext
+            val documentId = snapshot.documents[0].id
+            try {
+                //xóa id trong waiting id
+                chatBoxCollection.document(documentId)
+                    .update("waitingId", FieldValue.arrayRemove(userId))
+                //thêm id vào participants
+                chatBoxCollection.document(documentId)
+                    .update("participants", FieldValue.arrayUnion(userId))
+            } catch (e: Exception) {
+                Unit
             }
         }
     }
@@ -112,27 +171,26 @@ class ChatRepositoryImpl @Inject constructor(
     //delete chatbox if time gap is more than 7 days
     override suspend fun deleteInactiveChatBox(chatId: String) {
         withContext(dispatcherIO) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                chatBoxCollection.document(chatId).get().await()?.let { result ->
-                    result.toObject(ChatBoxDto::class.java)?.also { chatBox ->
-                        val lastTimestamp = chatBox.lastTimestamp.toDate().toInstant() //tg cuoi cung
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        val currentTimeStamp = Timestamp.now().toDate().toInstant()  //tg hien tai
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        val timeDifference =
-                            currentTimeStamp.toEpochDay() - lastTimestamp.toEpochDay()
-                        if (timeDifference >= 7) {
-                            firebaseMessaging.unsubscribeFromTopic(chatId).addOnCompleteListener { task ->
-                                if(task.isSuccessful) {
+            chatBoxCollection.document(chatId).get().await()?.let { result ->
+                result.toObject(ChatBoxDto::class.java)?.also { chatBox ->
+                    val lastTimestamp = chatBox.lastTimestamp.toDate().toInstant() //tg cuoi cung
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                    val currentTimeStamp = Timestamp.now().toDate().toInstant()  //tg hien tai
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                    val timeDifference =
+                        currentTimeStamp.toEpochDay() - lastTimestamp.toEpochDay()
+                    if (timeDifference >= 7) {
+                        firebaseMessaging.unsubscribeFromTopic(chatId)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
                                     Log.d("FCM", "Delete successfully")
                                 } else {
                                     Log.d("FCM", "Error deleting chatbox")
                                 }
                             }
-                            chatBoxCollection.document(chatId).delete().await()
-                        }
+                        chatBoxCollection.document(chatId).delete().await()
                     }
                 }
             }

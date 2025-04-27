@@ -10,7 +10,6 @@ import com.tanh.tourbooking.domain.model.Message
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun ChatBox.toChatBoxDto(): ChatBoxDto =
     ChatBoxDto(
         participants = participants,
@@ -19,10 +18,10 @@ fun ChatBox.toChatBoxDto(): ChatBoxDto =
         adminId = adminId,
         chatId = chatId,
         name = name,
-        uniqueBookingId = uniqueBookingId
+        uniqueBookingId = uniqueBookingId,
+        waitingId = waitingId
     )
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun ChatBoxDto.toChatBox(): ChatBox =
     ChatBox(
         participants = participants,
@@ -31,10 +30,10 @@ fun ChatBoxDto.toChatBox(): ChatBox =
         adminId = adminId,
         chatId = chatId,
         name = name,
-        uniqueBookingId = uniqueBookingId
+        uniqueBookingId = uniqueBookingId,
+        waitingId = waitingId
     )
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun Message.toMessageDto(): MessageDto =
     MessageDto(
         senderId = senderId,
@@ -43,7 +42,6 @@ fun Message.toMessageDto(): MessageDto =
         senderName = senderName
     )
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun MessageDto.toMessage(): Message =
     Message(
         senderId = senderId,

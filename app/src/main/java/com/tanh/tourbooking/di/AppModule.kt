@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
 import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
+import com.tanh.tourbooking.data.model.response.ValidTokenResponse
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
@@ -24,8 +25,11 @@ import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetToursByPlaceUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
+import com.tanh.tourbooking.domain.usecase.auth.LogoutUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
+import com.tanh.tourbooking.domain.usecase.auth.ValidTokenUseCase
+import com.tanh.tourbooking.domain.usecase.chatbox.AcceptUserJoinChat
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.chatbox.CreateMessage
@@ -33,6 +37,8 @@ import com.tanh.tourbooking.domain.usecase.chatbox.NotifyMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
+import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingChat
+import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingId
 import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CreateBookingOrderUseCase
@@ -49,6 +55,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideLogoutUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        authRepository: AuthRepository
+    ) = LogoutUseCase(authSecurityRepository, authRepository)
+
+    @Provides
+    @Singleton
+    fun provideValidTokenUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        authRepository: AuthRepository
+    ) = ValidTokenUseCase(authSecurityRepository, authRepository)
 
     @Provides
     @Singleton
@@ -169,13 +189,28 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideObserveWaitingChat(repository: ChatRepository) = ObserveWaitingChat(repository)
+
+    @Provides
+    @Singleton
+    fun provideObserveWaitingIdi(repository: ChatRepository) = ObserveWaitingId(repository)
+
+    @Provides
+    @Singleton
+    fun provideAcceptUserJoinChat(repository: ChatRepository) = AcceptUserJoinChat(repository)
+
+    @Provides
+    @Singleton
     fun provideChatManager(
         observeChat: ObserveChat,
         createMessage: CreateMessage,
         observeChatlist: ObserveChatlist,
         observeMessage: ObserveMessage,
         allowUserToChat: AllowUserToChat,
-        notifyMessage: NotifyMessage
+        notifyMessage: NotifyMessage,
+        observeWaitingChat: ObserveWaitingChat,
+        observeWaitingId: ObserveWaitingId,
+        acceptUserJoinChat: AcceptUserJoinChat
     ) =
         ChatUseCaseManager(
             observeChat,
@@ -183,7 +218,10 @@ object AppModule {
             observeChatlist,
             observeMessage,
             allowUserToChat,
-            notifyMessage
+            notifyMessage,
+            observeWaitingChat,
+            observeWaitingId,
+            acceptUserJoinChat
         )
 
 }

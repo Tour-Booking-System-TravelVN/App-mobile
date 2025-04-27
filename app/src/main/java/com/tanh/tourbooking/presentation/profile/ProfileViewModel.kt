@@ -7,7 +7,9 @@ import com.tanh.tourbooking.data.model.util.exception.onSuccess
 import com.tanh.tourbooking.domain.model.Information
 import com.tanh.tourbooking.domain.usecase.auth.CheckRoleUseCase
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
+import com.tanh.tourbooking.domain.usecase.auth.LogoutUseCase
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
+import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val checkRoleUseCase: CheckRoleUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val getInformationUseCase: GetInformationUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(ProfileUiState())
@@ -87,6 +90,18 @@ class ProfileViewModel @Inject constructor(
     fun onEvent(event: ProfileEvent) {
         when(event) {
             is ProfileEvent.OnNavToPrivateInformation -> onNavToPrivateInformation(event.route)
+            ProfileEvent.Logout -> logout()
+        }
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            val status = logoutUseCase()
+            if(status) {
+                sendEvent(OneTimeEvent.Navigate(Route.LOGIN_SCREEN.toString()))
+            } else {
+                showSnackBar("Oops!")
+            }
         }
     }
 

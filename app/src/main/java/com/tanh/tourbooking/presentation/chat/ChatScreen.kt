@@ -1,9 +1,6 @@
 package com.tanh.tourbooking.presentation.chat
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,25 +12,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -51,19 +42,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.dimens
 
-@OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun ChatScreen(
-    viewModel: ChatsViewModel = hiltViewModel<ChatsViewModel>(),
     modifier: Modifier = Modifier,
+    viewModel: ChatsViewModel = hiltViewModel<ChatsViewModel>(),
     onShowSnackBar: suspend (String) -> Unit,
     onNavigate: (String) -> Unit
 ) {
 
-    val state = viewModel.chat.collectAsState(initial = emptyList()).value
+    val chat = viewModel.chat.collectAsState(initial = emptyList()).value
+    val waitedChat = viewModel.waitedChats.collectAsState(initial = emptyList()).value
 
-    var inputChatBookingId by remember {
+    var inputBookingId by remember {
         mutableStateOf("")
     }
     var showDialog by remember {
@@ -114,7 +105,7 @@ fun ChatScreen(
         ) {
             Column {
                 Text(
-                    text = "Messages",
+                    text = "Tin nhắn",
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
@@ -135,12 +126,15 @@ fun ChatScreen(
                             .padding(top = 8.dp),
                         contentPadding = PaddingValues(16.dp)
                     ) {
-                        itemsIndexed(state) { index, chatbox ->
+                        itemsIndexed(chat) { index, chatbox ->
                             Column {
-                                ChatItem(chatBox = chatbox) {
+                                ChatItem(
+                                    chatBox = chatbox,
+                                    status = false
+                                ) {
                                     viewModel.onNavToMessage(chatbox.chatId)
                                 }
-                                if (index < state.size - 1) {
+                                if (index < chat.size - 1) {
                                     HorizontalDivider(
                                         color = Color.Gray,
                                         thickness = 0.5.dp,
@@ -151,6 +145,51 @@ fun ChatScreen(
                                 }
                             }
                         }
+                        itemsIndexed(waitedChat) { index, chatbox ->
+                            Column {
+                                ChatItem(
+                                    chatBox = chatbox,
+                                    status = true
+                                ) {
+                                }
+                                if (index < chat.size - 1) {
+                                    HorizontalDivider(
+                                        color = Color.Gray,
+                                        thickness = 0.5.dp,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(showDialog) {
+            Dialog(
+                onDismissRequest = {
+                    showDialog = false
+                }
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        value = inputBookingId,
+                        onValueChange = {
+                            inputBookingId = it
+                        }
+                    )
+                    Button(
+                        onClick = {
+                            viewModel.validChatBookingId(inputBookingId)
+                            inputBookingId = ""
+                            showDialog = false
+                        }
+                    ) {
+                        Text("Tham gia")
                     }
                 }
             }

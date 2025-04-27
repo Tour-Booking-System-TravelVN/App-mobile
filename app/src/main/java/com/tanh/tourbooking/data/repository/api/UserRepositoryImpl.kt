@@ -34,7 +34,7 @@ class UserRepositoryImpl @Inject constructor(
         return 1;
     }
 
-    override suspend fun checkBookingIdTour(bookingId: Int): Boolean {
+    override suspend fun checkBookingIdTour(bookingId: String): Boolean {
         return true
     }
 

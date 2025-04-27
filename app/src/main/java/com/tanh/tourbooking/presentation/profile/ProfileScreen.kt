@@ -2,6 +2,7 @@ package com.tanh.tourbooking.presentation.profile
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -110,7 +111,13 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 profileList.fastForEach { profile ->
-                    ProfileItem(icon = profile.second, title = profile.first)
+                    ProfileItem(
+                        icon = profile.second, title = profile.first,
+                        modifier = Modifier.clickable {
+                            if(profile.first == "Logout") {
+                                viewModel.onEvent(ProfileEvent.Logout)
+                            }
+                        })
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                 }
             }

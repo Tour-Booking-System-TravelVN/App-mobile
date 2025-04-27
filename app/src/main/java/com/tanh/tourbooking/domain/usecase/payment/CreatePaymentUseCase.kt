@@ -32,7 +32,7 @@ class CreatePaymentUseCase @Inject constructor(
         }
         val request = CreatePaymentRequest(
             cancelUrl = "https://makeitsoapp-44995.web.app/failure",
-            returnUrl = "https://makeitsoapp-44995.web.app/status.html",
+            returnUrl = "https://makeitsoapp-44995.web.app/success",
             description = tourState.tourUnitId,
             price = tourState.totalPrice.toInt(),
             productName = tourState.tourName,

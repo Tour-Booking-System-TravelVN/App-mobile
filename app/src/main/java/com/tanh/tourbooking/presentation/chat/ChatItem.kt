@@ -33,11 +33,11 @@ import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatItem(
     chatBox: ChatBox,
     modifier: Modifier = Modifier,
+    status: Boolean = false,
     onClick: (String) -> Unit
 ) {
 
@@ -61,9 +61,34 @@ fun ChatItem(
         Column(
             modifier = Modifier.align(Alignment.CenterVertically)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            if(!status) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = chatBox.name,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.W600,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = TimeFormatter.formatDate(chatBox.lastTime),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontSize = 12.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = chatBox.message,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else {
                 Text(
                     text = chatBox.name,
                     style = MaterialTheme.typography.bodySmall,
@@ -72,28 +97,16 @@ fun ChatItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = TimeFormatter.formatDate(chatBox.lastTime),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontSize = 12.sp
+                    text = "Vui lòng chờ hướng dẫn viên duyệt"
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = chatBox.message,
-                style = MaterialTheme.typography.titleLarge,
-                fontSize = 14.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
         }
 
     }
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun ChatItemPreivew(modifier: Modifier = Modifier) {

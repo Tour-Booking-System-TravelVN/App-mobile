@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,7 +46,11 @@ import com.tanh.tourbooking.util.navRoutes
 import kotlinx.coroutines.launch
 
 @Composable
-fun Navigation(modifier: Modifier = Modifier) {
+fun Navigation(
+    modifier: Modifier = Modifier,
+    tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
+) {
+
     val navController = rememberNavController()
 
     val coroutineScope = rememberCoroutineScope()
@@ -59,6 +64,16 @@ fun Navigation(modifier: Modifier = Modifier) {
 
     var showBottomBar by remember {
         mutableStateOf(currentDestination in navRoutes)
+    }
+
+    var isTokenValid by remember  {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        tokenViewModel.isTokenValid.collect { valid ->
+            isTokenValid = valid
+        }
     }
 
     LaunchedEffect(navBackStackEntry) {
@@ -79,7 +94,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = Route.START_SCREEN.toString()
+            startDestination = if(isTokenValid) Route.HOME_SCREEN.toString() else Route.START_SCREEN.toString()
         ) {
             composable(
                 route = Route.SPLASH_SCREEN.toString()

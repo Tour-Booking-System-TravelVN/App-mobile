@@ -11,5 +11,8 @@ interface ChatRepository {
     fun observeChatBox(chatId: String): Flow<Resources<ChatBoxDto, Exception>>
     suspend fun deleteInactiveChatBox(chatId: String)
     fun observeChatboxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>>
-    suspend fun joinChatBox(uniqueBookingId: Int, userId: Int): String?
+    suspend fun joinChatBox(uniqueBookingId: String, userId: Int): String?
+    fun observeWaitingChatBoxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>>
+    suspend fun observeWaitingId(chatId: String): Resources<List<Int>, Exception>
+    suspend fun acceptUserIdToChat(userId: Int, chatId: String)
 }

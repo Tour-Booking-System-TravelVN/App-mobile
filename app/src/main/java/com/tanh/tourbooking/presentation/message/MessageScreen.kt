@@ -51,17 +51,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.data.mappers.TimeFormatter
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
+import com.tanh.tourbooking.util.Role
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-@OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Suppress("DEPRECATION")
 @Composable
 fun MessageScreen(
+    modifier: Modifier = Modifier,
     viewModel: MessageViewModel = hiltViewModel<MessageViewModel>(),
     paddingValues: PaddingValues,
-    modifier: Modifier = Modifier,
     onPopBackStack: () -> Unit = {}
 ) {
 
@@ -113,16 +112,18 @@ fun MessageScreen(
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Bold
             )
-            IconButton(
-                onClick = {
-
+            if(state.role == Role.TOURGUIDE) {
+                IconButton(
+                    onClick = {
+                        viewModel.onNavToWaitingId()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
             }
         }
         Divider(
@@ -142,7 +143,7 @@ fun MessageScreen(
                     items(list) { message ->
                         MessageItem(
                             message = message,
-                            userId = viewModel.userId
+                            userId = state.userId ?: 0
                         )
                     }
                     item {
@@ -203,7 +204,6 @@ fun MessageScreen(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PreviewMessageScreen(modifier: Modifier = Modifier) {

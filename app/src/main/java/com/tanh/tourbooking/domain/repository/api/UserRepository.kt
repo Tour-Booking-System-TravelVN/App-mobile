@@ -12,6 +12,6 @@ interface UserRepository {
     suspend fun getInformation(token: String): Result<UserInformationResponse, NetworkError>
 
     suspend fun getUsers(): Flow<List<FakCustomer>>
-    suspend fun checkBookingIdTour(bookingId: Int): Boolean
+    suspend fun checkBookingIdTour(bookingId: String): Boolean
     fun getUserId(): Int?
 }
