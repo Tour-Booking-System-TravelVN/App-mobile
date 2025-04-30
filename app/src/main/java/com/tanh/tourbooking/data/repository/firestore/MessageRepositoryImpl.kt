@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.data.repository.firestore
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
@@ -77,6 +78,25 @@ class MessageRepositoryImpl @Inject constructor(
                 .update(updatedLastMessageAndTime)
                 .await()
 
+        }
+    }
+
+    override suspend fun recallMessage(timestamp: Timestamp, chatId: String) {
+        withContext(dispatcherIO) {
+            val snapshot = chatBoxCollection.document(chatId)
+                .collection(Collections.MSGLST)
+                .whereEqualTo("timestamp", timestamp)
+                .get()
+                .await()
+            if(snapshot.isEmpty) return@withContext
+
+            try {
+                val messageId = snapshot.documents[0].id
+                chatBoxCollection.document(chatId).collection(Collections.MSGLST)
+                    .document(messageId).delete()
+            } catch (e: Exception) {
+                Unit
+            }
         }
     }
 

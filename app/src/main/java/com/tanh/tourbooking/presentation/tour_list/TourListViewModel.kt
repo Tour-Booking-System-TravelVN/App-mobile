@@ -1,13 +1,12 @@
 package com.tanh.tourbooking.presentation.tour_list
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
-import com.tanh.tourbooking.domain.usecase.tour.GetToursByPlaceUseCase
+import com.tanh.tourbooking.domain.usecase.tour.FoundTourUseCase
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TourListViewModel @Inject constructor(
-    private val getToursByPlaceUseCase: GetToursByPlaceUseCase,
+    private val foundTourUseCase: FoundTourUseCase,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -64,7 +63,7 @@ class TourListViewModel @Inject constructor(
         _state.update {
             it.copy(isLoading = true)
         }
-        getToursByPlaceUseCase(
+        foundTourUseCase(
             destination = _place.value,
             price = "0-infinity",
             departureDate = null,

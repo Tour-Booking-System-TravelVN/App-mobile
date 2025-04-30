@@ -15,4 +15,5 @@ interface ChatRepository {
     fun observeWaitingChatBoxList(userId: Int): Flow<Resources<List<ChatBoxDto>, Exception>>
     suspend fun observeWaitingId(chatId: String): Resources<List<Int>, Exception>
     suspend fun acceptUserIdToChat(userId: Int, chatId: String)
+    suspend fun refureUserToChat(userId: Int, chatId: String)
 }

@@ -8,7 +8,7 @@ import com.tanh.tourbooking.domain.model.TourUnit
 import com.tanh.tourbooking.domain.repository.api.TourUnitRepository
 import javax.inject.Inject
 
-class GetToursByPlaceUseCase @Inject constructor(
+class FoundTourUseCase @Inject constructor(
     private val tourUnitRepository: TourUnitRepository
 ) {
     suspend operator fun invoke(

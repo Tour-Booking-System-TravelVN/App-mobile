@@ -142,6 +142,17 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun refureUserToChat(userId: Int, chatId: String) {
+        return withContext(dispatcherIO) {
+            try {
+                chatBoxCollection.document(chatId)
+                    .update("waitingId", FieldValue.arrayRemove(userId))
+            } catch (e: Exception) {
+                Unit
+            }
+        }
+    }
+
     override fun observeChatBox(chatId: String): Flow<Resources<ChatBoxDto, Exception>> {
         return callbackFlow {
             var listener: ListenerRegistration? = null

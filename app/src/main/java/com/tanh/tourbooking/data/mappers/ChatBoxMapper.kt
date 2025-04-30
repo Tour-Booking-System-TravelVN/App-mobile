@@ -9,6 +9,7 @@ import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.domain.model.Message
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.Date
 
 fun ChatBox.toChatBoxDto(): ChatBoxDto =
     ChatBoxDto(
@@ -38,7 +39,7 @@ fun Message.toMessageDto(): MessageDto =
     MessageDto(
         senderId = senderId,
         text = text,
-        timestamp = Timestamp(time.toEpochSecond(ZoneId.systemDefault() as ZoneOffset), 0),
+        timestamp = Timestamp(Date.from(time.atZone(ZoneId.systemDefault()).toInstant())),
         senderName = senderName
     )
 

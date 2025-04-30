@@ -11,5 +11,7 @@ class ChatUseCaseManager @Inject constructor(
     val notifyMessage: NotifyMessage,
     val observeWaitingChat: ObserveWaitingChat,
     val observeWaitingId: ObserveWaitingId,
-    val acceptUserJoinChat: AcceptUserJoinChat
+    val acceptUserJoinChat: AcceptUserJoinChat,
+    val refuseUserToChat: RefuseUserToChat,
+    val recallMessage: RecallMessage
 )

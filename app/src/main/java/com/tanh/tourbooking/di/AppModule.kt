@@ -5,8 +5,6 @@ import androidx.datastore.core.DataStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
-import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
-import com.tanh.tourbooking.data.model.response.ValidTokenResponse
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
@@ -23,7 +21,7 @@ import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
 import com.tanh.tourbooking.domain.usecase.auth.CheckRoleUseCase
 import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
-import com.tanh.tourbooking.domain.usecase.tour.GetToursByPlaceUseCase
+import com.tanh.tourbooking.domain.usecase.tour.FoundTourUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LogoutUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
@@ -39,6 +37,8 @@ import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingId
+import com.tanh.tourbooking.domain.usecase.chatbox.RecallMessage
+import com.tanh.tourbooking.domain.usecase.chatbox.RefuseUserToChat
 import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CreateBookingOrderUseCase
@@ -109,7 +109,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGetToursByPlaceUseCase(repository: TourUnitRepository) =
-        GetToursByPlaceUseCase(repository)
+        FoundTourUseCase(repository)
 
     @Provides
     @Singleton
@@ -201,6 +201,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideRefuseUserToChat(repository: ChatRepository) = RefuseUserToChat(repository)
+
+    @Provides
+    @Singleton
+    fun provideRecallMessage(repository: MessageRepository) = RecallMessage(repository)
+
+    @Provides
+    @Singleton
     fun provideChatManager(
         observeChat: ObserveChat,
         createMessage: CreateMessage,
@@ -210,7 +218,9 @@ object AppModule {
         notifyMessage: NotifyMessage,
         observeWaitingChat: ObserveWaitingChat,
         observeWaitingId: ObserveWaitingId,
-        acceptUserJoinChat: AcceptUserJoinChat
+        acceptUserJoinChat: AcceptUserJoinChat,
+        refuseUserToChat: RefuseUserToChat,
+        recallMessage: RecallMessage
     ) =
         ChatUseCaseManager(
             observeChat,
@@ -221,7 +231,9 @@ object AppModule {
             notifyMessage,
             observeWaitingChat,
             observeWaitingId,
-            acceptUserJoinChat
+            acceptUserJoinChat,
+            refuseUserToChat,
+            recallMessage
         )
 
 }

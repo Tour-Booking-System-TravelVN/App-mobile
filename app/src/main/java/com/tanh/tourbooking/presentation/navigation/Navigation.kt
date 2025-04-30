@@ -34,6 +34,7 @@ import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.login.LoginScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
+import com.tanh.tourbooking.presentation.message.waiting_screen.WaitingScreen
 import com.tanh.tourbooking.presentation.my_tour.MyTourScreen
 import com.tanh.tourbooking.presentation.profile.ProfileScreen
 import com.tanh.tourbooking.presentation.register.RegisterScreen
@@ -141,8 +142,23 @@ fun Navigation(
             }
             composable(route = Route.MESSAGE_SCREEN.toString() + "/{chatId}") {
                 MessageScreen(
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    onNavigate = {
+                        navController.navigate(it)
+                    }
                 ) {
+                    navController.popBackStack()
+                }
+            }
+            composable(
+                route = Route.WAITING_SCREEN.toString() + "/{chatId}",
+                arguments = listOf(
+                    navArgument(name = "chatId") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                WaitingScreen {
                     navController.popBackStack()
                 }
             }

@@ -11,9 +11,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tanh.tourbooking.data.mappers.toMessageDto
 import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
 import com.tanh.tourbooking.domain.model.Information
+import com.tanh.tourbooking.domain.model.Message
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
@@ -129,7 +131,7 @@ class MessageViewModel @Inject constructor(
     }
 
     fun onNavToWaitingId() {
-        sendEvent(OneTimeEvent.Navigate(Route.WAITING_SCREEN.toString() + "/${chatId}"))
+        sendEvent(OneTimeEvent.Navigate(Route.WAITING_SCREEN.toString() + "/$chatId"))
     }
 
     fun sendMessage(message: String) {
@@ -152,6 +154,15 @@ class MessageViewModel @Inject constructor(
     private fun sendEvent(event: OneTimeEvent) {
         viewModelScope.launch {
             _channel.send(event)
+        }
+    }
+
+    fun recallMessage(currentMessage: Message) {
+        viewModelScope.launch {
+            chatUseCaseManager.recallMessage(
+                timestamp = currentMessage.toMessageDto().timestamp,
+                chatId = chatId
+            )
         }
     }
 

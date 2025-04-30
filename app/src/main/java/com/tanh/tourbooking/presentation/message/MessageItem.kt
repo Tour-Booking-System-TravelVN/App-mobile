@@ -26,12 +26,11 @@ import com.tanh.tourbooking.data.mappers.TimeFormatter
 import com.tanh.tourbooking.domain.model.Message
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MessageItem(
+    modifier: Modifier = Modifier,
     message: Message,
     userId: Int,
-    modifier: Modifier = Modifier
 ) {
 
     val widthScreen = LocalConfiguration.current.screenWidthDp.dp
