@@ -174,7 +174,19 @@ fun Navigation(
             }
             composable(route = Route.EXPLORE_SCREEN.toString()) {
                 ExploreScreen(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
+                    onNavigate = {
+                        navController.navigate(it)
+                    },
+                    showSnackbar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    }
                 )
             }
             composable(route = Route.PROFILE_SCREEN.toString()) {

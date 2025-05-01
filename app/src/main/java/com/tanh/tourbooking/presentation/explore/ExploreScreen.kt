@@ -1,36 +1,56 @@
 package com.tanh.tourbooking.presentation.explore
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
@@ -38,23 +58,63 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.R
-import com.tanh.tourbooking.ui.theme.TourBookingTheme
+import com.tanh.tourbooking.domain.model.TourUnit
+import com.tanh.tourbooking.presentation.util.OneTimeEvent
+import com.tanh.tourbooking.ui.theme.TextStyle17
+import com.tanh.tourbooking.ui.theme.TextStyle18
 import com.tanh.tourbooking.ui.theme.dimens
-import com.tanh.tourbooking.util.FakeData
+import com.tanh.tourbooking.util.Calculation
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun ExploreScreen(modifier: Modifier = Modifier) {
+fun ExploreScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ExploreViewModel = hiltViewModel<ExploreViewModel>(),
+    onNavigate: (String) -> Unit,
+    showSnackbar: (String) -> Unit
+) {
+
+    val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.channel.collect { event ->
+            when (event) {
+                is OneTimeEvent.Navigate -> onNavigate(event.route)
+                OneTimeEvent.PopBackStack -> Unit
+                is OneTimeEvent.ShowSnackbar -> showSnackbar(event.message)
+                is OneTimeEvent.ShowToast -> Unit
+                is OneTimeEvent.OpenLink -> Unit
+            }
+        }
+    }
 
     var inputDestination by remember {
         mutableStateOf("")
     }
 
-    var isFiltered by remember {
-        mutableStateOf(true)
+    var inputDate by remember {
+        mutableStateOf("")
     }
+
+    var isFiltered by remember {
+        mutableStateOf(false)
+    }
+
+    var minPrice by remember {
+        mutableDoubleStateOf(0.0)
+    }
+
+    var maxPrice by remember {
+        mutableDoubleStateOf(5000000.0)
+    }
+
 
     Column(
         modifier = modifier
@@ -66,103 +126,403 @@ fun ExploreScreen(modifier: Modifier = Modifier) {
 
         //modifiedSection
         ModifiedSection(
-            isFiltered = isFiltered,
             inputDestination = inputDestination,
             onValueChange = {
-
-            })
+                inputDestination = it
+                viewModel.onEvent(ExploreEvent.TypePlace(place = inputDestination))
+            },
+            isFiltered = isFiltered,
+            onFilterChange = {
+                isFiltered = it
+            },
+            inputDate = inputDate,
+            onDateChange = {
+                inputDate = it
+                viewModel.onEvent(ExploreEvent.TypeDepartureDate(date = it))
+            },
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            onPriceChange = {
+                minPrice = it.first
+                maxPrice = it.second
+                viewModel.onEvent(ExploreEvent.OnPriceRangeChange(minPrice, maxPrice))
+            }
+        )
 
         //tourSection
-        RecommendedTourSection()
+        RecommendedTourSection(state.tourUnitList) {
+            viewModel.onNavToDetail(it)
+        }
     }
 
 }
 
 @Composable
-fun RecommendedTourSection() {
-    Text(
-        text = "Suggestion",
-        style = MaterialTheme.typography.headlineLarge,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(
-            start = MaterialTheme.dimens.small1,
-            top = MaterialTheme.dimens.small2
-        ),
-    )
-    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp)
-            .padding(vertical = 8.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
-    ) {
-        items(FakeData.fakeFakeFakeTourPrograms) { tourProgram ->
-            TourProgramItem(tourProgram)
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-            HorizontalDivider(
-                thickness = 0.5.dp,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 16.dp)
+fun RecommendedTourSection(
+    tourUnitList: List<TourUnit>,
+    onNavToDetail: (TourUnit) -> Unit
+) {
+    if (tourUnitList.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
+        ) {
+
+            items(tourUnitList) { tourUnit ->
+                TourProgramItem(
+                    tourUnit,
+                    modifier = Modifier.clickable {
+                        onNavToDetail(tourUnit)
+                    }
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(R.drawable.empty),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
+            Spacer(Modifier.height(15.dp))
+            Text(
+                text = "Oops, không tìm được tour nào phù hợp.",
+                style = TextStyle18,
+                modifier = Modifier.alpha(0.6f)
             )
         }
-
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModifiedSection(
-    isFiltered: Boolean,
+    inputDate: String,
+    onDateChange: (String) -> Unit,
     inputDestination: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    isFiltered: Boolean,
+    onFilterChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    maxPrice: Double,
+    minPrice: Double,
+    onPriceChange: (Pair<Double, Double>) -> Unit
+) {
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    // Convert inputDate to LocalDate or use today as default
+    val selectedDate = remember(inputDate) {
+        runCatching { LocalDate.parse(inputDate) }.getOrElse { LocalDate.now() }
+    }
+
+    // Formatter for yyyy-MM-dd
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    val sheetState = rememberModalBottomSheetState()
+
+    Surface {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TextField(
+                value = inputDestination,
+                onValueChange = onValueChange,
+                placeholder = {
+                    Text(
+                        text = "Search your destination",
+                        color = Color.Black,
+                        modifier = Modifier.alpha(0.4f)
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                ),
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .shadow(elevation = 10.dp, shape = MaterialTheme.shapes.medium)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    onClick = { showDatePicker = true },
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .border(1.dp, Color.LightGray, MaterialTheme.shapes.extraLarge)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = inputDate.ifBlank { "Ngày" },
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                Spacer(Modifier.weight(1f))
+
+                Crossfade(targetState = isFiltered, label = "") { filtered ->
+                    IconButton(onClick = { onFilterChange(!filtered) }) {
+                        Icon(
+                            painter = if (filtered)
+                                painterResource(R.drawable.filledfilter)
+                            else
+                                painterResource(R.drawable.filter),
+                            contentDescription = null,
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .let { if (!filtered) it.alpha(0.4f) else it }
+                        )
+                    }
+                }
+            }
+        }
+
+        // Show Material3 DatePicker inside Dialog
+        if (showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showDatePicker = false
+                    }) {
+                        Text("Xác nhận")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showDatePicker = false
+                        onDateChange("")
+                    }) {
+                        Text("Hủy")
+                    }
+                }
+            ) {
+                val state = rememberDatePickerState(
+                    initialSelectedDateMillis = selectedDate.toEpochDay() * 24 * 60 * 60 * 1000
+                )
+                DatePicker(state = state)
+                LaunchedEffect(state.selectedDateMillis) {
+                    state.selectedDateMillis?.let { millis ->
+                        val date = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
+                        onDateChange(date.format(dateFormatter))
+                    }
+                }
+            }
+        }
+
+        //show sheet
+        if (isFiltered) {
+            DraggableSheet(
+                sheetState,
+                onDismiss = {
+                    onFilterChange(false)
+                },
+                minPrice = minPrice,
+                maxPrice = maxPrice,
+                onPriceChange = {
+                    onPriceChange(it)
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DraggableSheet(
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    minPrice: Double,
+    maxPrice: Double,
+    onPriceChange: (Pair<Double, Double>) -> Unit
 ) {
 
-    if (isFiltered) {
-        Surface {
+    var min by remember {
+        mutableStateOf(minPrice)
+    }
+
+    var max by remember {
+        mutableStateOf(maxPrice)
+    }
+
+    var sliderPosition by remember {
+        mutableStateOf(0f..5000000f)
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = {
+            onDismiss()
+        },
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier.wrapContentSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.dimens.small1),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Icon(
+                    painter = painterResource(R.drawable.uncheck),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clickable {
+                            onDismiss()
+                        }
+                )
+                Text(
+                    text = "Lọc",
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.size(25.dp))
+            }
+            Spacer(Modifier.height(MaterialTheme.dimens.small1))
+            HorizontalDivider(
+                Modifier
+                    .fillMaxWidth()
+                    .alpha(0.3f),
+                1.dp,
+                Color.Black
+            )
+            Spacer(Modifier.height(MaterialTheme.dimens.small2))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .padding(top = 8.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = MaterialTheme.dimens.small1)
             ) {
-                TextField(
-                    value = inputDestination,
-                    onValueChange = {
-                        onValueChange(it)
+                Text(
+                    text = "Giá",
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle17
+                )
+                Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "đ",
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = Calculation.formatDouble(minPrice),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "-",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "đ",
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = Calculation.formatDouble(maxPrice),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                RangeSlider(
+                    value = sliderPosition,
+                    steps = 0,
+                    onValueChange = { range ->
+                        val roundedStart = (range.start / 10000).toInt() * 10000f
+                        val roundedEnd = (range.endInclusive / 10000).toInt() * 10000f
+                        sliderPosition = roundedStart..roundedEnd
                     },
-                    placeholder = {
-                        Text(
-                            text = "Search your destination",
-                            color = Color.Black
-                        )
-                    },
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.White
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
+                    valueRange = 0f..5000000f,
+                    onValueChangeFinished = {
+                        min = sliderPosition.start.toDouble()
+                        max = sliderPosition.endInclusive.toDouble()
+                        onPriceChange(min to max)
                     },
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .shadow(elevation = 10.dp, shape = MaterialTheme.shapes.extraLarge)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "đ",
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.alpha(0.5f)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = Calculation.formatDouble(minPrice),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.alpha(0.5f)
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = "đ",
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.alpha(0.5f)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = Calculation.formatDouble(maxPrice),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.alpha(0.5f)
+                    )
+                }
+                Spacer(Modifier.height(MaterialTheme.dimens.small3))
+                Button(
+                    onClick = {
+                        onPriceChange(0.0 to 5000000.0)
+                        sliderPosition = 0f..5000000f
+                    },
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Hủy")
+                }
+                Spacer(Modifier.height(MaterialTheme.dimens.medium2))
             }
         }
     }
-
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun HeaderSection() {
     BoxWithConstraints(
         modifier = Modifier
@@ -218,10 +578,3 @@ private fun HeaderSection() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewExploreScreen(modifier: Modifier = Modifier) {
-    TourBookingTheme {
-        ExploreScreen()
-    }
-}
