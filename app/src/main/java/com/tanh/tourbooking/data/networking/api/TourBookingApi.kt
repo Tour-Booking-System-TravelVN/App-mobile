@@ -5,17 +5,21 @@ import com.tanh.tourbooking.data.model.dto.auth.LoginRequest
 import com.tanh.tourbooking.data.model.dto.auth.RegisterRequest
 import com.tanh.tourbooking.data.model.request.CreatePaymentRequest
 import com.tanh.tourbooking.data.model.request.PaymentRequest
+import com.tanh.tourbooking.data.model.request.RatingTourRequest
 import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
 import com.tanh.tourbooking.data.model.response.BookingResponse
 import com.tanh.tourbooking.data.model.response.CheckTourUnitResponse
 import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
+import com.tanh.tourbooking.data.model.response.GetTourResponse
 import com.tanh.tourbooking.data.model.response.LogoutResponse
 import com.tanh.tourbooking.data.model.response.RatingResponse
+import com.tanh.tourbooking.data.model.response.RatingTourResponse
 import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
 import com.tanh.tourbooking.data.model.response.TourUnitCalendarResponse
 import com.tanh.tourbooking.data.model.response.UserInformationResponse
 import com.tanh.tourbooking.data.model.response.ValidTokenResponse
+import com.tanh.tourbooking.domain.model.Rating
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -86,5 +90,18 @@ interface TourBookingApi {
     suspend fun logout(
         @Header("Authorization") token: String
     ): Response<LogoutResponse>
+
+    @GET("/booking/mytours")
+    suspend fun getMyTours(
+        @Header("Authorization") token: String,
+        @Query("status") status: String,
+        @Query("page") page: Int
+    ): Response<GetTourResponse>
+
+    @POST("rating/rating-tour")
+    suspend fun ratingTour(
+        @Header("Authorization") token: String,
+        @Body request: RatingTourRequest
+    ): Response<RatingTourResponse>
 
 }

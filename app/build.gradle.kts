@@ -149,6 +149,8 @@ dependencies {
     //flow row
     implementation ("com.google.accompanist:accompanist-flowlayout:0.36.0")
 
+    //rating bar
+    implementation ("com.github.a914-gowtham:compose-ratingbar:1.3.12")
 }
 
 kapt {

@@ -17,10 +17,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
@@ -35,7 +37,9 @@ import com.tanh.tourbooking.presentation.login.LoginScreen
 import com.tanh.tourbooking.presentation.test.TestScreen
 import com.tanh.tourbooking.presentation.message.MessageScreen
 import com.tanh.tourbooking.presentation.message.waiting_screen.WaitingScreen
-import com.tanh.tourbooking.presentation.my_tour.MyTourScreen
+import com.tanh.tourbooking.presentation.my_tour.MyTourViewModel
+import com.tanh.tourbooking.presentation.my_tour.detail_screen.DetailMyTourScreen
+import com.tanh.tourbooking.presentation.my_tour.main_screen.MyTourScreen
 import com.tanh.tourbooking.presentation.profile.ProfileScreen
 import com.tanh.tourbooking.presentation.register.RegisterScreen
 import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
@@ -44,6 +48,7 @@ import com.tanh.tourbooking.presentation.success.SuccessScreen
 import com.tanh.tourbooking.presentation.tour_list.TourListScreen
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
+import com.tanh.tourbooking.util.sharedViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,7 +72,7 @@ fun Navigation(
         mutableStateOf(currentDestination in navRoutes)
     }
 
-    var isTokenValid by remember  {
+    var isTokenValid by remember {
         mutableStateOf(false)
     }
 
@@ -95,8 +100,56 @@ fun Navigation(
         val paddingValues = vl
         NavHost(
             navController = navController,
-            startDestination = if(isTokenValid) Route.HOME_SCREEN.toString() else Route.START_SCREEN.toString()
+            startDestination = if (isTokenValid) Route.HOME_SCREEN.toString() else Route.START_SCREEN.toString()
         ) {
+            //nested nav graph
+            navigation(
+                startDestination = Route.MY_TOURS_SCREEN.toString(),
+                route = "mytours"
+            ) {
+                composable(Route.MY_TOURS_SCREEN.toString()) { entry ->
+                    val viewModel = entry.sharedViewModel<MyTourViewModel>(navController)
+
+                    MyTourScreen(
+                        viewModel = viewModel,
+                        onNavigate = {
+                            navController.navigate(it)
+                        },
+                        modifier = Modifier.padding(paddingValues)
+                    ) {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }
+
+                composable(Route.DETAIL_MYTOUR_SCREEN.toString()) { entry ->
+                    val viewModel = entry.sharedViewModel<MyTourViewModel>(navController)
+
+                    DetailMyTourScreen(
+                        viewModel = viewModel,
+                        onNavigate = {
+                            navController.navigate(it)
+                        },
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }
+            }
+
             composable(
                 route = Route.SPLASH_SCREEN.toString()
             ) {
@@ -203,13 +256,6 @@ fun Navigation(
                             duration = SnackbarDuration.Long
                         )
                     }
-                }
-            }
-            composable(route = Route.MY_TOURS_SCREEN.toString()) {
-                MyTourScreen(
-                    modifier = Modifier.padding(paddingValues)
-                ) {
-                    navController.navigate(it)
                 }
             }
             composable(

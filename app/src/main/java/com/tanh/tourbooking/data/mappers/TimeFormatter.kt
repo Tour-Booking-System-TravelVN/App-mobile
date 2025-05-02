@@ -37,10 +37,13 @@ object TimeFormatter {
 
 private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+private val indicatorFormatter = DateTimeFormatter.ofPattern("dd/ MM/ yyyy")
 
+fun LocalDateTime.toIndicatorString(): String = this.format(indicatorFormatter)
 fun LocalDateTime.toFormattedString(): String = this.format(formatter)
 fun String.toLocalDateTime(): LocalDateTime = LocalDateTime.parse(this, formatter)
 
+fun LocalDate.toIndicator(): String = this.format(indicatorFormatter)
 fun String.toLocalDate(): LocalDate = LocalDate.parse(this, dateFormatter)
 fun LocalDate.toFormattedString(): String = this.format(dateFormatter)
 

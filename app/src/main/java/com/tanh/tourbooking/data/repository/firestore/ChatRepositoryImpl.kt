@@ -153,6 +153,16 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getChatBoxIdByBookingId(bookingId: String): String? {
+        return withContext(dispatcherIO) {
+            val snapshot = chatBoxCollection.whereEqualTo("uniqueBookingId", bookingId)
+                .get().await()
+            if (snapshot.isEmpty) return@withContext null
+            return@withContext snapshot.documents[0].id
+        }
+
+    }
+
     override fun observeChatBox(chatId: String): Flow<Resources<ChatBoxDto, Exception>> {
         return callbackFlow {
             var listener: ListenerRegistration? = null

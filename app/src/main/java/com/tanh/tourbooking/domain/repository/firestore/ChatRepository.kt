@@ -16,4 +16,5 @@ interface ChatRepository {
     suspend fun observeWaitingId(chatId: String): Resources<List<Int>, Exception>
     suspend fun acceptUserIdToChat(userId: Int, chatId: String)
     suspend fun refureUserToChat(userId: Int, chatId: String)
+    suspend fun getChatBoxIdByBookingId(bookingId: String): String?
 }

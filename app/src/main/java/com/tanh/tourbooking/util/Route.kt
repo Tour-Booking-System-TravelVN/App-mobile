@@ -17,7 +17,8 @@ enum class Route {
     PAGER_SCREEN,
     SUCCESS_SCREEN,
     FAILURE_SCREEN,
-    WAITING_SCREEN
+    WAITING_SCREEN,
+    DETAIL_MYTOUR_SCREEN
 }
 
 val navRoutes = listOf(
