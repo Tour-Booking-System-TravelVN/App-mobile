@@ -1,15 +1,15 @@
 package com.tanh.tourbooking.presentation.home
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +27,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,16 +47,16 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import com.tanh.tourbooking.R
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.ScreenOrientation
-import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.ui.theme.lightGray
 import com.tanh.tourbooking.util.FakeData
 import com.tanh.tourbooking.util.Route
 
@@ -69,6 +68,7 @@ fun HomeScreen(
 ) {
 
     val state = viewModel.state.collectAsState().value
+    val lastname = state.information?.lastname ?: "bạn"
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->
@@ -84,12 +84,13 @@ fun HomeScreen(
 
 
     if (ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-        PortraitHomeScreen(modifier, state, viewModel)
+        PortraitHomeScreen(modifier, state, viewModel, lastname)
     } else {
         PortraitHomeScreen(
             modifier = Modifier.verticalScroll(rememberScrollState()),
             state,
-            viewModel
+            viewModel,
+            lastname
         )
     }
 }
@@ -98,9 +99,10 @@ fun HomeScreen(
 fun PortraitHomeScreen(
     modifier: Modifier = Modifier,
     state: HomeUiState,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    lastname: String
 ) {
-    val customerName = "Hey guys"
+
     var inputText by remember { mutableStateOf("") }
     var isSeeAll by remember { mutableStateOf(false) }
 
@@ -113,28 +115,44 @@ fun PortraitHomeScreen(
     val headerTextSize = (screenWidth * 0.06).sp
     val titleTextSize = (screenWidth * 0.05).sp
     val bodyTextSize = (screenWidth * 0.04).sp
+    var currentFilter by remember {
+        mutableStateOf("")
+    }
+
+
+    val originalTour = remember { FakeData.fakePlacesVietNam }
+    var tour by remember { mutableStateOf(originalTour) }
+
+    LaunchedEffect(inputText) {
+        tour = if (inputText.isNotBlank()) {
+            originalTour.filter { it.name.contains(inputText, ignoreCase = true) }
+        } else {
+            originalTour
+        }
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp)
 //            .verticalScroll(rememberScrollState())
     ) {
+        Spacer(Modifier.height(8.dp))
         // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Hi, $customerName",
+                text = "Xin chào, $lastname",
                 fontSize = titleTextSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
 
-            AsyncImage(
-                model = "https://i.ibb.co/HpryKNLf/justin.jpg",
+            Image(
+                painter = painterResource(R.drawable.dio),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
@@ -146,8 +164,8 @@ fun PortraitHomeScreen(
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
         Text(
             text = """
-                Where do you want 
-                to go?
+                Bạn đang muốn
+                đi đâu?
             """.trimIndent(),
             fontSize = headerTextSize,
             fontWeight = FontWeight.Bold
@@ -158,7 +176,7 @@ fun PortraitHomeScreen(
         TextField(
             value = inputText,
             onValueChange = { inputText = it },
-            placeholder = { Text("Discover a city", color = Color.LightGray) },
+            placeholder = { Text("Khám phá thành phố", color = Color.LightGray) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true,
             colors = TextFieldDefaults.colors(
@@ -176,7 +194,7 @@ fun PortraitHomeScreen(
         // Explore Cities
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
         Text(
-            text = "Explore Cities",
+            text = "Thành phố",
             fontWeight = FontWeight.Bold,
             fontSize = titleTextSize
         )
@@ -186,11 +204,20 @@ fun PortraitHomeScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
-            items(listOf("All", "Popular", "Recommended")) { item ->
+            items(listOf("Tất cả", "Phổ biến", "Đề xuất")) { item ->
                 Text(
                     text = item,
                     fontSize = bodyTextSize,
-                    fontWeight = if (item == "Popular") FontWeight.Bold else FontWeight.Normal
+                    fontWeight = if (item == currentFilter) FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier.clickable {
+                        if (currentFilter == item) {
+                            tour = FakeData.fakePlacesVietNam
+                            currentFilter = ""
+                        } else {
+                            tour = FakeData.popularTour
+                            currentFilter = item
+                        }
+                    }
                 )
             }
         }
@@ -198,25 +225,23 @@ fun PortraitHomeScreen(
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
         // Places List
-        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-            val cardWidth = maxWidth * 0.4f
-
+        Box(modifier = Modifier.fillMaxWidth()) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
             ) {
-                items(FakeData.fakePlacesVietNam) { place ->
+                items(tour) { place ->
                     PlaceItem(
                         fakePlace = place,
                         modifier = Modifier
                             .clickable {
-                                Log.d("TL", place.name)
                                 viewModel.onEvent(
                                     HomeEvent.OnNavToTours(Route.TOUR_LIST_SCREEN.toString() + "/${place.name}")
                                 )
                             }
                     )
                 }
+
             }
         }
 
@@ -227,7 +252,7 @@ fun PortraitHomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Categories",
+                text = "Danh mục",
                 fontWeight = FontWeight.Bold,
                 fontSize = titleTextSize
             )
@@ -237,14 +262,14 @@ fun PortraitHomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "See all",
+                    text = "Xem tất cả",
                     fontSize = bodyTextSize,
-                    color = if (isSeeAll) MaterialTheme.colorScheme.onSurface else Color.LightGray
+                    color = if (isSeeAll) MaterialTheme.colorScheme.onSurface else lightGray
                 )
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = if (isSeeAll) MaterialTheme.colorScheme.onSurface else Color.LightGray,
+                    tint = if (isSeeAll) MaterialTheme.colorScheme.onSurface else lightGray,
                     modifier = Modifier.rotate(rotationAngle)
                 )
             }
@@ -258,7 +283,12 @@ fun PortraitHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
             ) {
                 items(FakeData.fakeCategories) { category ->
-                    CategoryItem(fakeCategory = category)
+                    CategoryItem(
+                        fakeCategory = category,
+                        navigate = {
+                            viewModel.onNavToCategoryScreen(it)
+                        }
+                    )
                 }
             }
         } else {
@@ -272,7 +302,12 @@ fun PortraitHomeScreen(
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
                         ) {
                             rowCategories.forEach { category ->
-                                CategoryItem(fakeCategory = category)
+                                CategoryItem(
+                                    fakeCategory = category,
+                                    navigate = {
+                                        viewModel.onNavToCategoryScreen(it)
+                                    }
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))

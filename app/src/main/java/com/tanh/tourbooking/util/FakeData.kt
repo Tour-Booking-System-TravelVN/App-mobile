@@ -134,57 +134,54 @@ object FakeData {
 
     val fakeCategories = listOf(
         FakeCategory(
-            name = "Adventure",
-            image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
+            name = "Du lịch biển",
+            image = "https://i.ibb.co/bgmVWQ3y/nhatrang.webp"
         ),
         FakeCategory(
-            name = "Historical",
+            name = "Du lịch núi",
             image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
         ),
         FakeCategory(
-            name = "Luxury",
-            image = "https://i.ibb.co/HpryKNLf/justin.jpg"
+            name = "Du lịch văn hóa",
+            image = "https://i.ibb.co/5gtMf6Ty/cultural.webp"
         ),
         FakeCategory(
-            name = "Family",
-            image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
+            name = "Du lịch ẩm thực",
+            image = "https://i.ibb.co/XffN5dRs/cuisine.jpg"
         ),
         FakeCategory(
-            name = "Business",
-            image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
+            name = "Du lịch sinh thái",
+            image = "https://i.ibb.co/nNX7XQKH/eco.jpg"
         ),
         FakeCategory(
-            name = "Relax",
-            image = "https://i.ibb.co/ch8p9Pd1/image.png"
-        ),
-        FakeCategory(
-            name = "Adventure",
-            image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
-        ),
-        FakeCategory(
-            name = "Historical",
-            image = "https://i.ibb.co/VcH7dy9d/ninhbinh2.jpg"
+            name = "Du lịch mạo hiểm",
+            image = "https://i.ibb.co/WQ4mVyQ/adventure.webp"
         )
     )
 
     val fakePlacesVietNam = listOf(
-        FakePlace("Hà Nội", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Hồ Chí Minh", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Đà Nẵng", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Huế", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Hội An", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Lâm Đồng", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Đà Lạt
-        FakePlace("Khánh Hòa", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Nha Trang
-        FakePlace("Quảng Ninh", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Hạ Long
-        FakePlace("Kiên Giang", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Phú Quốc
+        FakePlace("Hà Nội", "Vietnam", "https://i.ibb.co/kVTzZjXX/hanoi.jpg"),
+        FakePlace("Hồ Chí Minh", "Vietnam", "https://i.ibb.co/20ZX6DCT/sag.jpg"),
+        FakePlace("Đà Nẵng", "Vietnam", "https://i.ibb.co/kF14jPH/danang.jpg"),
+        FakePlace("Huế", "Vietnam", "https://i.ibb.co/27MP6pcK/hue.jpg"),
+        FakePlace("Hội An", "Vietnam", "https://i.ibb.co/CsT8SK00/hoian.jpg"),
+        FakePlace("Lâm Đồng", "Vietnam", "https://i.ibb.co/Rp1L8x7y/alat.jpg"),
+        FakePlace("Khánh Hòa", "Vietnam", "https://i.ibb.co/bgmVWQ3y/nhatrang.webp"),
+        FakePlace("Quảng Ninh", "Vietnam", "https://i.ibb.co/Cpt4S1pd/quangninh.jpg"), // Hạ Long
         FakePlace("Ninh Bình", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Quảng Bình", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Phong Nha
-        FakePlace("Lào Cai", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"), // Sapa
-        FakePlace("Thừa Thiên Huế", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Bà Rịa - Vũng Tàu", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Phú Yên", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
-        FakePlace("Bình Thuận", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg") // Mũi Né
+        FakePlace("Quảng Bình", "Vietnam", "https://i.ibb.co/d0T5VLGG/phongnha.jpg"), // Phong Nha
+        FakePlace("Lào Cai", "Vietnam", "https://i.ibb.co/fYXgQPJJ/sapa.jpg"), // Sapa ,
     )
+
+    val popularTour = listOf(
+        FakePlace("Hà Nội", "Vietnam", "https://i.ibb.co/kVTzZjXX/hanoi.jpg"),
+        FakePlace("Đà Nẵng", "Vietnam", "https://i.ibb.co/kF14jPH/danang.jpg"),
+        FakePlace("Huế", "Vietnam", "https://i.ibb.co/27MP6pcK/hue.jpg"),
+        FakePlace("Hội An", "Vietnam", "https://i.ibb.co/CsT8SK00/hoian.jpg"),
+        FakePlace("Quảng Ninh", "Vietnam", "https://i.ibb.co/Cpt4S1pd/quangninh.jpg"), // Hạ Long
+        FakePlace("Ninh Bình", "Vietnam", "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"),
+        FakePlace("Lào Cai", "Vietnam", "https://i.ibb.co/fYXgQPJJ/sapa.jpg"), //
+        )
 
 
 

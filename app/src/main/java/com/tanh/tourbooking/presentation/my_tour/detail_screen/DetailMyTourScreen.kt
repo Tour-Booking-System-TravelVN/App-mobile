@@ -286,7 +286,7 @@ fun DetailMyTourScreen(
                         )
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            text = myTour.tourUnit.tour.duration,
+                            text = Calculation.formatDuration(myTour.tourUnit.tour.duration),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black

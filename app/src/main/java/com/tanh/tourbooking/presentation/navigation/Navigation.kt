@@ -29,6 +29,7 @@ import androidx.navigation.navDeepLink
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.booking.BookingScreen
+import com.tanh.tourbooking.presentation.category.CategoryScreen
 import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
 import com.tanh.tourbooking.presentation.failure.FailureScreen
@@ -267,6 +268,28 @@ fun Navigation(
                 )
             ) {
                 TourListScreen(
+                    showSnackBar = {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                ) {
+                    navController.navigate(it)
+                }
+            }
+            composable(
+                route = Route.CATEGORY_SCREEN.toString() + "/{categoryName}",
+                arguments = listOf(
+                    navArgument(name = "categoryName") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                CategoryScreen(
                     showSnackBar = {
                         coroutineScope.launch {
                             snackBarHosState.showSnackbar(

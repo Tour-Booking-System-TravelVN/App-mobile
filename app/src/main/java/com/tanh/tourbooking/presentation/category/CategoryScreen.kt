@@ -1,4 +1,4 @@
-package com.tanh.tourbooking.presentation.tour_list
+package com.tanh.tourbooking.presentation.category
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -22,15 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tanh.tourbooking.presentation.tour_list.TourUnitItem
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.presentation.util.multipleEventsCutter
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.Route
 
 @Composable
-fun TourListScreen(
+fun CategoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: TourListViewModel = hiltViewModel<TourListViewModel>(),
+    viewModel: CategoryViewModel = hiltViewModel<CategoryViewModel>(),
     showSnackBar: (String) -> Unit,
     onNavigate: (String) -> Unit
 ) {
@@ -67,15 +68,9 @@ fun TourListScreen(
                 )
         ) {
             Text(
-                text = "${viewModel._place.value}, Việt Nam",
+                text = viewModel.categoryName.value,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineSmall
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            Text(
-                text = "Có ${state.list.size} tour ở ${viewModel._place.value}",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.Gray
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
             LazyColumn(
@@ -88,7 +83,8 @@ fun TourListScreen(
                             tour = tour,
                             modifier = Modifier.padding(bottom = MaterialTheme.dimens.small2).clickable {
                                 eventManager.processEvent {
-                                    viewModel.onEvent(TourListEvent.OnClickTour(tour.tourUnitId))
+                                    Log.d("CLICK", "Click1")
+                                    viewModel.onNavToDetailTour(tour.tourUnitId)
                                 }
                             }
                         )

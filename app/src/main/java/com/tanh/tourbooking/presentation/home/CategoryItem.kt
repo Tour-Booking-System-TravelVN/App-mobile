@@ -1,6 +1,7 @@
 package com.tanh.tourbooking.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -25,7 +26,8 @@ import com.tanh.tourbooking.ui.theme.TourBookingTheme
 @Composable
 fun CategoryItem(
     fakeCategory: FakeCategory,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigate: (String) -> Unit
 ) {
 
     Box(
@@ -34,7 +36,9 @@ fun CategoryItem(
             .background(Color(0xFFECECEC))
             .padding(0.dp)
             .padding(4.dp)
-
+            .clickable {
+                navigate(fakeCategory.name)
+            }
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopCenter),
@@ -61,15 +65,3 @@ fun CategoryItem(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewCategoryItem(modifier: Modifier = Modifier) {
-    TourBookingTheme {
-        CategoryItem(
-            fakeCategory = FakeCategory(
-                name = "Adventure",
-                image = "https://i.ibb.co/hJFkj2nC/ninhbinh1.jpg"
-            )
-        )
-    }
-}
