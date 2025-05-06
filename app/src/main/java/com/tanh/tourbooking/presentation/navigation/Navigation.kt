@@ -1,6 +1,8 @@
 package com.tanh.tourbooking.presentation.navigation
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -17,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,10 +53,10 @@ import com.tanh.tourbooking.util.navRoutes
 import com.tanh.tourbooking.util.sharedViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun Navigation(
     modifier: Modifier = Modifier,
-    tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
 ) {
 
     val navController = rememberNavController()
@@ -77,11 +78,12 @@ fun Navigation(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(Unit) {
-        tokenViewModel.isTokenValid.collect { valid ->
-            isTokenValid = valid
-        }
+    var openFromDeepLink by remember {
+        mutableStateOf(false)
     }
+
+
+
 
     LaunchedEffect(navBackStackEntry) {
         showBottomBar = currentDestination in navRoutes
@@ -99,9 +101,15 @@ fun Navigation(
         contentWindowInsets = WindowInsets.safeGestures
     ) { vl ->
         val paddingValues = vl
+        val tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
+        LaunchedEffect(Unit) {
+            tokenViewModel.isTokenValid.collect { valid ->
+                isTokenValid = valid
+            }
+        }
         NavHost(
             navController = navController,
-            startDestination = if (isTokenValid) Route.HOME_SCREEN.toString() else Route.START_SCREEN.toString()
+            startDestination = Route.LAUNCHER_SCREEN.toString()
         ) {
             //nested nav graph
             navigation(
@@ -152,33 +160,61 @@ fun Navigation(
             }
 
             composable(
-                route = Route.SPLASH_SCREEN.toString()
+                route = Route.LAUNCHER_SCREEN.toString()
             ) {
+                if (!openFromDeepLink) {
+                    LaunchedEffect(isTokenValid) {
+                        val dest = if (isTokenValid) Route.HOME_SCREEN.toString()
+                        else Route.START_SCREEN.toString()
+                        navController.navigate(dest) {
+                            popUpTo(Route.LAUNCHER_SCREEN.toString()) { inclusive = true }
+                        }
+                    }
+                }
                 SplashScreen(navController = navController)
             }
             composable(
-                route = Route.SUCCESS_SCREEN.toString(),
+                route = Route.SUCCESS_SCREEN.toString() + "?orderCode={orderCode}",
                 deepLinks = listOf(
                     navDeepLink {
                         uriPattern =
-                            "https://makeitsoapp-44995.web.app/success"
+                            "makeitsoapp://success?orderCode={orderCode}"
                         action = Intent.ACTION_VIEW
                     }
+                ),
+                arguments = listOf(
+                    navArgument(
+                        name = "orderCode"
+                    ) {
+                        type = NavType.StringType
+                    }
                 )
-            ) {
-                SuccessScreen()
+            ) { entry ->
+                openFromDeepLink = true
+                val orderCode = entry.arguments?.getString("orderCode")
+                SuccessScreen(
+                    orderCode = orderCode
+                ) {
+                    navController.navigate(it) {
+                        popUpTo(Route.SUCCESS_SCREEN.toString()) {
+                            inclusive = true
+                        }
+                    }
+                }
             }
             composable(
                 route = Route.FAILURE_SCREEN.toString(),
                 deepLinks = listOf(
                     navDeepLink {
+                        openFromDeepLink = true
                         uriPattern =
-                            "https://makeitsoapp-44995.web.app/failure"
+                            "makeitsoapp://failure"
                         action = Intent.ACTION_VIEW
                     }
                 )
             ) {
-                FailureScreen()
+                openFromDeepLink = true
+                FailureScreen(navController = navController)
             }
             composable(route = Route.CHATS_SCREEN.toString()) {
                 ChatScreen(

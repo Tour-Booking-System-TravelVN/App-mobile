@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.AirportShuttle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CancelPresentation
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -140,9 +141,11 @@ fun DetailMyTourScreen(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null,
                     tint = Color.Black,
-                    modifier = Modifier.size(25.dp).clickable {
-                        viewModel.popBackStack()
-                    }
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clickable {
+                            viewModel.popBackStack()
+                        }
                 )
                 Text(
                     text = "Chi tiết",
@@ -510,70 +513,111 @@ fun DetailMyTourScreen(
                             }
                         }
                     }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                                    .padding(5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.CancelPresentation,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .align(Alignment.Center)
+                                )
+                            }
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = "Hủy tour",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.W400,
+                                color = Color.Black
+                            )
+                            Spacer(Modifier.weight(1f))
+                            IconButton(
+                                onClick = {
+                                    viewModel.cancelTour(state.currentTour.bookingId)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowRight,
+                                    contentDescription = null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+
                 }
-            }
 
-            if (showDialog) {
-                Dialog(
-                    onDismissRequest = {
-                        showDialog = false
-                    }
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(0.dp)
-                            .wrapContentSize()
-                            .clip(MaterialTheme.shapes.large)
-                            .background(Color.White)
-                            .padding(MaterialTheme.dimens.small2),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                if (showDialog) {
+                    Dialog(
+                        onDismissRequest = {
+                            showDialog = false
+                        }
                     ) {
-                        Text(
-                            text = emoji,
-                            fontSize = 40.sp
-                        )
-                        Spacer(Modifier.height(MaterialTheme.dimens.small2))
-                        RatingBar(
-                            value = rating,
-                            style = RatingBarStyle.Fill(),
-                            onValueChange = {
-                                rating = it
-                            },
-                            onRatingChanged = {
+                        Column(
+                            modifier = Modifier
+                                .padding(0.dp)
+                                .wrapContentSize()
+                                .clip(MaterialTheme.shapes.large)
+                                .background(Color.White)
+                                .padding(MaterialTheme.dimens.small2),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = emoji,
+                                fontSize = 40.sp
+                            )
+                            Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                            RatingBar(
+                                value = rating,
+                                style = RatingBarStyle.Fill(),
+                                onValueChange = {
+                                    rating = it
+                                },
+                                onRatingChanged = {
 
-                            }
-                        )
-                        Spacer(Modifier.height(MaterialTheme.dimens.small1))
-                        OutlinedTextField(
-                            value = comment,
-                            onValueChange = {
-                                comment = it
-                            }
-                        )
-                        Spacer(Modifier.height(MaterialTheme.dimens.small2))
-                        Row {
-                            OutlinedButton(
-                                onClick = {
-                                    showDialog = false
-                                },
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Text("Hủy")
-                            }
-                            Spacer(Modifier.width(6.dp))
-                            Button(
-                                onClick = {
-                                    viewModel.ratingTour(
-                                        comment = comment,
-                                        ratingValue =  rating.toInt()
-                                    )
-                                    comment = ""
-                                    rating = 5f
-                                    showDialog = false
-                                },
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Text("Gửi đánh giá")
+                                }
+                            )
+                            Spacer(Modifier.height(MaterialTheme.dimens.small1))
+                            OutlinedTextField(
+                                value = comment,
+                                onValueChange = {
+                                    comment = it
+                                }
+                            )
+                            Spacer(Modifier.height(MaterialTheme.dimens.small2))
+                            Row {
+                                OutlinedButton(
+                                    onClick = {
+                                        showDialog = false
+                                    },
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Text("Hủy")
+                                }
+                                Spacer(Modifier.width(6.dp))
+                                Button(
+                                    onClick = {
+                                        viewModel.ratingTour(
+                                            comment = comment,
+                                            ratingValue = rating.toInt()
+                                        )
+                                        comment = ""
+                                        rating = 5f
+                                        showDialog = false
+                                    },
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Text("Gửi đánh giá")
+                                }
                             }
                         }
                     }

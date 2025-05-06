@@ -116,7 +116,7 @@ fun PortraitHomeScreen(
     val titleTextSize = (screenWidth * 0.05).sp
     val bodyTextSize = (screenWidth * 0.04).sp
     var currentFilter by remember {
-        mutableStateOf("")
+        mutableStateOf("Tất cả")
     }
 
 
@@ -124,13 +124,13 @@ fun PortraitHomeScreen(
     var tour by remember { mutableStateOf(originalTour) }
 
     LaunchedEffect(inputText) {
-        tour = if (inputText.isNotBlank()) {
+        val filteredTours = if (inputText.isNotBlank()) {
             originalTour.filter { it.name.contains(inputText, ignoreCase = true) }
         } else {
             originalTour
         }
+        tour = filteredTours.ifEmpty { originalTour }
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -66,6 +67,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.tanh.tourbooking.domain.model.Discount
@@ -161,7 +163,11 @@ fun DetailScreen(
     val animatedHeight by animateDpAsState(
         targetValue = currentHeight
     )
-
+    val offsetX by remember {
+        derivedStateOf {
+            (pagerState.currentPage + pagerState.currentPageOffsetFraction) * 12.dp
+        }
+    }
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -258,6 +264,7 @@ fun DetailScreen(
                                 .clip(CircleShape)
                                 .animateContentSize()
                                 .background(color)
+                                .offset(x = offsetX)
                                 .size(
                                     height = MaterialTheme.dimens.small1,
                                     width = if (isSwap) MaterialTheme.dimens.small3 else MaterialTheme.dimens.small1

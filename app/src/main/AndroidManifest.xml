@@ -36,25 +36,23 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
-                    android:host="makeitsoapp-44995.web.app"
-                    android:scheme="http"/>
+                    android:scheme="makeitsoapp"
+                    android:host="success" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
 
+            <!-- ✅ Custom scheme: makeitsoapp://failure -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
-                    android:host="makeitsoapp-44995.web.app"
-                    android:scheme="https"/>
+                    android:scheme="makeitsoapp"
+                    android:host="failure" />
             </intent-filter>
         </activity>
 

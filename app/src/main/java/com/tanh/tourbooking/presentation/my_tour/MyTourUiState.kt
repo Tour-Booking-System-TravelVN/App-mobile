@@ -7,5 +7,5 @@ data class MyTourUiState(
     val error: String? = null,
     val doneTours: List<MyTour> = emptyList(),
     val opwTours: List<MyTour> = emptyList(),
-    val currentTour: MyTour? = null
+    val currentTour: MyTour? = null,
 )

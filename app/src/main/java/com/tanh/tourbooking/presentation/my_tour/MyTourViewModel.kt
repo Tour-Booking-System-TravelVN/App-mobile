@@ -7,6 +7,7 @@ import com.tanh.tourbooking.data.model.util.exception.onError
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
 import com.tanh.tourbooking.domain.model.MyTour
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
+import com.tanh.tourbooking.domain.usecase.payment.CancelTourUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetMyTourUseCase
 import com.tanh.tourbooking.domain.usecase.tour.RatingTourUseCase
 import com.tanh.tourbooking.presentation.profile.ProfileUiState
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class MyTourViewModel @Inject constructor(
     private val getMyTourUseCase: GetMyTourUseCase,
     private val ratingTourUseCase: RatingTourUseCase,
+    private val cancelTourUseCase: CancelTourUseCase,
     private val chatUseCaseManager: ChatUseCaseManager
 ): ViewModel() {
 
@@ -58,6 +60,19 @@ class MyTourViewModel @Inject constructor(
                             state.copy(opwTours = myTours)
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun cancelTour(bookingId: String) {
+        viewModelScope.launch {
+            cancelTourUseCase(bookingId).apply {
+                onSuccess {
+                    showSnackBar("Hủy tour thành công")
+                }
+                onError {
+                    showSnackBar("Không thể hủy tour")
                 }
             }
         }

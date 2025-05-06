@@ -8,8 +8,11 @@ import com.tanh.tourbooking.data.model.request.PaymentRequest
 import com.tanh.tourbooking.data.model.request.RatingTourRequest
 import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
 import com.tanh.tourbooking.data.model.response.BookingResponse
+import com.tanh.tourbooking.data.model.response.CancelTourResponse
 import com.tanh.tourbooking.data.model.response.CheckTourUnitResponse
+import com.tanh.tourbooking.data.model.response.ConfirmPaymentResponse
 import com.tanh.tourbooking.data.model.response.CreatePaymentResponse
+import com.tanh.tourbooking.data.model.response.GetOrderCodeResponse
 import com.tanh.tourbooking.data.model.response.GetTourResponse
 import com.tanh.tourbooking.data.model.response.LogoutResponse
 import com.tanh.tourbooking.data.model.response.RatingResponse
@@ -25,6 +28,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -103,5 +107,23 @@ interface TourBookingApi {
         @Header("Authorization") token: String,
         @Body request: RatingTourRequest
     ): Response<RatingTourResponse>
+    
+    @GET("/order/{orderCode}")
+    suspend fun confirmPayment(
+        @Header("Authorization") token: String,
+        @Path("orderCode") orderCode: String
+    ): Response<ConfirmPaymentResponse>
+
+    @GET("/booking/{orderCode}")
+    suspend fun getOrderCode(
+        @Header("Authorization") token: String,
+        @Path("orderCode") orderCode: String
+    ): Response<GetOrderCodeResponse>
+
+    @PUT("/booking/cancel/{bookingId}")
+    suspend fun cancelTour(
+        @Header("Authorization") token: String,
+        @Path("bookingId") bookingId: String
+    ): Response<CancelTourResponse>
 
 }

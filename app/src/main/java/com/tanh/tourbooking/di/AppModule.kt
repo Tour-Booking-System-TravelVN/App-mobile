@@ -6,7 +6,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
 import com.tanh.tourbooking.dataStore
-import com.tanh.tourbooking.domain.model.TourUnit
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
 import com.tanh.tourbooking.domain.repository.api.BookingRepository
@@ -41,7 +40,10 @@ import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveWaitingId
 import com.tanh.tourbooking.domain.usecase.chatbox.RecallMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.RefuseUserToChat
+import com.tanh.tourbooking.domain.usecase.payment.CancelTourUseCase
+import com.tanh.tourbooking.domain.usecase.payment.ConfirmPaymentUseCase
 import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
+import com.tanh.tourbooking.domain.usecase.payment.GetBookingIdUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CreateBookingOrderUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetMyTourUseCase
@@ -59,6 +61,27 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideConfirmPaymentUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        paymentRepository: PaymentRepository
+    ) = ConfirmPaymentUseCase(authSecurityRepository, paymentRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetOrderCodeUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        paymentRepository: PaymentRepository
+    ) = GetBookingIdUseCase(authSecurityRepository, paymentRepository)
+
+    @Provides
+    @Singleton
+    fun provideCancelTourUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        paymentRepository: PaymentRepository
+    ) = CancelTourUseCase(authSecurityRepository, paymentRepository)
 
     @Provides
     @Singleton
