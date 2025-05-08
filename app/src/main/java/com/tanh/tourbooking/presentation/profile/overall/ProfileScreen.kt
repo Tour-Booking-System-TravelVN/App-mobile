@@ -1,9 +1,8 @@
-package com.tanh.tourbooking.presentation.profile
+package com.tanh.tourbooking.presentation.profile.overall
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +22,6 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,19 +39,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.tanh.tourbooking.presentation.profile.ProfileEvent
+import com.tanh.tourbooking.presentation.profile.ProfileUiState
+import com.tanh.tourbooking.presentation.profile.ProfileViewModel
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.util.Role
+import com.tanh.tourbooking.util.Route
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>(),
+    viewModel: ProfileViewModel,
     onNavigate: (String) -> Unit,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
+    popBackStack: () -> Unit
 ) {
 
     val state = viewModel.state.collectAsState(initial = ProfileUiState()).value
@@ -66,7 +68,7 @@ fun ProfileScreen(
         viewModel.channel.collect { event ->
             when (event) {
                 is OneTimeEvent.Navigate -> onNavigate(event.route)
-                OneTimeEvent.PopBackStack -> Unit
+                OneTimeEvent.PopBackStack -> popBackStack()
                 is OneTimeEvent.ShowSnackbar -> showSnackBar(event.message)
                 is OneTimeEvent.ShowToast -> Unit
                 is OneTimeEvent.OpenLink -> Unit
@@ -114,8 +116,14 @@ fun ProfileScreen(
                     ProfileItem(
                         icon = profile.second, title = profile.first,
                         modifier = Modifier.clickable {
-                            if(profile.first == "Logout") {
+                            if(profile.first == "Đăng xuất") {
                                 viewModel.onEvent(ProfileEvent.Logout)
+                            }
+                            if(profile.first == "Thông tin cá nhân") {
+                                viewModel.onEvent(ProfileEvent.onNavToScreen(Route.INFOR_SCREEN.toString()))
+                            }
+                            if(profile.first == "Đổi mật khẩu") {
+                                viewModel.onEvent(ProfileEvent.onNavToScreen(Route.CHGPWD_SCREEN.toString()))
                             }
                         })
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
@@ -171,9 +179,9 @@ fun ProfileItem(
 }
 
 val profileList = listOf(
-    "Profile" to Icons.Default.Person,
-    "Payment" to Icons.Default.Payment,
-    "Your experiences" to Icons.Default.Blind,
-    "Setting" to Icons.Default.Settings,
-    "Logout" to Icons.Default.Logout
+    "Thông tin cá nhân" to Icons.Default.Person,
+    "Thanh toán" to Icons.Default.Payment,
+    "Hoạt động" to Icons.Default.Blind,
+    "Đổi mật khẩu" to Icons.Default.Settings,
+    "Đăng xuất" to Icons.Default.Logout
 )

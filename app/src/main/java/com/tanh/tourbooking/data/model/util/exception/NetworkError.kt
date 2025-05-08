@@ -17,3 +17,19 @@ fun NetworkError.toMessage(): String = when(this) {
     NetworkError.SERIALIZATION -> "400 Serialization Error"
     NetworkError.UNKNOWN -> "Oops, something went wrong"
 }
+
+sealed class NetworkingError : Error {
+    data object NoInternet : NetworkingError()
+    data object ServerError: NetworkingError()
+    data object Serialization : NetworkingError()
+    data object Unknown : NetworkingError()
+    data class ClientError(val code: Int, val message: String): NetworkingError()
+}
+
+fun NetworkingError.toMessage(): String = when(this) {
+    is NetworkingError.ClientError -> this.message
+    NetworkingError.NoInternet -> "Không có kết nối internet"
+    NetworkingError.Serialization -> "Không thể serialization"
+    NetworkingError.ServerError -> "Lỗi server"
+    NetworkingError.Unknown -> "Lỗi không xác định"
+}

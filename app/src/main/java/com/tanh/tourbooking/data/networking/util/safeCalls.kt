@@ -27,3 +27,4 @@ suspend fun <T : Any> safeCall(
         Result.Error(NetworkError.UNKNOWN)
     }
 }
+

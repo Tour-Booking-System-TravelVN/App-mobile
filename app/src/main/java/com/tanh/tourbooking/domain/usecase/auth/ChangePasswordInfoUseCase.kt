@@ -1,0 +1,37 @@
+package com.tanh.tourbooking.domain.usecase.auth
+
+import com.tanh.tourbooking.data.model.request.ChangePasswordRequest
+import com.tanh.tourbooking.data.model.util.exception.Resources
+import com.tanh.tourbooking.data.model.util.exception.Result
+import com.tanh.tourbooking.data.model.util.exception.toMessage
+import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
+import com.tanh.tourbooking.domain.repository.api.UserRepository
+import javax.inject.Inject
+
+class ChangePasswordInfoUseCase @Inject constructor(
+    private val userRepository: UserRepository,
+    private val authSecurityRepository: AuthSecurityRepository
+) {
+    suspend operator fun invoke(
+        oldPassword: String,
+        newPassword: String
+    ): Resources<Boolean, Exception> {
+        val token = authSecurityRepository.readData().token
+        if(token.isNullOrBlank()) {
+            return Resources.Error(Exception("Vui lòng đăng nhập/ đăng ký"))
+        }
+        val request = ChangePasswordRequest(
+            oldPassword = oldPassword,
+            newPassword = newPassword
+        )
+        return userRepository.changePassword(
+            request = request,
+            token = token
+        ).let { result ->
+            when(result) {
+                is Result.Error -> Resources.Error(Exception(result.error.toMessage()))
+                is Result.Success -> Resources.Success(true)
+            }
+        }
+    }
+}

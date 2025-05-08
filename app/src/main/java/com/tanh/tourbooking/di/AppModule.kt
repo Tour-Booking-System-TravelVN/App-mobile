@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
+import com.tanh.tourbooking.data.model.request.UpdateInfoCustomerRequest
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
@@ -18,6 +20,7 @@ import com.tanh.tourbooking.domain.repository.api.UserRepository
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.domain.repository.firestore.MessageRepository
 import com.tanh.tourbooking.domain.repository.firestore.NotificationHandler
+import com.tanh.tourbooking.domain.usecase.auth.ChangePasswordInfoUseCase
 import com.tanh.tourbooking.domain.usecase.auth.CheckRoleUseCase
 import com.tanh.tourbooking.domain.usecase.auth.EncryptAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.GetInformationUseCase
@@ -26,6 +29,7 @@ import com.tanh.tourbooking.domain.usecase.auth.LoginUseCase
 import com.tanh.tourbooking.domain.usecase.auth.LogoutUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ReadAuthResultUseCase
 import com.tanh.tourbooking.domain.usecase.auth.RegisterUseCase
+import com.tanh.tourbooking.domain.usecase.auth.UpdateInforCustomerUseCase
 import com.tanh.tourbooking.domain.usecase.auth.ValidTokenUseCase
 import com.tanh.tourbooking.domain.usecase.chatbox.AcceptUserJoinChat
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
@@ -61,6 +65,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideChangePasswordUseCase(
+        userRepository: UserRepository,
+        authSecurityRepository: AuthSecurityRepository
+    ) = ChangePasswordInfoUseCase(userRepository, authSecurityRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateInfoCustomerUseCase(
+        userRepository: UserRepository,
+        authSecurityRepository: AuthSecurityRepository
+    ) = UpdateInforCustomerUseCase(userRepository, authSecurityRepository)
+
+    @Provides
+    @Singleton
+    fun provideGson() = Gson()
 
     @Provides
     @Singleton

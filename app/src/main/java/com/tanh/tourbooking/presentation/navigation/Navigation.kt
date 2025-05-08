@@ -42,7 +42,10 @@ import com.tanh.tourbooking.presentation.message.waiting_screen.WaitingScreen
 import com.tanh.tourbooking.presentation.my_tour.MyTourViewModel
 import com.tanh.tourbooking.presentation.my_tour.detail_screen.DetailMyTourScreen
 import com.tanh.tourbooking.presentation.my_tour.main_screen.MyTourScreen
-import com.tanh.tourbooking.presentation.profile.ProfileScreen
+import com.tanh.tourbooking.presentation.profile.overall.ProfileScreen
+import com.tanh.tourbooking.presentation.profile.ProfileViewModel
+import com.tanh.tourbooking.presentation.profile.information.InformationScreen
+import com.tanh.tourbooking.presentation.profile.password.PasswordScreen
 import com.tanh.tourbooking.presentation.register.RegisterScreen
 import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
 import com.tanh.tourbooking.presentation.start.StartScreen
@@ -81,8 +84,6 @@ fun Navigation(
     var openFromDeepLink by remember {
         mutableStateOf(false)
     }
-
-
 
 
     LaunchedEffect(navBackStackEntry) {
@@ -162,16 +163,21 @@ fun Navigation(
             composable(
                 route = Route.LAUNCHER_SCREEN.toString()
             ) {
-                if (!openFromDeepLink) {
-                    LaunchedEffect(isTokenValid) {
-                        val dest = if (isTokenValid) Route.HOME_SCREEN.toString()
-                        else Route.START_SCREEN.toString()
-                        navController.navigate(dest) {
-                            popUpTo(Route.LAUNCHER_SCREEN.toString()) { inclusive = true }
-                        }
+                openFromDeepLink = false
+
+                var dest by remember {
+                    mutableStateOf("")
+                }
+
+                LaunchedEffect(isTokenValid) {
+                    dest = if (isTokenValid) Route.HOME_SCREEN.toString()
+                    else Route.START_SCREEN.toString()
+                }
+                SplashScreen {
+                    if(dest.isNotBlank()) {
+                        navController.navigate(dest)
                     }
                 }
-                SplashScreen(navController = navController)
             }
             composable(
                 route = Route.SUCCESS_SCREEN.toString() + "?orderCode={orderCode}",
@@ -279,19 +285,63 @@ fun Navigation(
                     }
                 )
             }
-            composable(route = Route.PROFILE_SCREEN.toString()) {
-                ProfileScreen(
-                    modifier = Modifier.padding(paddingValues),
-                    onNavigate = {
-                        navController.navigate(it)
+            navigation(
+                startDestination = Route.PROFILE_SCREEN.toString(),
+                route = "profile"
+            ) {
+                composable(Route.PROFILE_SCREEN.toString()) { entry ->
+                    val viewModel = entry.sharedViewModel<ProfileViewModel>(navController)
+
+                    ProfileScreen(
+                        modifier = Modifier.padding(paddingValues),
+                        viewModel = viewModel,
+                        onNavigate = {
+                            navController.navigate(it)
+                        },
+                        popBackStack = {
+                            navController.popBackStack()
+                        },
+                        showSnackBar = {
+                            coroutineScope.launch {
+                                snackBarHosState.showSnackbar(
+                                    message = it,
+                                    withDismissAction = true,
+                                    duration = SnackbarDuration.Long
+                                )
+                            }
+                        }
+                    )
+                }
+
+                composable(Route.INFOR_SCREEN.toString()) { entry ->
+                    val viewModel = entry.sharedViewModel<ProfileViewModel>(navController)
+
+                    InformationScreen(
+                        viewModel = viewModel,
+                        onNavigate = {
+                            navController.navigate(it)
+                        },
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        coroutineScope.launch {
+                            snackBarHosState.showSnackbar(
+                                message = it,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
                     }
-                ) {
-                    coroutineScope.launch {
-                        snackBarHosState.showSnackbar(
-                            message = it,
-                            withDismissAction = true,
-                            duration = SnackbarDuration.Long
-                        )
+                }
+
+                composable(Route.CHGPWD_SCREEN.toString()) { entry ->
+                    val viewModel = entry.sharedViewModel<ProfileViewModel>(navController)
+
+                    PasswordScreen(
+                        viewModel = viewModel
+                    ) {
+                        navController.popBackStack()
                     }
                 }
             }

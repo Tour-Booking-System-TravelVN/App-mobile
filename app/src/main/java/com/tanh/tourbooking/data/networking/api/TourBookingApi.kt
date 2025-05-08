@@ -3,9 +3,11 @@ package com.tanh.tourbooking.data.networking.api
 import com.tanh.tourbooking.data.model.dto.auth.AuthResponse
 import com.tanh.tourbooking.data.model.dto.auth.LoginRequest
 import com.tanh.tourbooking.data.model.dto.auth.RegisterRequest
+import com.tanh.tourbooking.data.model.request.ChangePasswordRequest
 import com.tanh.tourbooking.data.model.request.CreatePaymentRequest
 import com.tanh.tourbooking.data.model.request.PaymentRequest
 import com.tanh.tourbooking.data.model.request.RatingTourRequest
+import com.tanh.tourbooking.data.model.request.UpdateInfoCustomerRequest
 import com.tanh.tourbooking.data.model.response.AvailableMonthResponse
 import com.tanh.tourbooking.data.model.response.BookingResponse
 import com.tanh.tourbooking.data.model.response.CancelTourResponse
@@ -20,8 +22,10 @@ import com.tanh.tourbooking.data.model.response.RatingTourResponse
 import com.tanh.tourbooking.data.model.response.TourProgramResponse
 import com.tanh.tourbooking.data.model.response.TourUnitByPlaceResponse
 import com.tanh.tourbooking.data.model.response.TourUnitCalendarResponse
+import com.tanh.tourbooking.data.model.response.UpdateInfoResponse
 import com.tanh.tourbooking.data.model.response.UserInformationResponse
 import com.tanh.tourbooking.data.model.response.ValidTokenResponse
+import com.tanh.tourbooking.data.networking.util.SuccessResponse
 import com.tanh.tourbooking.domain.model.Rating
 import retrofit2.Response
 import retrofit2.http.Body
@@ -125,5 +129,17 @@ interface TourBookingApi {
         @Header("Authorization") token: String,
         @Path("bookingId") bookingId: String
     ): Response<CancelTourResponse>
+
+    @PUT("/customer/myinfo/update")
+    suspend fun updateInfoCustomer(
+        @Header("Authorization") token: String,
+        @Body body: UpdateInfoCustomerRequest
+    ): Response<SuccessResponse<UpdateInfoResponse>>
+
+    @PUT("/changePwd")
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Body body: ChangePasswordRequest
+    ): Response<SuccessResponse<Boolean>>
 
 }
