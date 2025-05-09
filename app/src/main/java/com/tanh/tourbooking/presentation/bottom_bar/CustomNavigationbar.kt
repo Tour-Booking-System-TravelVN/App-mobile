@@ -47,10 +47,11 @@ fun CustomBottomNavigationBar(
 ) {
 
     val greyToWhiteGradient = Brush.horizontalGradient(
-        colors = listOf(
-            Color(0xFFE2E2E6),
-            Color(0xFFF5F5F5),
-            Color(0xFFFFFFFF)
+        colorStops = arrayOf(
+            0.0f to Color(0xFFF0F0F2),   // Rất nhạt, chỉ hơi xám
+            0.1f to Color(0xFFF4F4F6),   // Gần trắng
+            0.5f to Color(0xFFF9F9FA),   // Rất gần trắng
+            1.0f to Color(0xFFFFFFFF)    // Trắng tinh khiết
         )
     )
 
@@ -135,10 +136,3 @@ data class NavigationBarItemData(
     val badgeCount: Int? = null
 )
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewCustomBottomNavigationBar(modifier: Modifier = Modifier) {
-    TourBookingTheme {
-
-    }
-}

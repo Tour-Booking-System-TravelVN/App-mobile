@@ -6,34 +6,36 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Timelapse
 import com.tanh.tourbooking.presentation.bottom_bar.NavigationBarItemData
 
 object Good {
 
     val listBottomBar = listOf(
         NavigationBarItemData(
-            title = "Home",
+            title = "Trang chủ",
             route = Route.HOME_SCREEN.toString(),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
             hasNews = false,
         ),
         NavigationBarItemData(
-            title = "Explore",
+            title = "Tìm kiếm",
             route = Route.EXPLORE_SCREEN.toString(),
             selectedIcon = Icons.Filled.Search,
             unselectedIcon = Icons.Outlined.Search,
         ),
         NavigationBarItemData(
-            title = "Tours",
+            title = "Hoạt động",
             route = Route.MY_TOURS_SCREEN.toString(),
-            selectedIcon = Icons.Filled.Place,
-            unselectedIcon = Icons.Outlined.Place,
+            selectedIcon = Icons.Filled.Timelapse,
+            unselectedIcon = Icons.Outlined.Timelapse,
         ),
         NavigationBarItemData(
             title = "Message",
