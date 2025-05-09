@@ -27,6 +27,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -280,7 +281,10 @@ fun DetailScreen(
                     .fillMaxWidth()
                     .height(animatedHeight)
                     .align(Alignment.BottomCenter)
-                    .background(Color.White)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                    )
                     .pointerInput(Unit) {
                         detectVerticalDragGestures(
                             onDragEnd = {

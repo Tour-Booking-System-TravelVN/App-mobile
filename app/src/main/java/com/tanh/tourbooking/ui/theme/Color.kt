@@ -3,7 +3,7 @@ package com.tanh.tourbooking.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val greenItem = Color(0xFF2a9068)
-val starColor = Color(0xFFf39c01)
+val starColor = Color(0xFFC77800)
 val lightGray = Color(0xFFA4A4A8)
 val lighterGray = Color(0xFFf4f5f4)
 

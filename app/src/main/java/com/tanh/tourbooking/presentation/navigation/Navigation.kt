@@ -13,6 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,6 +34,7 @@ import com.tanh.tourbooking.presentation.booking.BookingScreen
 import com.tanh.tourbooking.presentation.category.CategoryScreen
 import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
+import com.tanh.tourbooking.presentation.explore.ExploreViewModel
 import com.tanh.tourbooking.presentation.failure.FailureScreen
 import com.tanh.tourbooking.presentation.home.HomeScreen
 import com.tanh.tourbooking.presentation.login.LoginScreen
@@ -85,9 +87,20 @@ fun Navigation(
         mutableStateOf(false)
     }
 
+    var selectedIndex by remember {
+        mutableIntStateOf(0)
+    }
 
     LaunchedEffect(navBackStackEntry) {
         showBottomBar = currentDestination in navRoutes
+
+        when(navBackStackEntry?.destination?.route) {
+            Route.HOME_SCREEN.toString() -> selectedIndex = 0
+            Route.EXPLORE_SCREEN.toString() -> selectedIndex = 1
+            Route.MY_TOURS_SCREEN.toString() -> selectedIndex = 2
+            Route.CHATS_SCREEN.toString() -> selectedIndex = 3
+            Route.PROFILE_SCREEN.toString() -> selectedIndex = 4
+        }
     }
 
     Scaffold(
@@ -96,7 +109,13 @@ fun Navigation(
         },
         bottomBar = {
             if (showBottomBar) {
-                CustomBottomNavigationBar(navController = navController)
+                CustomBottomNavigationBar(
+                    navController = navController,
+                    selectedIndex = selectedIndex,
+                    onIndexChange = {currentIndex ->
+                        selectedIndex = currentIndex
+                    }
+                )
             }
         },
         contentWindowInsets = WindowInsets.safeGestures
@@ -123,7 +142,11 @@ fun Navigation(
                     MyTourScreen(
                         viewModel = viewModel,
                         onNavigate = {
-                            navController.navigate(it)
+                            navController.navigate(it) {
+                                popUpTo(Route.MY_TOURS_SCREEN.toString()) {
+                                    inclusive = true
+                                }
+                            }
                         },
                         modifier = Modifier.padding(paddingValues)
                     ) {
@@ -175,7 +198,11 @@ fun Navigation(
                 }
                 SplashScreen {
                     if(dest.isNotBlank()) {
-                        navController.navigate(dest)
+                        navController.navigate(dest) {
+                            popUpTo(Route.LAUNCHER_SCREEN.toString()) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }
@@ -233,7 +260,11 @@ fun Navigation(
                         )
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        popUpTo(Route.CHGPWD_SCREEN.toString()) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
             composable(route = Route.MESSAGE_SCREEN.toString() + "/{chatId}") {
@@ -265,14 +296,24 @@ fun Navigation(
                 HomeScreen(
                     modifier = Modifier.padding(paddingValues)
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        popUpTo(Route.HOME_SCREEN.toString()) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
-            composable(route = Route.EXPLORE_SCREEN.toString()) {
+            composable(route = Route.EXPLORE_SCREEN.toString()) { entry ->
+                val viewModel = hiltViewModel<ExploreViewModel>(entry)
                 ExploreScreen(
                     modifier = Modifier.padding(paddingValues),
+                    viewModel = viewModel,
                     onNavigate = {
-                        navController.navigate(it)
+                        navController.navigate(it) {
+                            popUpTo(Route.EXPLORE_SCREEN.toString()) {
+                                inclusive = true
+                            }
+                        }
                     },
                     showSnackbar = {
                         coroutineScope.launch {
@@ -296,7 +337,11 @@ fun Navigation(
                         modifier = Modifier.padding(paddingValues),
                         viewModel = viewModel,
                         onNavigate = {
-                            navController.navigate(it)
+                            navController.navigate(it) {
+                                popUpTo(Route.PROFILE_SCREEN.toString()) {
+                                    inclusive = true
+                                }
+                            }
                         },
                         popBackStack = {
                             navController.popBackStack()
@@ -406,7 +451,11 @@ fun Navigation(
                         }
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        popUpTo(Route.LOGIN_SCREEN.toString()) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
             composable(route = Route.REGISTER_SCREEN.toString()) {
@@ -421,7 +470,11 @@ fun Navigation(
                         }
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        popUpTo(Route.REGISTER_SCREEN.toString()) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
             composable(

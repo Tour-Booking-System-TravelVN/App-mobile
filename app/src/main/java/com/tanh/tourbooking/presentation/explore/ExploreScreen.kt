@@ -76,7 +76,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ExploreScreen(
     modifier: Modifier = Modifier,
-    viewModel: ExploreViewModel = hiltViewModel<ExploreViewModel>(),
+    viewModel: ExploreViewModel,
     onNavigate: (String) -> Unit,
     showSnackbar: (String) -> Unit
 ) {

@@ -41,9 +41,10 @@ import com.tanh.tourbooking.util.Good
 @Composable
 fun CustomBottomNavigationBar(
     navController: NavController,
+    selectedIndex: Int,
+    onIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
 
     val greyToWhiteGradient = Brush.horizontalGradient(
         colors = listOf(
@@ -116,7 +117,7 @@ fun CustomBottomNavigationBar(
                             .weight(1f)
                             .padding(vertical = 8.dp)
                             .clickable {
-                                selectedIndex = index
+                                onIndexChange(index)
                                 navController.navigate(navItem.route)
                             }
                     )

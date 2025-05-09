@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -36,9 +38,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -60,6 +66,8 @@ fun LoginScreen(
 ) {
 
     val state = viewModel.state.collectAsState(initial = LoginState()).value
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(true) {
         viewModel.channel.collect { event ->
@@ -138,6 +146,12 @@ fun LoginScreen(
             label = {
                 Text("Your name")
             },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusRequester.requestFocus()
+                }
+            ),
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .border(
@@ -146,6 +160,7 @@ fun LoginScreen(
                     shape = MaterialTheme.shapes.medium
                 )
                 .fillMaxWidth()
+                .focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         TextField(
@@ -179,6 +194,12 @@ fun LoginScreen(
                     )
                 }
             },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .border(
@@ -187,6 +208,7 @@ fun LoginScreen(
                     shape = MaterialTheme.shapes.medium
                 )
                 .fillMaxWidth()
+                .focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         Text(
