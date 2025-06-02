@@ -63,31 +63,38 @@ fun ChatItem(
         ) {
             if(!status) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = chatBox.name,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W600,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = chatBox.name,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W600,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = chatBox.message,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
                     Text(
                         text = TimeFormatter.formatDate(chatBox.lastTime),
                         style = MaterialTheme.typography.titleSmall,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = chatBox.message,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
             } else {
                 Text(
                     text = chatBox.name,
@@ -116,7 +123,6 @@ fun ChatItemPreivew(modifier: Modifier = Modifier) {
                 participants = emptyList(),
                 lastTime = LocalDateTime.now(),
                 message = "Hello",
-                adminId = 1,
                 chatId = "awjdakwdjkawd",
                 name = "Nhóm đi ninh bình"
             )

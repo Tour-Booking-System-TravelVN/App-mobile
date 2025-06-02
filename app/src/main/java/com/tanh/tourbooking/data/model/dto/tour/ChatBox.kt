@@ -5,13 +5,13 @@ import com.google.firebase.Timestamp
 data class ChatBoxDto(
     val participants: List<Int> = emptyList(),
     val waitingId: List<Int> = emptyList(),
+    val bannedId: List<Int> = emptyList(),
     val lastTimestamp: com.google.firebase.Timestamp = Timestamp.now(),
+    val tourGuideId: List<Int> = emptyList(),
     val message: String = "",
-    val adminId: Int = 0,
     val chatId: String = "",
     val name: String = "",
-    val uniqueBookingId: String = ""
-)
+    )
 
 data class MessageDto(
     val senderId: Int = 0,

@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -160,6 +163,8 @@ fun BottomSheet(
         }
     }
 
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.toFloat()
+
     val totalAmount by derivedStateOf {
         (adultCount * adultPrice) +
                 (childCount * childPrice) +
@@ -175,13 +180,15 @@ fun BottomSheet(
         sheetState = bottomSheetState,
         onDismissRequest = {
             onSheetStateChange(false)
-        }
+        },
+        dragHandle = null,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             Modifier
-                .wrapContentSize()
+                .fillMaxWidth()
         ) {
-
+            Spacer(Modifier.height(MaterialTheme.dimens.small1))
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -205,6 +212,7 @@ fun BottomSheet(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(Modifier.size(28.dp))
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             HorizontalDivider(
@@ -372,7 +380,7 @@ fun BottomSheet(
                 contentPadding = PaddingValues(MaterialTheme.dimens.small2)
             ) {
                 Text(
-                    text = "Reset"
+                    text = "Làm mới"
                 )
             }
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
@@ -398,7 +406,7 @@ fun BottomSheet(
                 contentPadding = PaddingValues(MaterialTheme.dimens.small2)
             ) {
                 Text(
-                    text = "Confirmation"
+                    text = "Xác nhận"
                 )
             }
         }

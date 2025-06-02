@@ -14,7 +14,6 @@ class ObserveMessage @Inject constructor(
     private val repository: MessageRepository
 ) {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(chatId: String): Flow<Resources<List<Message>, Exception>> {
         return repository.observeMessages(chatId).map { res ->
             when(res) {

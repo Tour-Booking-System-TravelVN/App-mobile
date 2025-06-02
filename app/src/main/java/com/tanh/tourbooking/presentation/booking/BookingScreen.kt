@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,9 +73,17 @@ fun BookingScreen(
     val state = viewModel.state.collectAsState(initial = BookingUiState()).value
     val context = LocalContext.current
 
-    val companionSheetState = rememberModalBottomSheetState()
+    val companionSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     var isShowCompanionBottom by remember {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(isShowCompanionBottom) {
+        if(isShowCompanionBottom) {
+            companionSheetState.expand()
+        }
     }
 
     var checked by remember {
@@ -223,8 +232,8 @@ fun BookingScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CircularProgressIndicator()
-                    Text("Đang tiến hành thanh toán")
+                    CircularProgressIndicator(color = Color.White)
+                    Text("Đang tiến hành thanh toán", color = Color.White)
                 }
             }
         }

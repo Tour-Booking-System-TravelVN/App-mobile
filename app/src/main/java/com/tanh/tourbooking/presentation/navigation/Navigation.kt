@@ -144,9 +144,7 @@ fun Navigation(
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         navController.navigate(it) {
-                            popUpTo(Route.HOME_SCREEN.toString()) {
-                                inclusive = true
-                            }
+                            launchSingleTop = true
                         }
                     }
                 }
@@ -161,9 +159,7 @@ fun Navigation(
                         viewModel = viewModel,
                         onNavigate = {
                             navController.navigate(it) {
-                                popUpTo(Route.EXPLORE_SCREEN.toString()) {
-                                    inclusive = true
-                                }
+                                launchSingleTop = true
                             }
                         },
                         showSnackbar = {
@@ -191,9 +187,7 @@ fun Navigation(
                             viewModel = viewModel,
                             onNavigate = {
                                 navController.navigate(it) {
-                                    popUpTo(Route.MY_TOURS_SCREEN.toString()) {
-                                        inclusive = true
-                                    }
+                                    launchSingleTop = true
                                 }
                             },
                             modifier = Modifier.padding(paddingValues)
@@ -214,7 +208,9 @@ fun Navigation(
                         DetailMyTourScreen(
                             viewModel = viewModel,
                             onNavigate = {
-                                navController.navigate(it)
+                                navController.navigate(it) {
+                                    launchSingleTop = true
+                                }
                             },
                             popBackStack = {
                                 navController.popBackStack()
@@ -246,7 +242,9 @@ fun Navigation(
                         navController.navigate(it) {
                             popUpTo(Route.CHGPWD_SCREEN.toString()) {
                                 inclusive = true
+
                             }
+                            launchSingleTop = true
                         }
                     }
                 }
@@ -262,11 +260,16 @@ fun Navigation(
                         ProfileScreen(
                             modifier = Modifier.padding(paddingValues),
                             viewModel = viewModel,
-                            onNavigate = {
-                                navController.navigate(it) {
-                                    popUpTo(Route.PROFILE_SCREEN.toString()) {
-                                        inclusive = true
+                            onNavigate = {route ->
+                                if(route == Route.LOGIN_SCREEN.toString()) {
+                                    navController.navigate(route) {
+                                        popUpTo("bottom_graph") {
+                                            inclusive = true
+                                        }
+                                        launchSingleTop = true
                                     }
+                                } else {
+                                    navController.navigate(route)
                                 }
                             },
                             popBackStack = {
@@ -290,7 +293,9 @@ fun Navigation(
                         InformationScreen(
                             viewModel = viewModel,
                             onNavigate = {
-                                navController.navigate(it)
+                                navController.navigate(it) {
+                                    launchSingleTop = true
+                                }
                             },
                             popBackStack = {
                                 navController.popBackStack()
@@ -396,7 +401,9 @@ fun Navigation(
                 MessageScreen(
                     paddingValues = paddingValues,
                     onNavigate = {
-                        navController.navigate(it)
+                        navController.navigate(it) {
+                            launchSingleTop = true
+                        }
                     }
                 ) {
                     navController.popBackStack()
@@ -440,7 +447,9 @@ fun Navigation(
                         }
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        launchSingleTop = true
+                    }
                 }
             }
             composable(
@@ -462,7 +471,9 @@ fun Navigation(
                         }
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        launchSingleTop = true
+                    }
                 }
             }
             composable(route = Route.START_SCREEN.toString()) {
@@ -486,6 +497,7 @@ fun Navigation(
                         popUpTo(Route.LOGIN_SCREEN.toString()) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             }
@@ -505,6 +517,7 @@ fun Navigation(
                         popUpTo(Route.REGISTER_SCREEN.toString()) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             }
@@ -516,7 +529,9 @@ fun Navigation(
             ) {
                 BookingScreen(
                     onNavigate = {
-                        navController.navigate(it)
+                        navController.navigate(it) {
+                            launchSingleTop = true
+                        }
                     },
                     popBackStack = {
                         navController.popBackStack()
@@ -555,7 +570,9 @@ fun Navigation(
                         navController.popBackStack()
                     }
                 ) {
-                    navController.navigate(it)
+                    navController.navigate(it) {
+                        launchSingleTop = true
+                    }
                 }
             }
         }

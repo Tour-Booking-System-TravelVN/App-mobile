@@ -185,7 +185,7 @@ fun DetailMyTourScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Mã chuyến đi",
+                    text = "Mã đặt tour",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
@@ -201,6 +201,40 @@ fun DetailMyTourScreen(
                 IconButton(
                     onClick = {
                         clipboardManager.setText(AnnotatedString(myTour.bookingId))
+                    },
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ContentCopy,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small2),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Mã chuyến đi",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+                    text = myTour.tourUnit.tourUnitId,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+                Spacer(Modifier.width(2.dp))
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(myTour.tourUnit.tourUnitId))
                     },
                     modifier = Modifier
                 ) {

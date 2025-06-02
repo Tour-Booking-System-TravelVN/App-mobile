@@ -47,6 +47,7 @@ class MessageViewModel @Inject constructor(
 
     init {
         chatId = savedStateHandle.get<String>("chatId") ?: ""
+        Log.d("MSG5", chatId)
         if (chatId.isNotBlank()) {
             viewModelScope.launch {
                 launch {

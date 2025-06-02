@@ -1,8 +1,6 @@
 package com.tanh.tourbooking.presentation.chat
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onSuccess
@@ -81,9 +79,9 @@ class ChatsViewModel @Inject constructor(
         }
     }
 
-    fun validChatBookingId(chatBookingId: String) {
+    fun validChatBookingId(tourUnitId: String) {
         viewModelScope.launch {
-            chatUseCaseManager.allowUserToChat(chatBookingId, _state.value.userId ?: 0).let { chatBoxId ->
+            chatUseCaseManager.allowUserToChat(tourUnitId, _state.value.userId ?: 0).let { chatBoxId ->
                 if(chatBoxId == null) {
                     sendEvent(OneTimeEvent.ShowSnackbar("Không tìm thấy id"))
                 } else {
@@ -100,6 +98,7 @@ class ChatsViewModel @Inject constructor(
     }
 
     fun onNavToMessage(chatId: String) {
+        Log.d("MSG5", chatId)
         sendEvent(OneTimeEvent.Navigate(Route.MESSAGE_SCREEN.toString() + "/$chatId"))
     }
 

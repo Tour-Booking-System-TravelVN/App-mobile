@@ -64,7 +64,6 @@ fun CustomBottomNavigationBar(
         Box (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
                 .shadow(
                     elevation = 10.dp, shape = RoundedCornerShape(
                         topStart = 26.dp,

@@ -10,11 +10,13 @@ import com.tanh.tourbooking.data.model.util.exception.Resources
 import com.tanh.tourbooking.data.model.util.exception.Result
 import com.tanh.tourbooking.data.model.util.exception.toMessage
 import com.tanh.tourbooking.domain.model.Companion
+import com.tanh.tourbooking.domain.model.Discount
 import com.tanh.tourbooking.domain.model.TransactionDetail
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.PaymentRepository
 import com.tanh.tourbooking.presentation.booking.item.InforCustomer
 import com.tanh.tourbooking.presentation.detail_tour.BookingTourState
+import com.tanh.tourbooking.util.Calculation
 import javax.inject.Inject
 
 class CreatePaymentUseCase @Inject constructor(
@@ -34,7 +36,10 @@ class CreatePaymentUseCase @Inject constructor(
             cancelUrl = "makeitsoapp://failure",
             returnUrl = "makeitsoapp://success",
             description = tourState.tourUnitId,
-            price = tourState.totalPrice.toInt(),
+            price = Calculation.discountedPrice(
+                amount = tourState.totalPrice,
+                discount = tourState.discount
+            ).toInt(),
             productName = tourState.tourName,
             bookingRequest = BookingRequest(
                 customer = CustomerRequest(

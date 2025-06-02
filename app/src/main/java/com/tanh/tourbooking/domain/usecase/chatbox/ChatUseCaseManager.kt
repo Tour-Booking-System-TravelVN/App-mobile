@@ -14,5 +14,5 @@ class ChatUseCaseManager @Inject constructor(
     val acceptUserJoinChat: AcceptUserJoinChat,
     val refuseUserToChat: RefuseUserToChat,
     val recallMessage: RecallMessage,
-    val getChatBoxIdByBookingId: GetChatBoxIdByBookingId
+    val getChatBoxIdByTourUnitId: GetChatBoxIdByTourUnitId
 )

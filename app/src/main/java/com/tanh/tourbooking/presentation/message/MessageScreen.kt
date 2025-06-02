@@ -100,6 +100,7 @@ fun MessageScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
@@ -190,8 +191,8 @@ fun MessageScreen(
                                     Text(
                                         text = TimeFormatter.formatDateAndYear(date),
                                         fontSize = 8.sp,
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.bodySmall
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             }

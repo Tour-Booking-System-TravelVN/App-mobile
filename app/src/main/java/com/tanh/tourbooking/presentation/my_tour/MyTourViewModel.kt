@@ -1,6 +1,5 @@
 package com.tanh.tourbooking.presentation.my_tour
 
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanh.tourbooking.data.model.util.exception.onError
@@ -10,7 +9,6 @@ import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.payment.CancelTourUseCase
 import com.tanh.tourbooking.domain.usecase.tour.GetMyTourUseCase
 import com.tanh.tourbooking.domain.usecase.tour.RatingTourUseCase
-import com.tanh.tourbooking.presentation.profile.ProfileUiState
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -106,9 +104,9 @@ class MyTourViewModel @Inject constructor(
 
     fun navToChatBox() {
         viewModelScope.launch {
-            val bookingId = _state.value.currentTour?.bookingId
-            if(!bookingId.isNullOrBlank()) {
-                chatUseCaseManager.getChatBoxIdByBookingId(bookingId).let { documentId ->
+            val tourUnitId = _state.value.currentTour?.tourUnit?.tourUnitId
+            if(!tourUnitId.isNullOrBlank()) {
+                chatUseCaseManager.getChatBoxIdByTourUnitId(tourUnitId).let { documentId ->
                     if(documentId != null) {
                         sendEvent(OneTimeEvent.Navigate(Route.MESSAGE_SCREEN.toString() + "/$documentId"))
                     } else {

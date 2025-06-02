@@ -28,7 +28,8 @@ object Calculation {
         return formatter.format(amount)
     }
 
-    fun discountedPrice(amount: Double, discount: Discount): Double {
+    fun discountedPrice(amount: Double, discount: Discount?): Double {
+        if(discount == null) return amount
         return when (discount.discountUnit) {
             "%" -> {
                 amount * ((100 - discount.discountValue) / 100)

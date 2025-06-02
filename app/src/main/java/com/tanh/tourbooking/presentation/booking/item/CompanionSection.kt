@@ -137,9 +137,11 @@ fun CompanionSection(
     if (isShowBottom) {
         ModalBottomSheet(
             onDismissRequest = { onDismissRequest() },
-            sheetState = sheetState
+            sheetState = sheetState,
+            dragHandle = null
         ) {
             Column(modifier = Modifier.background(Color.White)) {
+                Spacer(Modifier.height(MaterialTheme.dimens.small1))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -159,7 +161,7 @@ fun CompanionSection(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f)
                     )
-                    Spacer(Modifier.size(25.dp))
+                    Spacer(Modifier.size(30.dp))
                 }
 
                 Spacer(Modifier.height(8.dp))

@@ -12,9 +12,9 @@ class AllowUserToChat @Inject constructor(
 ) {
 
     //return chatBoxId
-    suspend operator fun invoke(bookingIdTour: String, userId: Int): String? {
-        val isValid = repositoryImpl.checkBookingIdTour(bookingIdTour)
-        val chatId = if (isValid) chatRepository.joinChatBox(bookingIdTour, userId) else null
+    suspend operator fun invoke(tourUnitId: String, userId: Int): String? {
+        val isValid = repositoryImpl.checkBookingIdTour(tourUnitId)
+        val chatId = if (isValid) chatRepository.joinChatBox(tourUnitId, userId) else null
         if (chatId != null) {
             handler.subscribeTopic(chatId)  //subscribe topic to receive messages
         }

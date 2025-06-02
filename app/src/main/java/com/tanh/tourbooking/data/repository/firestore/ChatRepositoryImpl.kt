@@ -1,13 +1,10 @@
 package com.tanh.tourbooking.data.repository.firestore
 
-import android.os.Build
 import android.util.Log
-import androidx.compose.ui.text.rememberTextMeasurer
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.toObject
 import com.google.firebase.messaging.FirebaseMessaging
 import com.tanh.tourbooking.data.model.dto.tour.ChatBoxDto
 import com.tanh.tourbooking.data.model.util.exception.Resources
@@ -15,7 +12,6 @@ import com.tanh.tourbooking.di.IODispatcher
 import com.tanh.tourbooking.domain.model.ChatBox
 import com.tanh.tourbooking.domain.repository.firestore.ChatRepository
 import com.tanh.tourbooking.util.Collections
-import io.opencensus.resource.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -67,9 +63,9 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun joinChatBox(uniqueBookingId: String, userId: Int): String? {
+    override suspend fun joinChatBox(tourUnitId: String, userId: Int): String? {
         return withContext(dispatcherIO) {
-            val snapshot = chatBoxCollection.whereEqualTo("uniqueBookingId", uniqueBookingId)
+            val snapshot = chatBoxCollection.whereEqualTo("chatId", tourUnitId)
                 .get().await()
             if (snapshot.isEmpty) return@withContext null
 
@@ -153,9 +149,9 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getChatBoxIdByBookingId(bookingId: String): String? {
+    override suspend fun getChatBoxIdByTourUnitid(tourUnitId: String): String? {
         return withContext(dispatcherIO) {
-            val snapshot = chatBoxCollection.whereEqualTo("uniqueBookingId", bookingId)
+            val snapshot = chatBoxCollection.whereEqualTo("chatId", tourUnitId)
                 .get().await()
             if (snapshot.isEmpty) return@withContext null
             return@withContext snapshot.documents[0].id

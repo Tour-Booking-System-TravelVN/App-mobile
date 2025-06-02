@@ -16,10 +16,10 @@ fun ChatBox.toChatBoxDto(): ChatBoxDto =
         participants = participants,
         lastTimestamp = Timestamp.now(),
         message = message,
-        adminId = adminId,
+        tourGuideId = tourGuideId,
+        bannedId = bannedId,
         chatId = chatId,
         name = name,
-        uniqueBookingId = uniqueBookingId,
         waitingId = waitingId
     )
 
@@ -28,11 +28,11 @@ fun ChatBoxDto.toChatBox(): ChatBox =
         participants = participants,
         lastTime = lastTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
         message = message,
-        adminId = adminId,
         chatId = chatId,
         name = name,
-        uniqueBookingId = uniqueBookingId,
-        waitingId = waitingId
+        waitingId = waitingId,
+        tourGuideId = tourGuideId,
+        bannedId = bannedId
     )
 
 fun Message.toMessageDto(): MessageDto =

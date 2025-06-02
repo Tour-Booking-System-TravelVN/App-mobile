@@ -1,6 +1,9 @@
 package com.tanh.tourbooking.presentation.home
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -47,6 +50,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,6 +64,7 @@ import com.tanh.tourbooking.ui.theme.lightGray
 import com.tanh.tourbooking.util.FakeData
 import com.tanh.tourbooking.util.Route
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -69,6 +74,11 @@ fun HomeScreen(
 
     val state = viewModel.state.collectAsState().value
     val lastname = state.information?.lastname ?: "bạn"
+
+    val activity = (LocalContext.current as? Activity)
+    BackHandler(enabled = true) {
+        activity?.finish()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->

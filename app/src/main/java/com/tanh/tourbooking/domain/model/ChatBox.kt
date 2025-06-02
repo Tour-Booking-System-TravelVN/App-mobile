@@ -6,12 +6,12 @@ import java.time.LocalDateTime
 data class ChatBox(
     val participants: List<Int> = emptyList(),
     val waitingId: List<Int> = emptyList(),
+    val bannedId: List<Int> = emptyList(),
     val lastTime: LocalDateTime,
+    val tourGuideId: List<Int> = emptyList(),
     val message: String = "",
-    val adminId: Int = 0,
     val chatId: String = "",
     val name: String = "",
-    val uniqueBookingId: String = ""
 )
 
 data class Message(

@@ -6,7 +6,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.tanh.tourbooking.data.model.dto.auth.AuthResult
-import com.tanh.tourbooking.data.model.request.UpdateInfoCustomerRequest
 import com.tanh.tourbooking.dataStore
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.domain.repository.api.AuthRepository
@@ -35,7 +34,7 @@ import com.tanh.tourbooking.domain.usecase.chatbox.AcceptUserJoinChat
 import com.tanh.tourbooking.domain.usecase.chatbox.AllowUserToChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ChatUseCaseManager
 import com.tanh.tourbooking.domain.usecase.chatbox.CreateMessage
-import com.tanh.tourbooking.domain.usecase.chatbox.GetChatBoxIdByBookingId
+import com.tanh.tourbooking.domain.usecase.chatbox.GetChatBoxIdByTourUnitId
 import com.tanh.tourbooking.domain.usecase.chatbox.NotifyMessage
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChat
 import com.tanh.tourbooking.domain.usecase.chatbox.ObserveChatlist
@@ -272,7 +271,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun getChatIdByBookingId(repository: ChatRepository) = GetChatBoxIdByBookingId(repository)
+    fun getChatIdByBookingId(repository: ChatRepository) = GetChatBoxIdByTourUnitId(repository)
 
     @Provides
     @Singleton
@@ -288,7 +287,7 @@ object AppModule {
         acceptUserJoinChat: AcceptUserJoinChat,
         refuseUserToChat: RefuseUserToChat,
         recallMessage: RecallMessage,
-        getChatBoxIdByBookingId: GetChatBoxIdByBookingId
+        getChatBoxIdByTourUnitId: GetChatBoxIdByTourUnitId
     ) =
         ChatUseCaseManager(
             observeChat,
@@ -302,7 +301,7 @@ object AppModule {
             acceptUserJoinChat,
             refuseUserToChat,
             recallMessage,
-            getChatBoxIdByBookingId
+            getChatBoxIdByTourUnitId
         )
 
 }

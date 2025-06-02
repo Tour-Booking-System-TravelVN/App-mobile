@@ -136,7 +136,9 @@ fun DetailScreen(
     )
 
 
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     var isSheetOpen by remember {
         mutableStateOf(false)
     }
@@ -152,6 +154,12 @@ fun DetailScreen(
             delay(2000)
             val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
             pagerState.scrollToPage(nextPage)
+        }
+    }
+
+    LaunchedEffect(isSheetOpen) {
+        if (isSheetOpen) {
+            bottomSheetState.expand()
         }
     }
 
