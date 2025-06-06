@@ -2,6 +2,7 @@ package com.tanh.tourbooking.presentation.navigation
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -52,6 +53,7 @@ import com.tanh.tourbooking.presentation.splashscreen.SplashScreen
 import com.tanh.tourbooking.presentation.start.StartScreen
 import com.tanh.tourbooking.presentation.success.SuccessScreen
 import com.tanh.tourbooking.presentation.tour_list.TourListScreen
+import com.tanh.tourbooking.util.Role
 import com.tanh.tourbooking.util.Route
 import com.tanh.tourbooking.util.navRoutes
 import com.tanh.tourbooking.util.sharedViewModel
@@ -89,6 +91,15 @@ fun Navigation(
 
     var selectedIndex by remember {
         mutableIntStateOf(0)
+    }
+
+    LaunchedEffect(Unit) {
+        tokenViewModel.role.collect { newRole ->
+            if(newRole == Role.TOURGUIDE) {
+                navController.navigate(Route.CHATS_SCREEN.toString())
+            }
+        }
+
     }
 
     LaunchedEffect(navBackStackEntry) {
