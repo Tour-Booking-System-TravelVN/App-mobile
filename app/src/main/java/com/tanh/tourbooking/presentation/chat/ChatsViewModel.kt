@@ -41,21 +41,21 @@ class ChatsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getInformationUseCase().onSuccess {
-                when(val role = it.second) {
+                when(val info = it.second) {
                     is Information.Customer -> {
-                        Log.d("CAT1", role.toString())
+                        Log.d("MSG6", "customer: $info")
                         _state.update { state ->
                             state.copy(
-                                customer = role,
+                                customer = info,
                                 role = Role.CUSTOMER
                             )
                         }
                     }
                     is Information.TourGuide -> {
-                        Log.d("CAT1", role.toString())
+                        Log.d("MSG6", "tourguide: $info")
                         _state.update { state ->
                             state.copy(
-                                tourguide = role,
+                                tourguide = info,
                                 role = Role.TOURGUIDE
                             )
                         }
@@ -98,7 +98,6 @@ class ChatsViewModel @Inject constructor(
     }
 
     fun onNavToMessage(chatId: String) {
-        Log.d("MSG5", chatId)
         sendEvent(OneTimeEvent.Navigate(Route.MESSAGE_SCREEN.toString() + "/$chatId"))
     }
 

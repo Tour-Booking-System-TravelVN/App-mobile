@@ -3,6 +3,7 @@ package com.tanh.tourbooking.domain.usecase.auth
 import com.tanh.tourbooking.domain.repository.AuthSecurityRepository
 import com.tanh.tourbooking.util.Role
 import javax.inject.Inject
+import android.util.Log
 
 class CheckRoleUseCase @Inject constructor(
     private val repository: AuthSecurityRepository

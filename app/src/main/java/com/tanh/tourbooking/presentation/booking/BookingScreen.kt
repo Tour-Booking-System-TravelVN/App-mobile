@@ -2,10 +2,11 @@ package com.tanh.tourbooking.presentation.booking
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +58,7 @@ import com.tanh.tourbooking.ui.theme.lightGray
 import com.tanh.tourbooking.ui.theme.lighterGray
 import androidx.core.net.toUri
 import com.tanh.tourbooking.domain.model.Discount
+import com.tanh.tourbooking.presentation.booking.item.PaymentDialog
 import com.tanh.tourbooking.util.Calculation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +78,9 @@ fun BookingScreen(
         skipPartiallyExpanded = true
     )
     var isShowCompanionBottom by remember {
+        mutableStateOf(false)
+    }
+    var showDialog by remember {
         mutableStateOf(false)
     }
 
@@ -122,8 +126,7 @@ fun BookingScreen(
                 if (!checked) {
                     viewModel.showSnackBar("Vui lòng đồng ý điều khoản")
                 } else {
-                    Log.d("PAY1", "run")
-                    viewModel.onEvent(BookingEvent.MakeAPayment)
+                    showDialog = true
                 }
             }
         }
@@ -237,9 +240,21 @@ fun BookingScreen(
                 }
             }
         }
+        if(showDialog) {
+            PaymentDialog(
+                onDismissRequest = {
+                    showDialog = false
+                },
+                onUrlClick = {
+                    viewModel.onEvent(BookingEvent.MakeUrlPayment)
+                },
+                onZaloClick = {
+                    viewModel.onEvent(BookingEvent.MakeZaloPayment)
+                }
+            )
+        }
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable

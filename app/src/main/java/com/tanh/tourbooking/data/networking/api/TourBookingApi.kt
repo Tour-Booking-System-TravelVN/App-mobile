@@ -44,7 +44,7 @@ interface TourBookingApi {
     @POST("/registerapp")
     suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
 
-    @GET("/customer/myinfo")
+    @GET("/user/myinfo")
     suspend fun getInformation(@Header("Authorization") token: String): Response<UserInformationResponse>
 
     @GET("/tourunit/foundtourlist")

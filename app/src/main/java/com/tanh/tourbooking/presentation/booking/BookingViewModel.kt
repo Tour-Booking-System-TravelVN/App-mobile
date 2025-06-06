@@ -91,15 +91,15 @@ class BookingViewModel @Inject constructor(
             }
             is BookingEvent.AddContactInformation -> {
                 try {
-                    _state.update {
-                        it.copy(
-                            editedDob = event.dob?.takeIf { it.isNotBlank() } ?: it.editedDob,
-                            editedGender = event.gender ?: it.editedGender,
-                            editedAddress = event.address?.takeIf { it.isNotBlank() } ?: it.editedAddress,
-                            editedEmail = event.email?.takeIf { it.isNotBlank() } ?: it.editedEmail,
-                            editedPhoneNumber = event.phoneNumber?.takeIf { it.isNotBlank() } ?: it.editedPhoneNumber,
-                            editedLastName = event.lastname?.takeIf { it.isNotBlank() } ?: it.editedLastName,
-                            editedFirstName = event.firstname?.takeIf { it.isNotBlank() } ?: it.editedFirstName
+                    _state.update { bookingUiState ->
+                        bookingUiState.copy(
+                            editedDob = event.dob?.takeIf { it.isNotBlank() } ?: bookingUiState.editedDob,
+                            editedGender = event.gender ?: bookingUiState.editedGender,
+                            editedAddress = event.address?.takeIf { it.isNotBlank() } ?: bookingUiState.editedAddress,
+                            editedEmail = event.email?.takeIf { it.isNotBlank() } ?: bookingUiState.editedEmail,
+                            editedPhoneNumber = event.phoneNumber?.takeIf { it.isNotBlank() } ?: bookingUiState.editedPhoneNumber,
+                            editedLastName = event.lastname?.takeIf { it.isNotBlank() } ?: bookingUiState.editedLastName,
+                            editedFirstName = event.firstname?.takeIf { it.isNotBlank() } ?: bookingUiState.editedFirstName
                         )
                     }
                     showSnackBar("Cập nhập thông tin thành công")
@@ -107,11 +107,16 @@ class BookingViewModel @Inject constructor(
                     showSnackBar("Cập nhập thất bại")
                 }
             }
-            BookingEvent.MakeAPayment -> makeAPayment()
+            BookingEvent.MakeUrlPayment -> makeUrlPayment()
+            BookingEvent.MakeZaloPayment -> makeZaloPayment()
         }
     }
 
-    private fun makeAPayment() {
+    private fun makeZaloPayment() {
+
+    }
+
+    private fun makeUrlPayment() {
         viewModelScope.launch {
             _state.update {
                 it.copy(

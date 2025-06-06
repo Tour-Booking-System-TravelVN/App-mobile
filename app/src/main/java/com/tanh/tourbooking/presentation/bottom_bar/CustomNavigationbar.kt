@@ -1,6 +1,7 @@
 package com.tanh.tourbooking.presentation.bottom_bar
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,8 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,33 +31,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.navigation.NavController
-import com.tanh.tourbooking.ui.theme.TourBookingTheme
+import com.tanh.tourbooking.presentation.navigation.TokenViewModel
 import com.tanh.tourbooking.util.Good
+import com.tanh.tourbooking.util.Role
 
-@SuppressLint("UseOfNonLambdaOffsetOverload")
+@SuppressLint("UseOfNonLambdaOffsetOverload", "UnrememberedMutableState")
 @Composable
 fun CustomBottomNavigationBar(
     navController: NavController,
     selectedIndex: Int,
+    viewModel: TokenViewModel,
     onIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
+    var role by remember {
+        mutableStateOf(Role.NULL)
+    }
+
     val greyToWhiteGradient = Brush.horizontalGradient(
         colorStops = arrayOf(
-            0.0f to Color(0xFFF0F0F2),   // Rất nhạt, chỉ hơi xám
-            0.1f to Color(0xFFF4F4F6),   // Gần trắng
-            0.5f to Color(0xFFF9F9FA),   // Rất gần trắng
-            1.0f to Color(0xFFFFFFFF)    // Trắng tinh khiết
+            0.0f to Color(0xFFF0F0F2),
+            0.1f to Color(0xFFF4F4F6),
+            0.5f to Color(0xFFF9F9FA),
+            1.0f to Color(0xFFFFFFFF)
         )
     )
 
-    val list by remember { mutableStateOf(Good.listBottomBar) }
+    LaunchedEffect(Unit) {
+        viewModel.role.collect { newRole ->
+            role = newRole
+            Log.d("AU1", role.toString())
+        }
+
+    }
+
+    val list by remember {
+        derivedStateOf {
+            if(role == Role.TOURGUIDE) {
+                Good.tourGuideBottomBar
+            } else {
+                Good.customerBottomBar
+            }
+        }
+    }
 
     val density = LocalDensity.current
     val parentWidth = remember { mutableStateOf(0.dp) }

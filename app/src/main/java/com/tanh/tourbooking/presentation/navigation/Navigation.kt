@@ -2,7 +2,6 @@ package com.tanh.tourbooking.presentation.navigation
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -62,6 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Navigation(
     modifier: Modifier = Modifier,
+    tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
 ) {
 
     val navController = rememberNavController()
@@ -112,6 +112,7 @@ fun Navigation(
                 CustomBottomNavigationBar(
                     navController = navController,
                     selectedIndex = selectedIndex,
+                    viewModel = tokenViewModel,
                     onIndexChange = { currentIndex ->
                         selectedIndex = currentIndex
                     }
@@ -121,8 +122,8 @@ fun Navigation(
         contentWindowInsets = WindowInsets.safeGestures
     ) { vl ->
         val paddingValues = vl
-        val tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
         LaunchedEffect(Unit) {
+            tokenViewModel.getInfo()
             tokenViewModel.isTokenValid.collect { valid ->
                 isTokenValid = valid
             }
@@ -482,6 +483,8 @@ fun Navigation(
                 }
             }
             composable(route = Route.LOGIN_SCREEN.toString()) {
+                tokenViewModel.getInfo()
+                
                 LoginScreen(
                     showSnackBar = {
                         coroutineScope.launch {

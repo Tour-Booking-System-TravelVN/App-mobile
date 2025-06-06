@@ -17,6 +17,6 @@ sealed class BookingEvent {
         val email: String?
     ) : BookingEvent()
 
-    data object MakeAPayment : BookingEvent()
-
+    data object MakeUrlPayment : BookingEvent()
+    data object MakeZaloPayment : BookingEvent()
 }

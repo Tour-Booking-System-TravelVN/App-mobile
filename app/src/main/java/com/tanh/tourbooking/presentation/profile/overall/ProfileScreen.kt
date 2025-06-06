@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Blind
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -119,11 +120,16 @@ fun ProfileScreen(
                             if(profile.first == "Đăng xuất") {
                                 viewModel.onEvent(ProfileEvent.Logout)
                             }
-                            if(profile.first == "Thông tin cá nhân") {
+                            else if(profile.first == "Thông tin cá nhân") {
                                 viewModel.onEvent(ProfileEvent.onNavToScreen(Route.INFOR_SCREEN.toString()))
                             }
-                            if(profile.first == "Đổi mật khẩu") {
+                            else if(profile.first == "Đổi mật khẩu") {
                                 viewModel.onEvent(ProfileEvent.onNavToScreen(Route.CHGPWD_SCREEN.toString()))
+                            }
+                            else if(profile.first == "Tin nhắn") {
+                                viewModel.onEvent(ProfileEvent.onNavToScreen(Route.CHATS_SCREEN.toString()))
+                            } else {
+                                viewModel.onEvent(ProfileEvent.onNavToScreen(Route.MY_TOURS_SCREEN.toString()))
                             }
                         })
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
@@ -180,7 +186,7 @@ fun ProfileItem(
 
 val profileList = listOf(
     "Thông tin cá nhân" to Icons.Default.Person,
-    "Thanh toán" to Icons.Default.Payment,
+    "Tin nhắn" to Icons.Default.MailOutline,
     "Hoạt động" to Icons.Default.Blind,
     "Đổi mật khẩu" to Icons.Default.Settings,
     "Đăng xuất" to Icons.Default.Logout

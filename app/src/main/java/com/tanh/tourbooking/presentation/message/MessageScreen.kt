@@ -59,6 +59,7 @@ import com.tanh.tourbooking.domain.model.Message
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import com.tanh.tourbooking.ui.theme.dimens
+import com.tanh.tourbooking.util.Role
 
 @Suppress("DEPRECATION")
 @Composable
@@ -138,19 +139,19 @@ fun MessageScreen(
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold
                 )
-//            if(state.role == Role.TOURGUIDE) {
-                IconButton(
-                    onClick = {
-                        viewModel.onNavToWaitingId()
+                if (state.role == Role.TOURGUIDE) {
+                    IconButton(
+                        onClick = {
+                            viewModel.onNavToWaitingId()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
                 }
-//            }
             }
             Divider(
                 modifier = Modifier.fillMaxWidth(),
