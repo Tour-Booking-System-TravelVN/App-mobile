@@ -1,12 +1,14 @@
 package com.tanh.tourbooking
 
 import android.Manifest
+import android.app.ComponentCaller
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
-import android.window.SplashScreen
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +19,10 @@ import com.tanh.tourbooking.domain.repository.firestore.UserTokenRepository
 import com.tanh.tourbooking.presentation.navigation.Navigation
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
 import dagger.hilt.android.AndroidEntryPoint
+import vn.zalopay.sdk.Environment
+import vn.zalopay.sdk.ZaloPaySDK
 import javax.inject.Inject
+
 
 val Context.dataStore by dataStore(
     fileName = "encrypted-token",
@@ -34,6 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         askNotificationPermission()
+        ZaloPaySDK.init(2553, Environment.SANDBOX)
         setContent {
             TourBookingTheme {
                 Navigation()
@@ -64,5 +70,11 @@ class MainActivity : ComponentActivity() {
 
         }
     }
+
+//    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
+//        super.onNewIntent(intent, caller)
+//        ZaloPaySDK.getInstance().onResult(intent)
+//        Log.d("Zazlo2", "onNewIntent called with: ${intent.data}")
+////    }
 }
 

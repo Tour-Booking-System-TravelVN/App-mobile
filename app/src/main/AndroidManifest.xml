@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".TourBookingApplication"
@@ -31,6 +32,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,7 +47,6 @@
                     android:host="success" />
             </intent-filter>
 
-            <!-- ✅ Custom scheme: makeitsoapp://failure -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -54,6 +55,7 @@
                     android:scheme="makeitsoapp"
                     android:host="failure" />
             </intent-filter>
+
         </activity>
 
         <service

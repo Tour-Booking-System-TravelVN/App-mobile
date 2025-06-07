@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-kapt")
+    id ("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
@@ -74,6 +75,11 @@ dependencies {
     implementation(libs.androidx.media3.common.ktx)
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.androidx.animation.core.android)
+    implementation(fileTree(mapOf(
+        "dir" to "D:\\Lintinh",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -152,6 +158,9 @@ dependencies {
 
     //rating bar
     implementation ("com.github.a914-gowtham:compose-ratingbar:1.3.12")
+
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }
 
 kapt {

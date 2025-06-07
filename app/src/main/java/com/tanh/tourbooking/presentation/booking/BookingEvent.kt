@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.booking
 
+import android.content.Context
 import com.tanh.tourbooking.domain.model.Companion
 
 sealed class BookingEvent {
@@ -18,5 +19,5 @@ sealed class BookingEvent {
     ) : BookingEvent()
 
     data object MakeUrlPayment : BookingEvent()
-    data object MakeZaloPayment : BookingEvent()
+    data class MakeZaloPayment(val context: Context) : BookingEvent()
 }

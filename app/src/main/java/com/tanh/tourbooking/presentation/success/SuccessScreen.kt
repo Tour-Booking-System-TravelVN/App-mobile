@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.success
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ fun SuccessScreen(
     val state = viewModel.state.collectAsState().value
 
     LaunchedEffect(Unit) {
+        Log.d("Zalo2", "orderCode :$orderCode")
         viewModel.channel.collect { event ->
             when (event) {
                 is OneTimeEvent.Navigate -> onNavigate(event.route)

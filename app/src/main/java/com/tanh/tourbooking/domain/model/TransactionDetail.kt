@@ -1,6 +1,10 @@
 package com.tanh.tourbooking.domain.model
 
-data class TransactionDetail(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class  TransactionDetail(
     val accountName: String,
     val accountNumber: String,
     val amount: Int,
@@ -13,4 +17,4 @@ data class TransactionDetail(
     val paymentLinkId: String,
     val qrCode: String,
     val status: String
-)
+) : Parcelable

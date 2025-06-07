@@ -46,6 +46,7 @@ import com.tanh.tourbooking.domain.usecase.chatbox.RefuseUserToChat
 import com.tanh.tourbooking.domain.usecase.payment.CancelTourUseCase
 import com.tanh.tourbooking.domain.usecase.payment.ConfirmPaymentUseCase
 import com.tanh.tourbooking.domain.usecase.payment.CreatePaymentUseCase
+import com.tanh.tourbooking.domain.usecase.payment.CreateZaloPaymentUseCase
 import com.tanh.tourbooking.domain.usecase.payment.GetBookingIdUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CheckTourUnitUseCase
 import com.tanh.tourbooking.domain.usecase.tour.CreateBookingOrderUseCase
@@ -131,6 +132,14 @@ object AppModule {
         authSecurityRepository: AuthSecurityRepository,
         authRepository: AuthRepository
     ) = ValidTokenUseCase(authSecurityRepository, authRepository)
+
+    @Provides
+    @Singleton
+    fun provideCreateZaloPaymentUseCase(
+        authSecurityRepository: AuthSecurityRepository,
+        paymentRepository: PaymentRepository
+    ) = CreateZaloPaymentUseCase(authSecurityRepository, paymentRepository)
+
 
     @Provides
     @Singleton

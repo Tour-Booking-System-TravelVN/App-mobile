@@ -1,6 +1,5 @@
 package com.tanh.tourbooking.domain.usecase.payment
 
-import android.util.Log
 import com.tanh.tourbooking.data.mappers.toTransactionDetail
 import com.tanh.tourbooking.data.model.dto.tour.UserAccount
 import com.tanh.tourbooking.data.model.request.BookingRequest
@@ -20,7 +19,7 @@ import com.tanh.tourbooking.presentation.detail_tour.BookingTourState
 import com.tanh.tourbooking.util.Calculation
 import javax.inject.Inject
 
-class CreatePaymentUseCase @Inject constructor(
+class CreateZaloPaymentUseCase @Inject constructor(
     private val authSecurityRepository: AuthSecurityRepository,
     private val paymentRepository: PaymentRepository
 ) {
@@ -33,10 +32,9 @@ class CreatePaymentUseCase @Inject constructor(
         if(token.isNullOrBlank()) {
             return Resources.Error(Exception("Vui lòng đăng nhập/ đăng ký"))
         }
-        Log.d("Zalo2", "Url create")
         val request = CreatePaymentRequest(
-            cancelUrl = "makeitsoapp://failure",
-            returnUrl = "makeitsoapp://success",
+            cancelUrl = "tourbooking://app",
+            returnUrl = "tourbooking://app",
             description = tourState.tourUnitId,
             price = Calculation.discountedPrice(
                 amount = tourState.totalPrice,

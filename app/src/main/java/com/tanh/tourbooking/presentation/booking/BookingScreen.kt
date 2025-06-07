@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,15 +58,21 @@ import com.tanh.tourbooking.ui.theme.dimens
 import com.tanh.tourbooking.ui.theme.lightGray
 import com.tanh.tourbooking.ui.theme.lighterGray
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.tanh.tourbooking.domain.model.Discount
 import com.tanh.tourbooking.presentation.booking.item.PaymentDialog
 import com.tanh.tourbooking.util.Calculation
+import com.tanh.tourbooking.util.Route
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingScreen(
     modifier: Modifier = Modifier,
-    viewModel: BookingViewModel = hiltViewModel<BookingViewModel>(),
+    viewModel: BookingViewModel,
     showSnackBar: (String) -> Unit,
     popBackStack: () -> Unit,
     onNavigate: (String) -> Unit
@@ -73,6 +80,7 @@ fun BookingScreen(
 
     val state = viewModel.state.collectAsState(initial = BookingUiState()).value
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val companionSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -85,7 +93,7 @@ fun BookingScreen(
     }
 
     LaunchedEffect(isShowCompanionBottom) {
-        if(isShowCompanionBottom) {
+        if (isShowCompanionBottom) {
             companionSheetState.expand()
         }
     }
@@ -93,6 +101,27 @@ fun BookingScreen(
     var checked by remember {
         mutableStateOf(false)
     }
+
+//    DisposableEffect(lifecycleOwner) {
+//
+//        val observer = LifecycleEventObserver { _, event ->
+//            if(event == Lifecycle.Event.ON_RESUME) {
+//
+//                Log.d("Zalo2", "on resume")
+//                Log.d("Zalo2", state.toString())
+//                if(state.transactionDetail != null) {
+//                    Log.d("Zalo2", "on navigating")
+//                    viewModel.onNavigateToSuccess()
+//                } else {
+//                    Log.d("Zalo2", "??")
+//                }
+//            }
+//        }
+//        lifecycleOwner.lifecycle.addObserver(observer)
+//        onDispose {
+//            lifecycleOwner.lifecycle.removeObserver(observer)
+//        }
+//    }
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->
@@ -240,16 +269,20 @@ fun BookingScreen(
                 }
             }
         }
-        if(showDialog) {
+        if (showDialog) {
             PaymentDialog(
                 onDismissRequest = {
                     showDialog = false
                 },
                 onUrlClick = {
+                    Log.d("Zalo2", "Url")
                     viewModel.onEvent(BookingEvent.MakeUrlPayment)
+                    showDialog = false
                 },
                 onZaloClick = {
-                    viewModel.onEvent(BookingEvent.MakeZaloPayment)
+                    Log.d("Zalo2", "Zalo")
+                    viewModel.onEvent(BookingEvent.MakeZaloPayment(context))
+                    showDialog = false
                 }
             )
         }

@@ -31,6 +31,7 @@ import androidx.navigation.navDeepLink
 import com.tanh.tourbooking.presentation.bottom_bar.CustomBottomNavigationBar
 import com.tanh.tourbooking.presentation.chat.ChatScreen
 import com.tanh.tourbooking.presentation.booking.BookingScreen
+import com.tanh.tourbooking.presentation.booking.BookingViewModel
 import com.tanh.tourbooking.presentation.category.CategoryScreen
 import com.tanh.tourbooking.presentation.detail_tour.screen.DetailScreen
 import com.tanh.tourbooking.presentation.explore.ExploreScreen
@@ -540,7 +541,7 @@ fun Navigation(
                 arguments = listOf(navArgument("state") {
                     type = NavType.StringType
                 })
-            ) {
+            ) { entry ->
                 BookingScreen(
                     onNavigate = {
                         navController.navigate(it) {
@@ -550,6 +551,7 @@ fun Navigation(
                     popBackStack = {
                         navController.popBackStack()
                     },
+                    viewModel = hiltViewModel<BookingViewModel>(entry),
                     showSnackBar = {
                         coroutineScope.launch {
                             snackBarHosState.showSnackbar(
