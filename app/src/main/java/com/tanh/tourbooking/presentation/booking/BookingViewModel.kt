@@ -173,18 +173,25 @@ class BookingViewModel @Inject constructor(
                             ZaloPaySDK.getInstance().payOrder(
                                 context as Activity,
                                 token,
-                                "makeitsoapp://success",
+                                "zalopmt://app",
                                 object : PayOrderListener {
                                     override fun onPaymentSucceeded(
                                         p0: String?,
                                         p1: String?,
                                         p2: String?
                                     ) {
-                                        Log.d("Zalo2", "Success")
+                                        Log.d("Zalo2", "Success viewmodel")
+                                        val orderCode = _state.value.transactionDetail?.orderCode
+                                        Log.d("Zalo2", "oderCode: $orderCode")
+                                        if(orderCode != null) {
+                                            sendEvent(OneTimeEvent.Navigate(Route.SUCCESS_SCREEN.toString() + "/${orderCode.toString()}"))
+                                        } else {
+                                            sendEvent(OneTimeEvent.Navigate(Route.FAILURE_SCREEN.toString()))
+                                        }
                                     }
 
                                     override fun onPaymentCanceled(p0: String?, p1: String?) {
-                                        Log.d("Zalo2", "Failure")
+                                        Log.d("Zalo2", "Failure viewmodel")
                                         sendEvent(OneTimeEvent.Navigate(Route.FAILURE_SCREEN.toString()))
                                     }
 
@@ -193,7 +200,7 @@ class BookingViewModel @Inject constructor(
                                         p1: String?,
                                         p2: String?
                                     ) {
-                                        Log.d("Zalo2", "Failure")
+                                        Log.d("Zalo2", "Failure viewmodel")
                                         sendEvent(OneTimeEvent.Navigate(Route.FAILURE_SCREEN.toString()))
 
                                     }

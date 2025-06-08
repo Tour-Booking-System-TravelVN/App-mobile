@@ -20,6 +20,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -64,10 +66,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun Navigation(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     tokenViewModel: TokenViewModel = hiltViewModel<TokenViewModel>()
 ) {
 
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
 
     val coroutineScope = rememberCoroutineScope()
     val snackBarHosState = remember {
@@ -364,14 +367,14 @@ fun Navigation(
 
             //success payment
             composable(
-                route = Route.SUCCESS_SCREEN.toString() + "?orderCode={orderCode}",
-                deepLinks = listOf(
-                    navDeepLink {
-                        uriPattern =
-                            "makeitsoapp://success?orderCode={orderCode}"
-                        action = Intent.ACTION_VIEW
-                    }
-                ),
+                route = Route.SUCCESS_SCREEN.toString() + "/{orderCode}",
+//                deepLinks = listOf(
+//                    navDeepLink {
+//                        uriPattern =
+//                            "makeitsoapp://success?orderCode={orderCode}"
+//                        action = Intent.ACTION_VIEW
+//                    }
+//                ),
                 arguments = listOf(
                     navArgument(
                         name = "orderCode"
@@ -380,7 +383,8 @@ fun Navigation(
                     }
                 )
             ) { entry ->
-                openFromDeepLink = true
+//                openFromDeepLink = true
+                Log.d("Zalo2", "Success init")
                 val orderCode = entry.arguments?.getString("orderCode")
                 SuccessScreen(
                     orderCode = orderCode
@@ -396,19 +400,20 @@ fun Navigation(
             //failure payment
             composable(
                 route = Route.FAILURE_SCREEN.toString(),
-                deepLinks = listOf(
-                    navDeepLink {
-                        openFromDeepLink = true
-                        uriPattern =
-                            "makeitsoapp://failure"
-                        action = Intent.ACTION_VIEW
-                    }
-                )
+//                deepLinks = listOf(
+//                    navDeepLink {
+//                        openFromDeepLink = true
+//                        uriPattern =
+//                            "makeitsoapp://failure"
+//                        action = Intent.ACTION_VIEW
+//                    }
+//                )
             ) {
-                openFromDeepLink = true
+                Log.d("Zalo2", "Failure init")
+//                openFromDeepLink = true
                 FailureScreen(navController = navController)
             }
-
+            
             //message
             composable(route = Route.MESSAGE_SCREEN.toString() + "/{chatId}") {
                 MessageScreen(

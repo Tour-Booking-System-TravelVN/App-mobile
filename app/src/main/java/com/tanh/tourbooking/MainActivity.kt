@@ -14,10 +14,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.datastore.dataStore
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.tanh.tourbooking.data.serializer.AuthResultSerializer
 import com.tanh.tourbooking.domain.repository.firestore.UserTokenRepository
 import com.tanh.tourbooking.presentation.navigation.Navigation
+import com.tanh.tourbooking.presentation.success.SuccessScreen
 import com.tanh.tourbooking.ui.theme.TourBookingTheme
+import com.tanh.tourbooking.util.Route
 import dagger.hilt.android.AndroidEntryPoint
 import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPaySDK
@@ -34,15 +39,18 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userTokenRepo: UserTokenRepository
+    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         askNotificationPermission()
-        ZaloPaySDK.init(2553, Environment.SANDBOX)
         setContent {
+            navController = rememberNavController()
             TourBookingTheme {
-                Navigation()
+                Navigation(
+                    navController = navController
+                )
             }
         }
     }
@@ -71,10 +79,39 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-//    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
-//        super.onNewIntent(intent, caller)
-//        ZaloPaySDK.getInstance().onResult(intent)
-//        Log.d("Zazlo2", "onNewIntent called with: ${intent.data}")
-////    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.let {
+            setIntent(it)
+            handleDeeplink(it)
+        }
+    }
+
+    private fun handleDeeplink(intent: Intent) {
+        intent.data?.let { uri ->
+            Log.d("Zalo2", "Handling deeplink: $uri")
+            when {
+                uri.toString().contains("success") -> {
+                    val orderCode = uri.getQueryParameter("orderCode")
+                    Log.d("zalo2", "Payment Success, OrderCode: $orderCode")
+                    navController.navigate(Route.SUCCESS_SCREEN.toString() + "/$orderCode") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+                uri.toString().contains("failure") -> {
+                    Log.d("zalo2", "Payment Canceled or Failed")
+                    navController.navigate(Route.FAILURE_SCREEN.toString()) {
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                    }
+                }
+                uri.toString().startsWith("zalopmt://app") -> {
+                    Log.d("Zalo2", "ZaloPay deeplink triggered")
+                    ZaloPaySDK.getInstance().onResult(intent)
+                }
+            }
+        }
+    }
 }
 

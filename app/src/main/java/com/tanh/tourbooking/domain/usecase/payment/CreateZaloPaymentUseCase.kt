@@ -33,8 +33,8 @@ class CreateZaloPaymentUseCase @Inject constructor(
             return Resources.Error(Exception("Vui lòng đăng nhập/ đăng ký"))
         }
         val request = CreatePaymentRequest(
-            cancelUrl = "tourbooking://app",
-            returnUrl = "tourbooking://app",
+            cancelUrl = "zalopmt://app",
+            returnUrl = "zalopmt://app",
             description = tourState.tourUnitId,
             price = Calculation.discountedPrice(
                 amount = tourState.totalPrice,
