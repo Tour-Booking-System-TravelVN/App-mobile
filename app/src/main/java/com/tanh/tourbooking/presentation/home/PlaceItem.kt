@@ -56,7 +56,7 @@ fun PlaceItem(
                     .align(Alignment.Center)
                     .border(
                         4.dp,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(12.dp)
                     )
             )

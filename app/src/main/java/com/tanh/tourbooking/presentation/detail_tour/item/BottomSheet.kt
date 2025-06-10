@@ -163,8 +163,6 @@ fun BottomSheet(
         }
     }
 
-    val screenHeightDp = LocalConfiguration.current.screenHeightDp.toFloat()
-
     val totalAmount by derivedStateOf {
         (adultCount * adultPrice) +
                 (childCount * childPrice) +

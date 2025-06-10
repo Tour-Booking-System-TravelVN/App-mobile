@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.booking.item
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,8 +30,10 @@ fun BottomBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(
                 horizontal = MaterialTheme.dimens.small2,
+                vertical = MaterialTheme.dimens.small1
             )
     ) {
         Row(

@@ -41,7 +41,7 @@ fun TourUnitItem(
         modifier = modifier
             .fillMaxWidth()
             .graphicsLayer { clip = true; shape = RoundedCornerShape(8.dp) }
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.surfaceContainerLow),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -91,7 +91,6 @@ fun TourUnitItem(
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                color = Color.LightGray
             )
         }
     }

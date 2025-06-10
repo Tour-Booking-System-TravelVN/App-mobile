@@ -1,5 +1,6 @@
 package com.tanh.tourbooking.presentation.detail_tour.item
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,7 @@ fun BookingBarSection(
     val screenWithDp = LocalConfiguration.current.screenWidthDp.dp
 
     Column (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         HorizontalDivider(
             Modifier.fillMaxWidth(),

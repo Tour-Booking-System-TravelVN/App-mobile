@@ -250,6 +250,7 @@ fun DetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
+                        tint = MaterialTheme.colorScheme.surfaceVariant,
                         contentDescription = null
                     )
                 }
@@ -290,7 +291,7 @@ fun DetailScreen(
                     .height(animatedHeight)
                     .align(Alignment.BottomCenter)
                     .background(
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.surfaceContainerLowest,
                         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                     )
                     .pointerInput(Unit) {
@@ -325,7 +326,6 @@ fun DetailScreen(
                     Text(
                         text = tourUnit?.tour?.tourName ?: "No name",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
                     )
@@ -356,20 +356,17 @@ fun DetailScreen(
                         Text(
                             text = "(",
                             fontSize = 18.sp,
-                            color = Color.Black,
                             fontWeight = FontWeight.Light
                         )
                         Text(
                             text = "${state.ratings.size} Đánh giá",
                             fontSize = 18.sp,
                             textDecoration = TextDecoration.Underline,
-                            color = Color.Black,
                             fontWeight = FontWeight.Light
                         )
                         Text(
                             text = ")",
                             fontSize = 18.sp,
-                            color = Color.Black,
                             fontWeight = FontWeight.Light
                         )
                     }
@@ -399,11 +396,10 @@ fun DetailScreen(
                             .fillMaxWidth()
                             .padding(horizontal = MaterialTheme.dimens.small1)
                     ) {
-                        Text(
-                            text = "Mô tả",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.Black
-                        )
+//                        Text(
+//                            text = "Mô tả",
+//                            style = MaterialTheme.typography.headlineMedium,
+//                        )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
                         Text(
                             text = tourUnit?.tour?.description ?: "This tour is amazing",
@@ -425,7 +421,6 @@ fun DetailScreen(
                             Text(
                                 text = "Lịch trình",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = Color.Black
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             IconButton(
@@ -436,7 +431,6 @@ fun DetailScreen(
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = null,
-                                    tint = Color.Black,
                                     modifier = Modifier.rotate(direction)
                                 )
                             }
@@ -623,7 +617,7 @@ fun DiscountSection(discount: Discount?) {
                 Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(lighterGray)
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
             ) { }
             Row(
                 Modifier
@@ -642,7 +636,7 @@ fun DiscountSection(discount: Discount?) {
                 Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(lighterGray)
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
             ) { }
         }
     }
@@ -660,25 +654,25 @@ fun PeopleSelectorItem(
 ) {
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small2),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.dimens.small2),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = title
         )
         Spacer(Modifier.weight(1f))
-        if(price != 0.0) {
-            Text(
-                text = "đ",
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(
-                text = Calculation.formatDouble(price),
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+        Text(
+            text = "đ",
+            textDecoration = TextDecoration.Underline,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(Modifier.width(4.dp))
+        Text(
+            text = Calculation.formatDouble(price),
+            fontWeight = FontWeight.SemiBold
+        )
         Spacer(Modifier.width(6.dp))
         Box(
             contentAlignment = Alignment.Center,
@@ -687,7 +681,7 @@ fun PeopleSelectorItem(
                 .border(1.dp, Color.LightGray, CircleShape)
                 .clip(CircleShape)
                 .clickable {
-                    if(isAdult) {
+                    if (isAdult) {
                         if (count > 1) {
                             onValueChange(count - 1)
                         }

@@ -140,7 +140,7 @@ fun CompanionSection(
             sheetState = sheetState,
             dragHandle = null
         ) {
-            Column(modifier = Modifier.background(Color.White)) {
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLowest)) {
                 Spacer(Modifier.height(MaterialTheme.dimens.small1))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -150,7 +150,6 @@ fun CompanionSection(
                         Icon(
                             painter = painterResource(R.drawable.uncheck),
                             contentDescription = null,
-                            tint = Color.Black,
                             modifier = Modifier.size(25.dp)
                         )
                     }
@@ -175,12 +174,6 @@ fun CompanionSection(
                     TextField(
                         value = firstname,
                         onValueChange = { firstname = it },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedIndicatorColor = lightGray,
-                            focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
-                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -194,12 +187,6 @@ fun CompanionSection(
                     TextField(
                         value = lastname,
                         onValueChange = { lastname = it },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedIndicatorColor = lightGray,
-                            focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
-                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -240,11 +227,6 @@ fun CompanionSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
-                        colors = TextFieldDefaults.colors(
-                            disabledTextColor = Color.Black,
-                            disabledTrailingIconColor = Color.Black,
-                            disabledContainerColor = Color.White
-                        )
                     )
                 }
 

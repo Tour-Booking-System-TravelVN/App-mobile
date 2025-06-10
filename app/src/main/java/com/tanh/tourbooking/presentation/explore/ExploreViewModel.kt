@@ -104,7 +104,7 @@ class ExploreViewModel @Inject constructor(
         startFilter()
     }
 
-    private fun startFilter() {
+    fun startFilter() {
         viewModelScope.launch {
             foundTourUseCase(
                 destination = _state.value.place,

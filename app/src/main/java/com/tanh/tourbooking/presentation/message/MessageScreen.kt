@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -101,7 +102,7 @@ fun MessageScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
@@ -151,6 +152,8 @@ fun MessageScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                } else {
+                    Spacer(Modifier.width(25.dp).height(25.dp))
                 }
             }
             Divider(
@@ -220,10 +223,10 @@ fun MessageScreen(
                     },
                     modifier = Modifier.weight(1f),
                     textStyle = MaterialTheme.typography.bodyLarge,
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant
+                        focusedIndicatorColor = MaterialTheme.colorScheme.inverseSurface,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.inverseSurface
                     ), trailingIcon = {
                         IconButton(
                             onClick = {

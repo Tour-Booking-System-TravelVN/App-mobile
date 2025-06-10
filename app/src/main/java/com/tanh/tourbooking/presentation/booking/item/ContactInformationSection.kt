@@ -247,7 +247,7 @@ fun ContactInformationSection(
             },
             sheetState = sheetState
         ) {
-            Column(modifier = Modifier.background(Color.White)) {
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLowest)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -256,7 +256,6 @@ fun ContactInformationSection(
                         Icon(
                             painter = painterResource(R.drawable.uncheck),
                             contentDescription = null,
-                            tint = Color.Black,
                             modifier = Modifier.size(25.dp)
                         )
                     }
@@ -285,8 +284,8 @@ fun ContactInformationSection(
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor = lightGray,
                             focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -305,8 +304,8 @@ fun ContactInformationSection(
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor = lightGray,
                             focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -325,8 +324,8 @@ fun ContactInformationSection(
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor = lightGray,
                             focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -345,8 +344,8 @@ fun ContactInformationSection(
                         colors = TextFieldDefaults.colors(
                             unfocusedIndicatorColor = lightGray,
                             focusedIndicatorColor = Color.Black,
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -396,9 +395,8 @@ fun ContactInformationSection(
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
                         colors = TextFieldDefaults.colors(
-                            disabledTextColor = Color.Black,
-                            disabledTrailingIconColor = Color.Black,
-                            disabledContainerColor = Color.White
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
                         )
                     )
                 }

@@ -69,7 +69,7 @@ class LoginViewModel @Inject constructor(
                 showSnackbar("Login successfully")
                 onNavToHome()
             } else {
-                showSnackbar(_state.value.errorMessage ?: "Login failed")
+                showSnackbar(_state.value.errorMessage ?: "")
             }
         }
     }

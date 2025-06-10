@@ -97,7 +97,7 @@ fun MyTourScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
     ) {
         Spacer(Modifier.height(MaterialTheme.dimens.small2))
         //header
@@ -118,7 +118,6 @@ fun MyTourScreen(
                 text = "Đang diễn ra",
                 style = TextStyle17,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .alpha(if (pagerState.currentPage == 0) 1f else 0.4f)
@@ -132,7 +131,6 @@ fun MyTourScreen(
                 text = "Lịch sử",
                 style = TextStyle17,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .alpha(if (pagerState.currentPage == 1) 1f else 0.4f)

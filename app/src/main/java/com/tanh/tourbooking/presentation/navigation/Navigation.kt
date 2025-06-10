@@ -167,12 +167,11 @@ fun Navigation(
 
                 //explore
                 composable(route = Route.EXPLORE_SCREEN.toString()) { entry ->
-                    val parentEntry = remember { navController.getBackStackEntry("bottom_graph") }
-                    val viewModel = hiltViewModel<ExploreViewModel>(entry)
-
+                    val parentEntry = navController.getBackStackEntry("bottom_graph")
+                    val exploreViewModel = hiltViewModel<ExploreViewModel>(parentEntry)
                     ExploreScreen(
                         modifier = Modifier.padding(paddingValues),
-                        viewModel = viewModel,
+                        viewModel = exploreViewModel,
                         onNavigate = {
                             navController.navigate(it) {
                                 launchSingleTop = true

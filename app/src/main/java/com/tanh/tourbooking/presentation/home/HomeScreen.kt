@@ -192,8 +192,6 @@ fun PortraitHomeScreen(
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()

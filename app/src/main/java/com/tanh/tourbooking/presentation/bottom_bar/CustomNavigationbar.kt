@@ -103,7 +103,7 @@ fun CustomBottomNavigationBar(
                         bottomEnd = 0.dp
                     )
                 )
-                .background(greyToWhiteGradient)
+                .background(MaterialTheme.colorScheme.surfaceBright)
                 .onGloballyPositioned { layoutCoordinates ->    //get bottom bar width
                     parentWidth.value = with(density) { layoutCoordinates.size.width.toDp() }
                 }

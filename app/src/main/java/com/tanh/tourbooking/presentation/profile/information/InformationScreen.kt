@@ -86,7 +86,7 @@ fun InformationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .padding(
                 vertical = MaterialTheme.dimens.small1,
                 horizontal = MaterialTheme.dimens.small2
@@ -105,7 +105,6 @@ fun InformationScreen(
                 Icon(
                     imageVector = Icons.Default.ArrowBackIosNew,
                     contentDescription = null,
-                    tint = Color.Black,
                     modifier = Modifier.size(25.dp),
                 )
             }

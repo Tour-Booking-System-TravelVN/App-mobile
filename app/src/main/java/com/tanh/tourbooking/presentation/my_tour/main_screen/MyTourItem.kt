@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PeopleAlt
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -76,14 +77,12 @@ fun MyTourItem(
                     text = myTour.bookingDate.toIndicatorString(),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Normal,
-                    color = Color.Black,
                     modifier = Modifier.alpha(0.5f)
                 )
                 Text(
                     text = "${Calculation.formatDouble(myTour.totalAmount)} đ",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
                 )
             }
             Spacer(Modifier.weight(1f))

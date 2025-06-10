@@ -1,6 +1,5 @@
 package com.tanh.tourbooking.presentation.detail_tour.item
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,16 +15,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tanh.tourbooking.domain.model.TourUnitCalendar
 import com.tanh.tourbooking.util.Month
 import java.time.LocalDate
 
@@ -35,16 +32,13 @@ fun CalendarSection(
     months: List<Pair<Int, Month>>,
     isDateChosen: (Int, Int) -> Unit
 ) {
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
-
-    Log.d("CAl5", months.toString())
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(10.dp)
             .verticalScroll(rememberScrollState())
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(10.dp)
     ) {
 
         Row(
@@ -100,12 +94,17 @@ fun CalendarSection(
                             ) {
                                 val isEnabled = !((LocalDate.now().monthValue == month.month)
                                         && (day.date <= LocalDate.now().dayOfMonth))
+                                if(day.data) {
+                                    TextButton(onClick = {}) {
+
+                                    }
+                                }
                                 Text(
                                     text = day.date.toString(),
                                     fontSize = 14.sp,
                                     textAlign = TextAlign.Center,
                                     fontWeight = if(day.data) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (day.data) MaterialTheme.colorScheme.primary else Color.Black,
+                                    color = if (day.data) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.let {
                                         if(day.data) {
                                             it.clickable {

@@ -1,10 +1,12 @@
 package com.tanh.tourbooking.presentation.explore
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,13 +59,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tanh.tourbooking.R
 import com.tanh.tourbooking.domain.model.TourUnit
 import com.tanh.tourbooking.presentation.util.OneTimeEvent
@@ -82,6 +84,7 @@ fun ExploreScreen(
 ) {
 
     val state = viewModel.state.collectAsState().value
+//    var hasChanged by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->
@@ -215,6 +218,9 @@ fun ModifiedSection(
     minPrice: Double,
     onPriceChange: (Pair<Double, Double>) -> Unit
 ) {
+
+    val isDarkMode = isSystemInDarkTheme()
+
     var showDatePicker by remember { mutableStateOf(false) }
 
     // Convert inputDate to LocalDate or use today as default
@@ -240,18 +246,16 @@ fun ModifiedSection(
                 onValueChange = onValueChange,
                 placeholder = {
                     Text(
-                        text = "Search your destination",
-                        color = Color.Black,
+                        text = "Nhập tour muốn tìm",
                         modifier = Modifier.alpha(0.4f)
                     )
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clip(MaterialTheme.shapes.medium)
                     .shadow(elevation = 10.dp, shape = MaterialTheme.shapes.medium)
             )
@@ -290,12 +294,13 @@ fun ModifiedSection(
                 Crossfade(targetState = isFiltered, label = "") { filtered ->
                     IconButton(onClick = { onFilterChange(!filtered) }) {
                         Icon(
-                            painter = if (filtered)
-                                painterResource(R.drawable.filledfilter)
-                            else
-                                painterResource(R.drawable.filter),
+                            painter = if (filtered) {
+                                if(isDarkMode) painterResource(R.drawable.whitefilledfilter) else painterResource(R.drawable.filledfilter)
+                            }
+                            else {
+                                if(isDarkMode) painterResource(R.drawable.whitefilter) else painterResource(R.drawable.filter)
+                            },
                             contentDescription = null,
-                            tint = Color.Black,
                             modifier = Modifier
                                 .size(30.dp)
                                 .let { if (!filtered) it.alpha(0.4f) else it }
@@ -381,7 +386,8 @@ fun DraggableSheet(
         onDismissRequest = {
             onDismiss()
         },
-        sheetState = sheetState
+        sheetState = sheetState,
+        dragHandle = null
     ) {
         Column(
             modifier = Modifier.wrapContentSize()
@@ -507,14 +513,19 @@ fun DraggableSheet(
                     )
                 }
                 Spacer(Modifier.height(MaterialTheme.dimens.small3))
-                Button(
-                    onClick = {
-                        onPriceChange(0.0 to 5000000.0)
-                        sliderPosition = 0f..5000000f
-                    },
-                    shape = MaterialTheme.shapes.medium
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("Hủy")
+                    Button(
+                        onClick = {
+                            onPriceChange(0.0 to 5000000.0)
+                            sliderPosition = 0f..5000000f
+                        },
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Text("Hủy")
+                    }
                 }
                 Spacer(Modifier.height(MaterialTheme.dimens.medium2))
             }
@@ -561,14 +572,14 @@ private fun HeaderSection() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Choose Your Favorite",
+                text = "Chọn địa điểm yêu thích",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
             Text(
-                text = "Many Interesting Choices For You",
+                text = "Rất nhiều địa điểm hấp dẫn đang chờ bạn",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimary
             )

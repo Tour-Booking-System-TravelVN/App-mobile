@@ -164,7 +164,7 @@ fun BookingScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                 .verticalScroll(rememberScrollState())
         ) {
             Row(
@@ -179,7 +179,6 @@ fun BookingScreen(
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowLeft,
                         contentDescription = null,
-                        tint = Color.Black,
                         modifier = Modifier.size(25.dp)
                     )
                 }
@@ -203,7 +202,7 @@ fun BookingScreen(
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 10.dp,
-                lighterGray
+                MaterialTheme.colorScheme.surfaceContainerLow
             )
             Spacer(Modifier.height(MaterialTheme.dimens.small2))
             //companion section
@@ -222,7 +221,7 @@ fun BookingScreen(
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 10.dp,
-                lighterGray
+                MaterialTheme.colorScheme.surfaceContainerLow
             )
             Spacer(Modifier.height(MaterialTheme.dimens.small2))
             //contact section
@@ -246,7 +245,8 @@ fun BookingScreen(
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 10.dp,
-                lighterGray
+                MaterialTheme.colorScheme.surfaceContainerLow
+
             )
             Spacer(Modifier.height(MaterialTheme.dimens.small2))
             RestSection(
@@ -264,8 +264,8 @@ fun BookingScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CircularProgressIndicator(color = Color.White)
-                    Text("Đang tiến hành thanh toán", color = Color.White)
+                    CircularProgressIndicator()
+                    Text("Đang tiến hành thanh toán")
                 }
             }
         }

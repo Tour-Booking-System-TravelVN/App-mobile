@@ -18,8 +18,10 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -49,8 +51,8 @@ import com.tanh.tourbooking.util.Route
 
 @Composable
 fun RegisterScreen(
-    viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel>(),
     modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel>(),
     showSnackbar: (String) -> Unit,
     onNavigate: (String) -> Unit
 ) {
@@ -101,7 +103,7 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .padding(horizontal = MaterialTheme.dimens.medium1),
         verticalArrangement = Arrangement.Center,
     ) {
@@ -123,57 +125,36 @@ fun RegisterScreen(
         }
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small3))
         Text(
-            text = "Registration",
+            text = "Đăng ký tài khoản",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.medium1))
 
         //name text field
-        TextField(
+        OutlinedTextField(
             value = inputName,
             onValueChange = {
                 inputName = it
                 viewModel.onUsernameChange(it)
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray
-            ),
             label = {
-                Text("Your name")
+                Text("Tên đăng nhập")
             },
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         //password
-        TextField(
+        OutlinedTextField(
             value = inputPassword,
             onValueChange = {
                 inputPassword = it
                 viewModel.onPassword(it)
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray,
-            ),
             label = {
-                Text("Your password")
+                Text("Nhập mật khẩu")
             },
             visualTransformation = if (isPasswordVisible) {
                 VisualTransformation.None
@@ -184,39 +165,27 @@ fun RegisterScreen(
                 IconButton(
                     onClick = { isPasswordVisible = !isPasswordVisible }
                 ) {
-                    Image(
+                    Icon(
                         imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             },
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         //confirmpassword
-        TextField(
+        OutlinedTextField(
             value = inputConfirmPassword,
             onValueChange = {
                 inputConfirmPassword = it
                 viewModel.onConfirmPassword(it)
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray,
-            ),
             label = {
-                Text("Type your password again")
+                Text("Nhập lại mật khẩu")
             },
             visualTransformation = if (isConfirmPasswordVisible) {
                 VisualTransformation.None
@@ -227,47 +196,30 @@ fun RegisterScreen(
                 IconButton(
                     onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }
                 ) {
-                    Image(
+                    Icon(
                         imageVector = if (isConfirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             },
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         //email
-        TextField(
+        OutlinedTextField(
             value = inputEmail,
             onValueChange = {
                 inputEmail = it
                 viewModel.onEmailChange(it)
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray
-            ),
             label = {
                 Text("Email")
             },
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small3))
@@ -285,7 +237,7 @@ fun RegisterScreen(
                 .fillMaxWidth()
         ) {
             Text(
-                "Register"
+                "Đăng ký"
             )
         }
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.medium1))
@@ -317,7 +269,7 @@ fun RegisterScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Already have an account?",
+                text = "Đã có tài khoản?",
                 style = MaterialTheme.typography.bodyMedium
             )
             TextButton(
@@ -326,7 +278,7 @@ fun RegisterScreen(
                 }
             ) {
                 Text(
-                    text = "Login now",
+                    text = "Đăng nhập ngay",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium
                 )

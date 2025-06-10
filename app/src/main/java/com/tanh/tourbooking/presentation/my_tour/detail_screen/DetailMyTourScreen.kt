@@ -128,7 +128,7 @@ fun DetailMyTourScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
         ) {
             Spacer(Modifier.height(MaterialTheme.dimens.small2))
             Row(
@@ -140,7 +140,6 @@ fun DetailMyTourScreen(
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null,
-                    tint = Color.Black,
                     modifier = Modifier
                         .size(25.dp)
                         .clickable {
@@ -172,7 +171,6 @@ fun DetailMyTourScreen(
                     text = myTour.bookingDate.toIndicatorString(),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
                 )
                 Spacer(Modifier.weight(1f))
                 StatusIndicator(status = myTour.status)
@@ -188,14 +186,12 @@ fun DetailMyTourScreen(
                     text = "Mã đặt tour",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = myTour.bookingId,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
                 )
                 Spacer(Modifier.width(2.dp))
                 IconButton(
@@ -222,14 +218,12 @@ fun DetailMyTourScreen(
                     text = "Mã chuyến đi",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = myTour.tourUnit.tourUnitId,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
                 )
                 Spacer(Modifier.width(2.dp))
                 IconButton(
@@ -254,7 +248,6 @@ fun DetailMyTourScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White)
                     .border(
                         width = 1.dp,
                         color = lightGray,
@@ -300,13 +293,11 @@ fun DetailMyTourScreen(
                             Text(
                                 text = myTour.tourUnit.departureDate?.toIndicator() ?: "",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Black
                             )
                             Spacer(modifier = Modifier.height(14.dp))
                             Text(
                                 text = myTour.tourUnit.returnDate?.toIndicator() ?: "",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Black
                             )
                         }
                     }
@@ -326,7 +317,6 @@ fun DetailMyTourScreen(
                             text = Calculation.formatDuration(myTour.tourUnit.tour.duration),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
                         )
                     }
                     Spacer(Modifier.height(MaterialTheme.dimens.small1))
@@ -345,7 +335,6 @@ fun DetailMyTourScreen(
                             text = myTour.tourUnit.tour.departurePlace,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
                         )
                     }
                     Spacer(Modifier.height(MaterialTheme.dimens.small1))
@@ -364,7 +353,6 @@ fun DetailMyTourScreen(
                             text = myTour.tourUnit.tour.placesToVisit,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
                         )
                     }
                     Spacer(Modifier.height(MaterialTheme.dimens.small2))
@@ -398,14 +386,12 @@ fun DetailMyTourScreen(
                             Text(
                                 text = "Chuyển khoản",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Black
                             )
                             Spacer(Modifier.weight(1f))
                             Text(
                                 text = "${Calculation.formatDouble(myTour.totalAmount)}đ",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
                             )
                         }
                         Spacer(Modifier.height(MaterialTheme.dimens.small1))
@@ -417,27 +403,23 @@ fun DetailMyTourScreen(
                             Text(
                                 text = "Người lớn x ${myTour.adultNumber}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
                             )
                             if (myTour.childNumber > 0) {
                                 Text(
                                     text = "Trẻ em x ${myTour.childNumber}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Black
                                 )
                             }
                             if (myTour.babyNumber > 0) {
                                 Text(
                                     text = "Em bé x ${myTour.babyNumber}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Black
                                 )
                             }
                             if (myTour.toddlerNumber > 0) {
                                 Text(
                                     text = "Trẻ nhỏ x ${myTour.toddlerNumber}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.Black
                                 )
                             }
                         }
@@ -452,7 +434,6 @@ fun DetailMyTourScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White)
                     .border(
                         width = 1.dp,
                         color = lightGray,
@@ -488,7 +469,6 @@ fun DetailMyTourScreen(
                             text = "Nhóm chat",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.W400,
-                            color = Color.Black
                         )
                         Spacer(Modifier.weight(1f))
                         IconButton(
@@ -499,7 +479,6 @@ fun DetailMyTourScreen(
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowRight,
                                 contentDescription = null,
-                                tint = Color.Black,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -530,7 +509,6 @@ fun DetailMyTourScreen(
                                 text = "Đánh giá",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.W400,
-                                color = Color.Black
                             )
                             Spacer(Modifier.weight(1f))
                             IconButton(
@@ -541,7 +519,6 @@ fun DetailMyTourScreen(
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = null,
-                                    tint = Color.Black,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -571,7 +548,6 @@ fun DetailMyTourScreen(
                                 text = "Hủy tour",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.W400,
-                                color = Color.Black
                             )
                             Spacer(Modifier.weight(1f))
                             IconButton(
@@ -582,7 +558,6 @@ fun DetailMyTourScreen(
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = null,
-                                    tint = Color.Black,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

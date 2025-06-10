@@ -3,6 +3,7 @@ package com.tanh.tourbooking.presentation.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -101,7 +103,7 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .padding(horizontal = MaterialTheme.dimens.medium1),
         verticalArrangement = Arrangement.Center,
     ) {
@@ -130,21 +132,13 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.medium1))
 
         //name text field
-        TextField(
+        OutlinedTextField(
             value = inputName,
             onValueChange = {
                 inputName = it
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray
-            ),
             label = {
-                Text("Your name")
+                Text("Tên đăng nhập")
             },
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(
@@ -152,32 +146,19 @@ fun LoginScreen(
                     focusRequester.requestFocus()
                 }
             ),
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
-        TextField(
+        OutlinedTextField(
             value = inputPassword,
             onValueChange = {
                 inputPassword = it
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                focusedLabelColor = Color.LightGray,
-                unfocusedLabelColor = Color.LightGray,
-            ),
             label = {
-                Text("Your password")
+                Text("Mật khẩu")
             },
             visualTransformation = if (isPasswordVisible) {
                 VisualTransformation.None
@@ -188,9 +169,10 @@ fun LoginScreen(
                 IconButton(
                     onClick = { isPasswordVisible = !isPasswordVisible }
                 ) {
-                    Image(
+                    Icon(
                         imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             },
@@ -200,19 +182,14 @@ fun LoginScreen(
                     focusManager.clearFocus()
                 }
             ),
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = MaterialTheme.shapes.medium
-                )
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
         )
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.small2))
         Text(
-            text = "Forget password?",
+            text = "Quên mật khẩu?",
             color = Color.LightGray,
             textDecoration = TextDecoration.Underline,
             style = MaterialTheme.typography.bodySmall,
@@ -233,7 +210,7 @@ fun LoginScreen(
                 .fillMaxWidth()
         ) {
             Text(
-                "Login"
+                "Đăng nhập"
             )
         }
         Spacer(modifier = Modifier.size(MaterialTheme.dimens.medium1))
@@ -265,7 +242,7 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Don't have an account?",
+                text = "Không có tài khoản?",
                 style = MaterialTheme.typography.bodyMedium
             )
             TextButton(
@@ -274,7 +251,7 @@ fun LoginScreen(
                 }
             ) {
                 Text(
-                    text = "Register now",
+                    text = "Đăng ký ngay",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium
                 )
