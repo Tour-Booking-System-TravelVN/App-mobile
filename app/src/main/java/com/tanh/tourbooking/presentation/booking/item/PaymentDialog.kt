@@ -58,7 +58,7 @@ fun PaymentDialog(
         Column(
             modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.surfaceContainerLow)
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -102,40 +102,40 @@ fun PaymentDialog(
                 }
             }
             Spacer(Modifier.height(8.dp))
-            Box(
-                Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.secondary,
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .padding(8.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.bank),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(25.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "Thanh toán qua ZaloPay",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(Modifier.weight(1f))
-                    RadioButton(
-                        selected = currentCheckBox == 2,
-                        onClick = {
-                            currentCheckBox = 2
-                        }
-                    )
-                }
-            }
+//            Box(
+//                Modifier
+//                    .clip(MaterialTheme.shapes.medium)
+//                    .border(
+//                        width = 1.dp,
+//                        color = MaterialTheme.colorScheme.secondary,
+//                        shape = MaterialTheme.shapes.medium
+//                    )
+//                    .background(MaterialTheme.colorScheme.secondaryContainer)
+//                    .padding(8.dp)
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.bank),
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colorScheme.secondary,
+//                        modifier = Modifier.size(25.dp)
+//                    )
+//                    Spacer(Modifier.width(8.dp))
+//                    Text(
+//                        text = "Thanh toán qua ZaloPay",
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    Spacer(Modifier.weight(1f))
+//                    RadioButton(
+//                        selected = currentCheckBox == 2,
+//                        onClick = {
+//                            currentCheckBox = 2
+//                        }
+//                    )
+//                }
+//            }
             Spacer(Modifier.height(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically

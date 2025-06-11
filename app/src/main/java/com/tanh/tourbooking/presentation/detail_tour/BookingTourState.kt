@@ -18,6 +18,7 @@ data class BookingTourState(
     val toddlePrice: Double = 0.0,
     val babyPrice: Double = 0.0,
     val totalPrice: Double = 0.0,
+    val roomPrice: Double = 0.0,
     @Serializable(with = LocalDateSerializer::class)
     val departureDate: LocalDate? = null,
     val discount: Discount? = null

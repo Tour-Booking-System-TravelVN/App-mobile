@@ -35,7 +35,8 @@ object ApiModule {
     @Named("Auth")
     fun provideAuthRetrofit(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://192.168.1.234:8080")
+            .baseUrl("https://moose-relevant-elephant.ngrok-free.app")
+//            .baseUrl("http://192.168.1.234:8080")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -52,8 +52,7 @@ fun IndicatorItem(
             text = title,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black,
-            modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f)
         )
     }
 

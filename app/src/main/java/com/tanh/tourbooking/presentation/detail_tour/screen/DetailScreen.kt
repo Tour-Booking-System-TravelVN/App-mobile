@@ -250,7 +250,7 @@ fun DetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        tint = MaterialTheme.colorScheme.surfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         contentDescription = null
                     )
                 }
@@ -391,23 +391,23 @@ fun DetailScreen(
                     DiscountSection(state.tourUnit?.discount)
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                     //Description
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = MaterialTheme.dimens.small1)
-                    ) {
+//                    Column(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(horizontal = MaterialTheme.dimens.small1)
+//                    ) {
+////                        Text(
+////                            text = "Mô tả",
+////                            style = MaterialTheme.typography.headlineMedium,
+////                        )
+//                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
 //                        Text(
-//                            text = "Mô tả",
-//                            style = MaterialTheme.typography.headlineMedium,
+//                            text = tourUnit?.tour?.description ?: "This tour is amazing",
+//                            style = MaterialTheme.typography.bodyLarge,
+//                            color = Color.LightGray
 //                        )
-                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
-                        Text(
-                            text = tourUnit?.tour?.description ?: "This tour is amazing",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.LightGray
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
+//                    }
+//                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small1))
                     //schedule
                     Column(
                         modifier = Modifier

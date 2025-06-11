@@ -155,14 +155,14 @@ fun PortraitHomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Xin chào, $lastname",
+                text = "Xin chào, ${state.information?.firstname ?: ""}",
                 fontSize = titleTextSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
 
             Image(
-                painter = painterResource(R.drawable.dio),
+                painter = painterResource(R.drawable.anony),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
@@ -186,17 +186,19 @@ fun PortraitHomeScreen(
         TextField(
             value = inputText,
             onValueChange = { inputText = it },
-            placeholder = { Text("Khám phá thành phố", color = Color.LightGray) },
+            placeholder = { Text("Khám phá thành phố") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+//                focusedContainerColor = Color.Transparent,
+//                unfocusedContainerColor = Color.Transparent
             ),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
+                .shadow(4.dp, RoundedCornerShape(8.dp))
                 .fillMaxWidth()
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(8.dp))
-                .clip(RoundedCornerShape(8.dp))
         )
 
         // Explore Cities

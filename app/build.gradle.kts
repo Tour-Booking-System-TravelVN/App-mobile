@@ -161,6 +161,10 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
+
+    //lottie
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+
 }
 
 kapt {

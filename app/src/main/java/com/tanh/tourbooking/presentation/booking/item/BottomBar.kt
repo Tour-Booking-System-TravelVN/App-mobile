@@ -25,6 +25,7 @@ import com.tanh.tourbooking.util.Calculation
 @Composable
 fun BottomBar(
     totalAmount: Double,
+    roomPrice: Double,
     makeAPayment: () -> Unit
 ) {
     Column(
@@ -48,7 +49,7 @@ fun BottomBar(
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                text = Calculation.formatDouble(totalAmount),
+                text = Calculation.formatDouble(totalAmount + roomPrice),
                 style = TextStyle20,
                 fontWeight = FontWeight.SemiBold
             )

@@ -135,6 +135,7 @@ fun BookingScreen(
                     intent.setPackage("com.android.chrome")
                     context.startActivity(intent)
                 }
+                else -> {}
             }
         }
     }
@@ -151,6 +152,7 @@ fun BookingScreen(
                         id = 0
                     )
                 ),
+                roomPrice = state.state.roomPrice
             ) {
                 if (!checked) {
                     viewModel.showSnackBar("Vui lòng đồng ý điều khoản")
@@ -264,8 +266,11 @@ fun BookingScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CircularProgressIndicator()
-                    Text("Đang tiến hành thanh toán")
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(
+                        "Đang tiến hành thanh toán",
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
                 }
             }
         }

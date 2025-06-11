@@ -41,6 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.tanh.tourbooking.R
 import com.tanh.tourbooking.presentation.profile.ProfileEvent
 import com.tanh.tourbooking.presentation.profile.ProfileUiState
 import com.tanh.tourbooking.presentation.profile.ProfileViewModel
@@ -65,6 +71,9 @@ fun ProfileScreen(
         state.role == Role.CUSTOMER
     }
 
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.scenerylottie))
+    val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever, isPlaying = true)
+
     LaunchedEffect(Unit) {
         viewModel.channel.collect { event ->
             when (event) {
@@ -82,14 +91,13 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainerLowest)
     ) {
-        AsyncImage(
-            model = "https://i.ibb.co/ch8p9Pd1/image.png",
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-                .fillMaxWidth()
-                .aspectRatio(1.5f)
+
+        LottieAnimation(
+            composition = composition,
+            progress = {progress},
+            modifier = Modifier.fillMaxWidth().height(200.dp)
+                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                .align(Alignment.TopCenter)
         )
 
         Surface(

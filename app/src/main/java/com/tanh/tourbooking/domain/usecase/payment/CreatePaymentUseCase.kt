@@ -33,7 +33,6 @@ class CreatePaymentUseCase @Inject constructor(
         if(token.isNullOrBlank()) {
             return Resources.Error(Exception("Vui lòng đăng nhập/ đăng ký"))
         }
-        Log.d("Zalo2", "Url create")
         val request = CreatePaymentRequest(
             cancelUrl = "makeitsoapp://failure",
             returnUrl = "makeitsoapp://success",
@@ -41,7 +40,7 @@ class CreatePaymentUseCase @Inject constructor(
             price = Calculation.discountedPrice(
                 amount = tourState.totalPrice,
                 discount = tourState.discount
-            ).toInt(),
+            ).toInt() + tourState.roomPrice.toInt(),
             productName = tourState.tourName,
             bookingRequest = BookingRequest(
                 customer = CustomerRequest(

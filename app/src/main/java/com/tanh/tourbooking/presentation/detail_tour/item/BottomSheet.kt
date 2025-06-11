@@ -157,6 +157,7 @@ fun BottomSheet(
                     childPrice = tourUnitCalendar.childTourPrice,
                     tourUnitId = tourUnitCalendar.tourUnitId,
                     discount = tourUnitCalendar.discount,
+                    roomPrice = tourUnitCalendar.privateRoomPrice,
                     tourName = tourUnit?.tour?.tourName ?: ""
                 )
             }
@@ -272,9 +273,34 @@ fun BottomSheet(
                 color = Color.LightGray,
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Giá phòng"
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+                    text = "đ",
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = Calculation.formatDouble(bookingTourState.roomPrice),
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.width(6.dp))
+            }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = Color.LightGray,
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             PeopleSelectorItem(
-                title = "Adult",
+                title = "Người lớn",
                 isAdult = true,
                 count = adultCount,
                 price = adultPrice,
@@ -289,21 +315,7 @@ fun BottomSheet(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             PeopleSelectorItem(
-                title = "Toddle",
-                count = toddleCount,
-                price = toddlePrice,
-                onValueChange = {
-                    toddleCount = it
-                }
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            HorizontalDivider(
-                thickness = 0.5.dp,
-                color = Color.LightGray,
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            PeopleSelectorItem(
-                title = "Child",
+                title = "Trẻ em",
                 count = childCount,
                 price = childPrice,
                 onValueChange = {
@@ -317,7 +329,21 @@ fun BottomSheet(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             PeopleSelectorItem(
-                title = "Kids (Baby)",
+                title = "Trẻ em (1 - 3)",
+                count = toddleCount,
+                price = toddlePrice,
+                onValueChange = {
+                    toddleCount = it
+                }
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = Color.LightGray,
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            PeopleSelectorItem(
+                title = "Em bé",
                 count = babyCount,
                 price = babyPrice,
                 onValueChange = {
@@ -330,7 +356,6 @@ fun BottomSheet(
                 color = Color.LightGray,
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-
         }
         //total amount
         Row(
@@ -348,7 +373,7 @@ fun BottomSheet(
             )
             Spacer(Modifier.width(4.dp))
             Text(
-                text = Calculation.formatDouble(totalAmount),
+                text = Calculation.formatDouble(totalAmount + bookingTourState.roomPrice),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
